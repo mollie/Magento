@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+
+<!--
+ *
+ * Copyright (c) 2012, Mollie B.V.
+ * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met: 
+ * 
+ * - Redistributions of source code must retain the above copyright notice, 
+ *    this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright 
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY 
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+ * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY 
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
+ * DAMAGE. 
+ *
+ * @category    Mollie
+ * @package     Mollie_Ideal
+ * @author      Mollie B.V. (info@mollie.nl)
+ * @version     v2.0.0
+ * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
+ * 
+-->
+
+<config>
+	<modules>
+		<Mollie_Mpm>
+			<version>2.0.0</version>
+		</Mollie_Mpm>
+	</modules>
+
+	<global>
+		<models>
+			<mpm>
+				<class>Mollie_Mpm_Model</class>
+			</mpm>
+		</models>
+		<blocks>
+			<mpm>
+				<class>Mollie_Mpm_Block</class>
+			</mpm>
+			<payment>
+				<class>Mollie_Mpm_Block</class>
+				<class>Mage_Payment_Block</class>
+			</payment>
+		</blocks>
+		<helpers>
+			<mpm>
+				<class>Mollie_Mpm_Helper</class>
+			</mpm>
+		</helpers>
+		<payment>
+			<groups>
+				<mollie>mollie</mollie>
+			</groups>
+		</payment>
+		<resources>
+			<mpm_setup>
+				<setup>
+					<module>Mollie_Mpm</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</mpm_setup>
+			<mpm_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</mpm_write>
+			<mpm_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</mpm_read>
+		</resources>
+	</global>
+
+	<frontend>
+		<routers>
+			<mpm>
+				<use>standard</use>
+				<args>
+					<module>Mollie_Mpm</module>
+					<frontName>mpm</frontName>
+				</args>
+			</mpm>
+		</routers>
+	</frontend>
+
+	<adminhtml>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<mollie>
+											<title>Mollie Betaal Methode(s)</title>
+										</mollie>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<mpm>
+					<file>mpm.xml</file>
+				</mpm>
+			</updates>
+		</layout>
+	</adminhtml>
+
+	<default>
+		<payment>
+			<mpm_idl>
+				<group>mollie</group>
+				<active>1</active>
+				<model>mpm/idl</model>
+				<title>iDEAL</title>
+				<currency>EUR</currency>
+				<allowspecific>1</allowspecific>
+				<specificcountry>NL</specificcountry>
+			</mpm_idl>
+		</payment>
+	</default>
+</config>

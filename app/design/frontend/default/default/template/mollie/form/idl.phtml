@@ -1,0 +1,19 @@
+<?php
+	// Get Payment code ( mpm_idl ) //
+	$_code = $this->getMethodCode();
+	// Fetch all iDEAL banks
+	$_banks = Mage::Helper('mpm/idl')->getBanks();
+?>
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+	<li>
+		<label for="<?php echo $_code ?>_bank_id" class="required"><em>*</em><?php echo $this->__('Selecteer uw bank:') ?></label>
+		<span class="input-box">
+			<select name="payment[bankid]" class="required-entry input-text" id="<?php echo $_code; ?>_bank_id" title="<?php echo $_code; ?>_bank_id">
+				<option value=''>Kies uw bank</option>
+				<?php foreach ($_banks as $bank_id => $bank_name): ?>
+					<option value="<?php echo $bank_id ?>"><?php echo $bank_name ?></option>
+				<?php endforeach; ?>
+			</select>
+		</span>
+	</li>
+</ul>
