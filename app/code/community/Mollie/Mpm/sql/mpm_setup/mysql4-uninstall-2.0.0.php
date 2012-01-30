@@ -44,16 +44,13 @@ $installer->run(
 	)
 );
 
-$installer->run(
-	sprintf("DELETE FROM `%s` where `path` = 'mollie/idl/active';
-		DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/description';
-		DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/minvalue';
-		DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/testmode';
-		DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/settings/parnerid';
-		DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/settings/profilekey';
-		DELETE FROM `{$installer->getTable('core_resource')}` where `code` = 'mpm_setup';",
-		;
-	)
+$installer->run("DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/active';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/description';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/minvalue';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/testmode';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/settings/partnerid';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/settings/profilekey';
+	DELETE FROM `{$installer->getTable('core_resource')}` where `code` = 'mpm_setup';"
 );
 
 $installer->endSetup();
