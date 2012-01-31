@@ -58,8 +58,15 @@ $installer->run(
  */
 if(strlen(Mage::getStoreConfig("mollie/settings/partnerid")) == 0)
 {
-	$date = date("Y/m/d H:i:s", time());
-	$installer->run("INSERT INTO `adminnotification_inbox` (`severity`, `date_added`, `title`, `description`, `url`, `is_read`, `is_remove`) VALUES ('4', '{$date}', 'Mollie instellingen', 'Uw Mollie instellingen moeten ingesteld worden. Als u dit niet doet dan kunnen uw klanten geen gebruik maken van de betaalmethode(s).', 'http://www.mollie.nl/', '0', '0');");
+	$installer->run(
+			sprintf("INSERT INTO `%s` (`severity`, `date_added`, `title`, `description`, `url`, `is_read`, `is_remove`) 
+				VALUES ('4', '%s', 'Uw Mollie instellingen moeten ingesteld worden. Als u dit niet doet dan kunnen uw klanten geen gebruik maken van de betaalmethode(s).',
+				'Ga naar System -> Configuration -> Mollie om de instellingen te bekijken',
+				'http://www.mollie.nl/', '0', '0');",
+				$installer->getTable('adminnotification_inbox'),
+				date("Y/m/d H:i:s", time())
+			)
+		);
 }
 
 $installer->endSetup();
