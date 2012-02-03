@@ -92,7 +92,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @return string
 	 */
-	public function getProfilekey()  
+	public function getProfilekey()
 	{
 		return Mage::getStoreConfig("mollie/settings/profilekey");
 	}
