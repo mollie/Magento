@@ -78,7 +78,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		{
 			// Assign required value's
 			$bank_id = Mage::app()->getRequest()->getParam('bank_id');
-			$amount = intval(number_format($order->getGrandTotal(), 0, '', '') * 100);
+			$amount = intval($order->getGrandTotal() * 100);
 			$description =  str_replace('%', $order->getIncrementId(), Mage::Helper('mpm/data')->getConfig('idl', 'description'));
 			$return_url = Mage::getUrl('mpm/idl/return');
 			$report_url = Mage::getUrl('mpm/idl/report');
@@ -180,7 +180,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				// Get iDEAL payment status and set it
 				if ($this->_ideal->getPaidStatus() == true)
 				{
-					if ($this->_ideal->getAmount() == intval(number_format($order->getGrandTotal(), 0, '', '') * 100))
+					if ($this->_ideal->getAmount() == intval($order->getGrandTotal() * 100))
 					{
 						$payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
 						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), true)->save();
