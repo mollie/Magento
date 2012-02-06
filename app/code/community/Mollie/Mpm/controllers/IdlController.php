@@ -83,6 +83,9 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			$return_url = Mage::getUrl('mpm/idl/return');
 			$report_url = Mage::getUrl('mpm/idl/report');
 
+			if($amount < Mage::Helper('mpm/data')->getConfig('idl', 'minvalue'))
+				Mage::throwException("Order bedrag (".$amount." centen) is lager dan ingesteld (".Mage::Helper('mpm/data')->getConfig('idl', 'minvalue') . " centen)");
+
 			if ($this->_ideal->createPayment($bank_id, $amount, $description, $return_url, $report_url))
 			{
 				if (!$order->getId())
@@ -91,20 +94,13 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					Mage::throwException('Geen order voor verwerking gevonden');
 				}
 
-				// Store order and iDEAL information
-				$data = array('order_id' => $order->getIncrementId(),
-					'entity_id' => $order->getData('entity_id'),
-					'quote_id' => $order->getData('quote_id'),
-					'trans_id' => $this->_ideal->getTransactionId(),
-				);
-
-				$sql = sprintf("INSERT INTO `%s` (`order_id`, `entity_id`, `method`, `transaction_id`) VALUES ('%s', '%s', '%s', '%s');",
-								Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
-								$data['order_id'],
-								$data['entity_id'],
-								'idl',
-								$data['trans_id']
-							);
+				$sql = sprintf(
+							"INSERT INTO `%s` (`order_id`, `transaction_id`, `method`) VALUES ('%s', '%s', '%s');",
+							Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
+							$order->getIncrementId(),
+							$this->_ideal->getTransactionId(),
+							'idl'
+						);
 
 				// Writes the above query into the mollie_payments table and then creates a transaction
 				if ($this->_write->query($sql))
@@ -112,7 +108,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					// Creates transaction
 					$payment = Mage::getModel('sales/order_payment')
 							->setMethod('iDEAL')
-							->setTransactionId($data['trans_id'])
+							->setTransactionId($this->_ideal->getTransactionId())
 							->setIsTransactionClosed(false);
 
 					// Sets the above transaction
@@ -125,13 +121,16 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					$this->_redirectUrl($this->_ideal->getBankURL());
 				}
 			}
+			else
+			{
+				Mage::throwException($this->_ideal->getErrorMessage());
+			}
 		}
 		catch (Exception $e)
 		{
 			Mage::log($e);
-			Mage::throwException(
-				"Kon geen betaling aanmaken, neem contact op met de beheerder.<br />
-				Error melding voor de beheerder: " . $this->_ideal->getErrorMessage()
+			Mage::throwException("Kon geen betaling aanmaken, neem contact op met de beheerder.<br />
+				Error melding voor de beheerder: " . $e->getMessage()
 			);
 		}
 	}
