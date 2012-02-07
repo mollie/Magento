@@ -145,12 +145,15 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 			$data = new Varien_Object($data);
 		}
 
-		foreach ($this->_ideal->getBanks() as $id => $name)
+		if(strlen(Mage::registry('bank_id')) == 0)
 		{
-			if ($data->getBankid() == $id)
+			foreach ($this->_ideal->getBanks() as $id => $name)
 			{
-				Mage::register('bank_id', $id);
-				Mage::register('bank_name', $name);
+				if ($data->getBankid() == $id)
+				{
+					Mage::register('bank_id', $id);
+					Mage::register('bank_name', $name);
+				}
 			}
 		}
 
