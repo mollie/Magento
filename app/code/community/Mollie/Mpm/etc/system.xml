@@ -51,7 +51,7 @@
 					<frontend_type>text</frontend_type>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
-					<show_in_store>0</show_in_store>
+					<show_in_store>1</show_in_store>
 
 					<fields>
 						<partnerid translate="label">
@@ -60,10 +60,11 @@
 							<sort_order>1</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
-							<show_in_store>0</show_in_store>
+							<show_in_store>1</show_in_store>
+							<tooltip><![CDATA[<b>Mollie partner ID:</b> <br/>]]> Uw Mollie partner ID. Op dit account wordt de betaling toegevoegd.</tooltip>
 							<validate>required-entry validate-not-negative-number validate-digits</validate>
 						</partnerid>
-
+						
 						<profilekey translate="label">
 							<label>Profile Key</label>
 							<frontend_type>text</frontend_type>
@@ -71,18 +72,9 @@
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
+							<tooltip><![CDATA[<b>Profilekey:</b> <br/>]]> Vul het betaalprofiel in die u wilt gebruiken.</tooltip>
 							<validate>required-entry validate-alphanum</validate>
 						</profilekey>
-
-						<testmode translate="label">
-							<label>Testmode</label>
-							<frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>3</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>0</show_in_store>
-						</testmode>
 					</fields>
 				</settings>
 
@@ -91,8 +83,8 @@
 					<sort_order>2</sort_order>
 					<frontend_type>text</frontend_type>
 					<show_in_default>1</show_in_default>
-					<show_in_website>0</show_in_website>
-					<show_in_store>0</show_in_store>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
 
 					<fields>
 						<active translate="label">
@@ -102,26 +94,40 @@
 							<sort_order>1</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
-							<show_in_store>0</show_in_store>
+							<show_in_store>1</show_in_store>
+							<tooltip><![CDATA[<b>Status:</b> <br/>]]> De betaalmodule activeren of deactiveren.</tooltip>
 						</active>
 
-						<description translate="label">
-							<label>Beschrijving</label>
-							<frontend_type>text</frontend_type>
+						<testmode translate="label">
+							<label>Testmode</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
 							<sort_order>2</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
+							<tooltip><![CDATA[<b>Testmode:</b> <br/>]]> Gebruik de testmode om betalingen te testen zonder een echte betaling te doen.</tooltip>
+						</testmode>
+
+						<description translate="label">
+							<label>Beschrijving</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<tooltip><![CDATA[<b>Beschrijving:</b> <br/>]]> Vul hier een omschrijving in van maximaal 29 karakters (bijv. een ordernummer). Tip: gebruik '%' voor het ordernummer. Houdt u er wel rekening mee dat dit meetelt met het aantal beschikbare karakters.</tooltip>
 							<validate>required-entry</validate>
 						</description>
 
 						<minvalue translate="label">
 							<label>Minimale order bedrag (CENTEN)</label>
 							<frontend_type>text</frontend_type>
-							<sort_order>3</sort_order>
+							<sort_order>4</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
+							<tooltip><![CDATA[<b>Minimaal bestelbedrag:</b> <br/>]]> Minimale bedrag voor iDEAL wordt weergeven bij een bestelling (MEEGEGEVEN IN CENTEN!).</tooltip>
 							<validate>required-entry validate-not-negative-number validate-digits validate-greater-than-zero</validate>
 						</minvalue>
 					</fields>

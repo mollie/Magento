@@ -38,12 +38,11 @@ $installer = $this;
 $installer->startSetup();
 
 /*
- * Koppel tabel maken.
+ * Mollie tabel maken.
  */
 $installer->run(
 	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
 		`order_id` int(11) NOT NULL,
-		`entity_id` int(11) NOT NULL,
 		`method` varchar(3) NOT NULL,
 		`transaction_id` varchar(32) NOT NULL,
 		`bank_account` varchar(15) NOT NULL,
@@ -60,13 +59,18 @@ if(strlen(Mage::getStoreConfig("mollie/settings/partnerid")) == 0)
 {
 	$installer->run(
 			sprintf("INSERT INTO `%s` (`severity`, `date_added`, `title`, `description`, `url`, `is_read`, `is_remove`) 
-				VALUES ('4', '%s', 'Uw Mollie instellingen moeten ingesteld worden. Als u dit niet doet dan kunnen uw klanten geen gebruik maken van de betaalmethode(s).',
-				'Ga naar System -> Configuration -> Mollie om de instellingen te bekijken',
+				VALUES ('4', '%s', 'Ga naar System -> Configuration -> Mollie om uw Mollie gegevens in te vullen om onze betaalmethode(s) te gebruiken',
+				'Uw Mollie instellingen moeten ingesteld worden. Als u dit niet doet dan kunnen uw klanten geen gebruik maken van de betaalmethode(s).',
 				'http://www.mollie.nl/', '0', '0');",
 				$installer->getTable('adminnotification_inbox'),
 				date("Y/m/d H:i:s", time())
 			)
 		);
 }
+
+// Clear cache
+// Mage::app()->cleanCache();
+// Mage::app()->getCache()->clean();
+// Mage::app()->getCacheInstance()->flush();
 
 $installer->endSetup();
