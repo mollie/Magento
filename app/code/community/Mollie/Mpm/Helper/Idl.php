@@ -81,7 +81,11 @@ class Mollie_Mpm_Helper_Idl
 		$this->setTestmode((Mage::Helper('mpm/data')->getConfig('idl', 'testmode')==1) ? true : false);
 	}
 
-	// Haal de lijst van beschikbare banken
+	/**
+	 * Haal de lijst van beschikbare banken
+	 *
+	 * @return array[]
+	 */
 	public function getBanks()
 	{
 		$query_variables = array(
@@ -120,7 +124,11 @@ class Mollie_Mpm_Helper_Idl
 		return $banks_array;
 	}
 
-	// Zet een betaling klaar bij de bank en maak de betalings URL beschikbaar
+	/**
+	 * Zet een betaling klaar bij de bank en maak de betalings URL beschikbaar
+	 *
+	 * @return boolean
+	 */
 	public function createPayment($bank_id, $amount, $description, $return_url, $report_url)
 	{
 
@@ -323,13 +331,15 @@ class Mollie_Mpm_Helper_Idl
 		try
 		{
 			$xml_object = new SimpleXMLElement($xml);
-			if ($xml_object == false)
+			if (!$xml_object)
 			{
 				$this->error_message = "Kon XML resultaat niet verwerken";
 				return false;
 			}
-		} catch (Exception $e)
+		}
+		catch (Exception $e)
 		{
+			$this->error_message = $e->getMessage();
 			return false;
 		}
 
@@ -348,6 +358,12 @@ class Mollie_Mpm_Helper_Idl
 
 				return true;
 			}
+		}
+
+		if (isset($xml->order->error) && (string) $xml->order->error == "true") {
+			$this->error_message = $xml->order->message;
+			$this->error_code = -1;
+			return true;
 		}
 
 		return false;
