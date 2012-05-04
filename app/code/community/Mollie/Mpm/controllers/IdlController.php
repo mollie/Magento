@@ -66,6 +66,35 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	}
 
 	/**
+	 * Get the amount of the order in cents, make sure that we return the right value even if the locale is set to
+	 * something different than the default (e.g. nl_NL).
+	 *
+	 * @param Mage_Sales_Model_Order $order
+	 * @return int
+	 */
+	protected function getAmountInCents(Mage_Sales_Model_Order $order) {
+
+		$grand_total = $order->getGrandTotal();
+
+		if (is_string($grand_total)) {
+
+			$locale_info = localeconv();
+
+			if ($locale_info['decimal_point'] !== '.')
+			{
+				$grand_total = strtr($grand_total, array(
+					$locale_info['thousands_sep'] => '',
+					$locale_info['decimal_point'] => '.',
+				));
+			}
+
+			$grand_total = floatval($grand_total); // Why U NO work with locales?
+		}
+
+		return intval(100 * $grand_total);
+	}
+
+	/**
 	 * After clicking 'Place Order' the method 'getOrderPlaceRedirectUrl()' gets called and redirects to here with the bank_id
 	 * Then this action creates an payment with a transaction_id that gets inserted in the database (mollie_payments, sales_payment_transaction)
 	 */
@@ -78,7 +107,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		{
 			// Assign required value's
 			$bank_id = Mage::app()->getRequest()->getParam('bank_id');
-			$amount = intval($order->getGrandTotal() * 100);
+			$amount = $this->getAmountInCents($order);
 			$description =  str_replace('%', $order->getIncrementId(), Mage::Helper('mpm/data')->getConfig('idl', 'description'));
 			$return_url = Mage::getUrl('mpm/idl/return');
 			$report_url = Mage::getUrl('mpm/idl/report');
@@ -179,7 +208,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				// Get iDEAL payment status and set it
 				if ($this->_ideal->getPaidStatus() == true)
 				{
-					if ($this->_ideal->getAmount() == intval($order->getGrandTotal() * 100))
+					if ($this->_ideal->getAmount() == $this->getAmountInCents($order))
 					{
 						$payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
 						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), true)->save();
