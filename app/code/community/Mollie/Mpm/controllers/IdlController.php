@@ -50,9 +50,28 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	public function _construct()
 	{
 		$this->_ideal = Mage::Helper('mpm/idl');
-		$this->_read = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$this->_read  = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$this->_write = Mage::getSingleton('core/resource')->getConnection('core_write');
 		parent::_construct();
+	}
+
+	public function errorAction ()
+	{
+
+	}
+
+	protected function _showException ($e = '', $order_id = NULL)
+	{
+		$this->loadLayout();
+
+		$block = $this->getLayout()
+				->createBlock('Mage_Core_Block_Template')
+				->setTemplate('mollie/page/exception.phtml')
+				->setData('exception', $e)
+				->setData('orderId', $order_id);
+
+		$this->getLayout()->getBlock('content')->append($block);
+		$this->renderLayout();
 	}
 
 	/**
@@ -72,12 +91,12 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 * @param Mage_Sales_Model_Order $order
 	 * @return int
 	 */
-	protected function getAmountInCents(Mage_Sales_Model_Order $order) {
-
+	protected function getAmountInCents(Mage_Sales_Model_Order $order)
+	{
 		$grand_total = $order->getGrandTotal();
 
-		if (is_string($grand_total)) {
-
+		if (is_string($grand_total))
+		{
 			$locale_info = localeconv();
 
 			if ($locale_info['decimal_point'] !== '.')
@@ -91,7 +110,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			$grand_total = floatval($grand_total); // Why U NO work with locales?
 		}
 
-		return intval(100 * $grand_total);
+		return intval(round(100 * $grand_total));
 	}
 
 	/**
@@ -112,9 +131,10 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			$return_url = Mage::getUrl('mpm/idl/return');
 			$report_url = Mage::getUrl('mpm/idl/report');
 
-			if($amount < Mage::Helper('mpm/data')->getConfig('idl', 'minvalue'))
+			if($amount < Mage::Helper('mpm/data')->getConfig('idl', 'minvalue')) {
 				Mage::throwException("Order bedrag (".$amount." centen) is lager dan ingesteld (".Mage::Helper('mpm/data')->getConfig('idl', 'minvalue') . " centen)");
-
+			}
+$amount = 0;
 			if ($this->_ideal->createPayment($bank_id, $amount, $description, $return_url, $report_url))
 			{
 				if (!$order->getId())
@@ -158,9 +178,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		catch (Exception $e)
 		{
 			Mage::log($e);
-			Mage::throwException("Kon geen betaling aanmaken, neem contact op met de beheerder.<br />
-				Error melding voor de beheerder: " . $e->getMessage()
-			);
+			$this->_showException($e->getMessage(), $order->getId());
 		}
 	}
 
@@ -282,7 +300,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		catch (Exception $e)
 		{
 			Mage::log($e);
-			$this->_redirectUrl(Mage::getBaseUrl());
+			$this->_showException($e->getMessage(), $order->getId());
 		}
 	}
 

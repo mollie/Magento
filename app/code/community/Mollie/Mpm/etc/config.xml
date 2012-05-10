@@ -87,6 +87,16 @@
 				</connection>
 			</mpm_read>
 		</resources>
+		<layouts>
+			<mollie_exception>
+				<label>Mollie Exception</label>
+				<template>mollie/page/exception.phtml</template>
+			</mollie_exception>
+			<idl_payment_fail>
+				<label>Payment Failed</label>
+				<template>mollie/page/payment_fail.phtml</template>
+			</idl_payment_fail>
+		</layouts>
 	</global>
 
 	<frontend>
@@ -99,6 +109,13 @@
 				</args>
 			</mpm>
 		</routers>
+		<layout>
+			<updates>
+				<mpm>
+					<file>mpm.xml</file>
+				</mpm>
+			</updates>
+		</layout>
 	</frontend>
 
 	<adminhtml>
