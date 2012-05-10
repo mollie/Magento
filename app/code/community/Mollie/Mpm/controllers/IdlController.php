@@ -55,11 +55,10 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		parent::_construct();
 	}
 
-	public function errorAction ()
-	{
-
-	}
-
+	/**
+	 * @param string $e
+	 * @param null|int $order_id
+	 */
 	protected function _showException ($e = '', $order_id = NULL)
 	{
 		$this->loadLayout();
@@ -131,10 +130,11 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			$return_url = Mage::getUrl('mpm/idl/return');
 			$report_url = Mage::getUrl('mpm/idl/report');
 
-			if($amount < Mage::Helper('mpm/data')->getConfig('idl', 'minvalue')) {
-				Mage::throwException("Order bedrag (".$amount." centen) is lager dan ingesteld (".Mage::Helper('mpm/data')->getConfig('idl', 'minvalue') . " centen)");
+			if($amount < Mage::Helper('mpm/data')->getConfig('idl', 'minvalue'))
+			{
+				Mage::throwException("Order bedrag (".$amount." cent) is lager dan ingesteld (".Mage::Helper('mpm/data')->getConfig('idl', 'minvalue') . " cent)");
 			}
-$amount = 0;
+
 			if ($this->_ideal->createPayment($bank_id, $amount, $description, $return_url, $report_url))
 			{
 				if (!$order->getId())
