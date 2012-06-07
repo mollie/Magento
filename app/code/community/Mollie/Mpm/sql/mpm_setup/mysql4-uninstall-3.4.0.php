@@ -30,20 +30,27 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @version     v3.4.0
  * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
- * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  Open Software License (OSL 3.0)
  * 
  **/
 
-class Mollie_Mpm_Block_Payment_Idl_Fail extends Mage_Core_Block_Template
-{
+$installer = $this;
 
-	/**
-	 * Sets iDEAL template into the checkout page
-	 */
-	public function _construct()
-	{
-		parent::_construct();
-		$this->setTemplate('mollie/page/fail.phtml');
-	}
+$installer->startSetup();
 
-}
+$installer->run(
+	sprintf("DROP TABLE IF EXISTS `%s`",
+		$installer->getTable('mollie_payments')
+	)
+);
+
+$installer->run("DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/active';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/description';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/minvalue';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/idl/testmode';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/settings/partnerid';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'mollie/settings/profilekey';
+	DELETE FROM `{$installer->getTable('core_resource')}` where `code` = 'mpm_setup';"
+);
+
+$installer->endSetup();

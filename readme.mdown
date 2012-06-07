@@ -1,8 +1,8 @@
 ![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Installatie #
-+ ``` git clone git://github.com/mollienl/Magento.git ~/.magento```
-+ Kopieër de structuur van de repository naar uw webshop
++ Kopieër de structuur van de repository naar uw Magento of clone hem direct naar je webserver
++ ```git clone git://github.com/mollienl/Magento.git ~/pad/naar/uw/magento```
 + Ga in het menu naar ‘Systeem’ en selecteer ‘Beheer Cache’ vervolgens klikt u op het knopje ‘Verwijder Magento cache’
 + Log vervolgens opnieuw in uw Administratie paneel
 + Als u weer bent ingelogd klik dan in het menu onder ‘Systeem’ op ‘Configuratie’ aan de linkerkant ziet u dan ons logo verschijnen

@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v2.0.0
+ * @version     v3.4.0
  * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
@@ -132,6 +132,13 @@
 						</minvalue>
 					</fields>
 				</idl>
+				<hint>
+                    <frontend_model>mpm/adminhtml_system_config_status</frontend_model>
+                    <sort_order>99</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </hint>
 			</groups>
 		</mollie>
 	</sections>

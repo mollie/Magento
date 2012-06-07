@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v2.0.0
+ * @version     v3.4.0
  * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
@@ -112,6 +112,47 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			return Mage::getStoreConfig("mollie/{$pm}/{$key}");
 
 		return NULL;
+	}
+
+	public function getModuleStatus()
+	{
+		$needFiles = array();
+		$modFiles  = array(
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Adminhtml/System/Config/Status.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Fail.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Form.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Info.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/IdlController.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/config.xml',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/system.xml',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Data.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Idl.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
+
+			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/idl.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
+		);
+
+		foreach ($modFiles as $file)
+		{
+			if(!file_exists($file)) {
+				$needFiles[] = '<span style="color:red">'.$file.'</span>';
+			}
+		}
+
+		if (count($needFiles) > 0) {
+			return $needFiles;
+		} else {
+			return '<span style="color:green">Module werkt naar toebehoren!</span>';
+		}
+	}
+
+	public function getModuleVersion()
+	{
+		return Mage::getConfig()->getNode('modules')->children()->Mollie_Mpm->version;
 	}
 
 }
