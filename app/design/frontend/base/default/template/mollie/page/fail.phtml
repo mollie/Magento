@@ -1,0 +1,45 @@
+<div class="page-title">
+	<h3>Betaling mislukt / Payment failed</h3>
+</div>
+
+De betaling is helaas mislukt. Probeer het bedrag van
+&euro;<?php echo number_format($this->getOrder()->getGrandTotal(),2) ?> nogmaals af te rekenen met iDEAL.
+
+<br /><br />
+
+<form name="mollie_mpm_idl" id="mollie_mpm_idl" action="<?php echo $this->getForm(); ?>" method="post">
+	<input type="hidden" name="order_id" value="<?php echo $this->getOrder()->getRealOrderId(); ?>" />
+	<ul class="form-list">
+		<li>
+			<label for="bank_id" class="required"><em>*</em>
+				<?php echo $this->__('Selecteer uw bank:') ?>
+			</label>
+			<span class="input-box">
+				<select name="bank_id" class="required-entry input-text" id="bank_id" title="bank_id">
+					<option value=''>--- Kies uw bank ---</option>
+					<?php foreach ($this->getBanks() as $bank_id => $bank_name): ?>
+						<option value="<?php echo $bank_id ?>"><?php echo $bank_name ?></option>
+					<?php endforeach; ?>
+				</select>
+			</span>
+		</li>
+		<li>
+			<button class="form-button" style="padding:5px;" type="submit">Betalen</button>
+		</li>
+	</ul>
+</form>
+
+<div class="buttons-set">
+	<p class="back-link">
+		<a href="<?php echo Mage::getBaseUrl() ?>">
+			<small>&laquo; </small>
+			<?php echo $this->__('Homepage') ?>
+		</a>
+	</p>
+</div>
+
+<script type="text/javascript">
+	//< ![CDATA[
+		var iDEALForm = new VarienForm('mollie_mpm_idl');
+	//]]>
+</script>

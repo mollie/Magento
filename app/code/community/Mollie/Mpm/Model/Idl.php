@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v3.4.0
+ * @version     v3.5.0
  * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -52,8 +52,16 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	protected $_canUseForMultishipping	= true;
 	protected $_canRefund				= false;
 
+	// Payment statusses
+	const IDL_SUCCESS                   = 'Success';
+	const IDL_CANCELLED                 = 'Cancelled';
+	const IDL_FAILURE                   = 'Failure';
+	const IDL_EXPIRED                   = 'Expired';
+	const IDL_CHECKEDBEFORE             = 'CheckedBefore';
+
 	// Payment flags
 	const PAYMENT_FLAG_PROCESSED		= "De betaling is ontvangen en verwerkt";
+	const PAYMENT_FLAG_RETRY			= "De consument probeert het bedrag nogmaals af te rekenen";
 	const PAYMENT_FLAG_CANCELD			= "De consument heeft de betaling geannuleerd";
 	const PAYMENT_FLAG_PENDING			= "Afwachten tot de betaling binnen is";
 	const PAYMENT_FLAG_EXPIRED			= "De betaling is verlopen doordat de consument niets met de betaling heeft gedaan";

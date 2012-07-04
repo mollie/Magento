@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v3.4.0
+ * @version     v3.5.0
  * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
@@ -47,7 +47,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 * Give $_write mage writing resource
 	 * Give $_read mage reading resource
 	 */
-	public function _construct()
+	public function _construct ()
 	{
 		$this->_ideal = Mage::Helper('mpm/idl');
 		$this->_read  = Mage::getSingleton('core/resource')->getConnection('core_read');
@@ -74,8 +74,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 * 
 	 * @return array
 	 */
-	protected function _getCheckout()
-	{
+	protected function _getCheckout() {
 		return Mage::getSingleton('checkout/session');
 	}
 
@@ -86,7 +85,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 * @param Mage_Sales_Model_Order $order
 	 * @return int
 	 */
-	protected function getAmountInCents(Mage_Sales_Model_Order $order)
+	protected function getAmountInCents (Mage_Sales_Model_Order $order)
 	{
 		$grand_total = $order->getGrandTotal();
 
@@ -112,10 +111,16 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 * After clicking 'Place Order' the method 'getOrderPlaceRedirectUrl()' gets called and redirects to here with the bank_id
 	 * Then this action creates an payment with a transaction_id that gets inserted in the database (mollie_payments, sales_payment_transaction)
 	 */
-	public function paymentAction()
+	public function paymentAction ()
 	{
-		// Load last order
-		$order = Mage::getModel('sales/order')->loadByIncrementId($this->_getCheckout()->last_real_order_id);
+		if ($this->getRequest()->getParam('order_id')) {
+			// Load failed payment order
+			$order = Mage::getModel('sales/order')->loadByIncrementId($this->getRequest()->getParam('order_id'));
+			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY), false)->save();
+		} else {
+			// Load last order
+			$order = Mage::getModel('sales/order')->loadByIncrementId($this->_getCheckout()->last_real_order_id);
+		}
 
 		try
 		{
@@ -127,7 +132,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			$report_url = Mage::getUrl('mpm/idl/report');
 
 			if($amount < Mage::Helper('mpm/data')->getConfig('idl', 'minvalue')) {
-				$this->_showException("Order bedrag (".$amount." centen) is lager dan ingesteld (".Mage::Helper('mpm/data')->getConfig('idl', 'minvalue') . " centen)");
+				throw new Exception("Order bedrag (".$amount." centen) is lager dan ingesteld (".Mage::Helper('mpm/data')->getConfig('idl', 'minvalue') ." centen)");
 			}
 
 			if ($this->_ideal->createPayment($bank_id, $amount, $description, $return_url, $report_url))
@@ -135,7 +140,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				if (!$order->getId())
 				{
 					Mage::log('Geen order voor verwerking gevonden');
-					Mage::throwException('Geen order voor verwerking gevonden');
+					throw new Exception('Geen order voor verwerking gevonden');
 				}
 
 				$sql = sprintf(
@@ -167,7 +172,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			}
 			else
 			{
-				Mage::throwException($this->_ideal->getErrorMessage());
+				throw new Exception($this->_ideal->getErrorMessage());
 			}
 		}
 		catch (Exception $e)
@@ -180,7 +185,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	/**
 	 * This action is getting called by Mollie to report the payment status
 	 */
-	public function reportAction()
+	public function reportAction ()
 	{
 		// Get transaction_id from url (Ex: http://yourmagento.com/index.php/idl/report?bank_id=9999 )
 		$transactionId = Mage::app()->getRequest()->getParam('transaction_id');
@@ -199,51 +204,71 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 				$customer = $this->_ideal->getConsumerInfo();
 
-				$this->_write->query(
-								sprintf(
-									"UPDATE `%s` SET `bank_status` = '%s', `bank_account` = '%s' WHERE `transaction_id` = '%s' AND `bank_status` = ''",
-									Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
-									$this->_ideal->getBankStatus(),
-									$customer['consumerAccount'],
-									$transactionId
-								)
-							);
-
-				// Creates transaction
+				// Maakt een Order transactie aan
 				$payment = Mage::getModel('sales/order_payment')
 						->setMethod('iDEAL')
 						->setTransactionId($transactionId)
 						->setIsTransactionClosed(true);
 
-				// Sets the above transaction
 				$order->setPayment($payment);
 
-				// Get iDEAL payment status and set it
-				if ($this->_ideal->getPaidStatus() == true)
+				if ($this->_ideal->getPaidStatus() == TRUE)
 				{
 					if ($this->_ideal->getAmount() == $this->getAmountInCents($order))
 					{
+						// Als de vorige betaling was mislukt dan zijn de producten 'Canceled' die un-canceled worden
+						foreach ($order->getAllItems() as $item) {
+							$item->setQtyCanceled(0);
+							$item->save();
+						}
+
+						$query = sprintf(
+							"UPDATE `%s` SET `bank_status` = '%s', `bank_account` = '%s' WHERE `transaction_id` = '%s'",
+							Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
+							$this->_ideal->getBankStatus(),
+							$customer['consumerAccount'],
+							$transactionId
+						);
+
 						$payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
-						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), true)->save();
+						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), true);
+						$order->sendNewOrderEmail()->setEmailSent(true); // Sends email to customer.
 					}
 					else
 					{
-						$order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD), false)->save();
+						$query = sprintf(
+							"UPDATE `%s` SET `bank_status` = '%s' WHERE `transaction_id` = '%s'",
+							Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
+							$this->_ideal->getBankStatus(),
+							$transactionId
+						);
+
+						$order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD), false);
 					}
 				}
 				else
 				{
+					$query = sprintf(
+						"UPDATE `%s` SET `bank_status` = '%s' WHERE `transaction_id` = '%s'",
+						Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
+						$this->_ideal->getBankStatus(),
+						$transactionId
+					);
+
+					// Stomme Magento moet eerst op 'cancel' en dan pas setState, andersom dan zet hij de voorraad niet terug.
 					$order->cancel();
+					$order->setState(Mage_Sales_Model_Order::STATE_CANCELED, Mage_Sales_Model_Order::STATE_CANCELED, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_CANCELD), false);
 				}
 
-				// Sends email to customer.
-				$order->sendNewOrderEmail()->setEmailSent(true)->save();
+				// $order->sendOrderUpdateEmail()->setEmailSent(true); // Sends email to customer.
+				$this->_write->query($query);
+				$order->save();
 			}
 		}
 		catch (Exception $e)
 		{
 			Mage::log($e);
-			Mage::throwException($e);
+			$this->_showException($e->getMessage());
 		}
 	}
 
@@ -251,7 +276,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 * Customer returning from the bank with an transaction_id
 	 * Depending on what the state of the payment is they get redirected to the corresponding page
 	 */
-	public function returnAction()
+	public function returnAction ()
 	{
 		// Get transaction_id from url (Ex: http://youmagento.com/index.php/idl/return?transaction_id=45r6tuyhijg67u3gds )
 		$transactionId = Mage::app()->getRequest()->getParam('transaction_id');
@@ -263,15 +288,36 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				// Get payment status from database ( `mollie_payments` )
 				$oStatus = Mage::helper('mpm/data')->getStatusById($transactionId);
 
-				if ($oStatus['bank_status'] == "Success")
+				if ($oStatus['bank_status'] == Mollie_Mpm_Model_Idl::IDL_SUCCESS)
 				{
+					if ($this->_getCheckout()->getQuote()->items_count > 0)
+					{
+						// Maak winkelwagen leeg
+						foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item) {
+							Mage::getSingleton('checkout/cart')->removeItem($item->getId())->save();
+						}
+					}
+
 					// Redirect to success page
 					$this->_redirect('checkout/onepage/success', array('_secure' => true));
 				}
 				else
 				{
-					// Redirect to fail page
-					$this->_redirect('checkout/onepage/failure', array('_secure' => true));
+					// Create fail page
+					$this->loadLayout();
+
+					$order_id = Mage::helper('mpm/data')->getOrderById($transactionId);
+
+					$block = $this->getLayout()
+							->createBlock('Mage_Core_Block_Template')
+							->setTemplate('mollie/page/fail.phtml')
+							->setData('banks', Mage::Helper('mpm/idl')->getBanks())
+							->setData('form', Mage::getUrl('mpm/idl/form'))
+							->setData('order', Mage::getModel('sales/order')->loadByIncrementId($order_id));
+
+					$this->getLayout()->getBlock('content')->append($block);
+
+					$this->renderLayout();
 				}
 			}
 		}
@@ -279,6 +325,25 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		{
 			Mage::log($e);
 			$this->_showException($e->getMessage(), $order->getId());
+		}
+	}
+
+	public function formAction ()
+	{
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			$create_new_payment = Mage::getUrl(
+				'mpm/idl/payment',
+				array(
+					'_secure' => TRUE,
+					'_query' => array(
+						'bank_id'  => $this->getRequest()->getPost('bank_id'),
+						'order_id' => $this->getRequest()->getPost('order_id')
+					)
+				)
+			);
+
+			$this->_redirectUrl($create_new_payment);
 		}
 	}
 
