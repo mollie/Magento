@@ -116,7 +116,10 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function canUseForCountry($country)
 	{
-		parent::canUseForCountry($country);
+		if (!parent::canUseForCountry($country))
+		{
+			return FALSE;
+		}
 
 		if ($country !== 'NL') {
 			return FALSE;
@@ -132,7 +135,10 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function canUseForCurrency($currencyCode)
 	{
-		parent::canUseForCurrency($currencyCode);
+		if (!parent::canUseForCurrency($currencyCode))
+		{
+			return FALSE;
+		}
 
 		if ($currencyCode !== 'EUR') {
 			return FALSE;
