@@ -211,9 +211,10 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					{
 						// Als de vorige betaling was mislukt dan zijn de producten 'Canceled' die un-canceled worden
 						foreach ($order->getAllItems() as $item) {
+							/** @var $item Mage_Sales_Model_Order_Item */
 							$item->setQtyCanceled(0);
+							$item->save();
 						}
-						$item->save();
 
 						$this->_model->updatePayment($transactionId, $this->_ideal->getBankStatus(), $customer);
 
@@ -275,8 +276,9 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 							{
 								// Maak winkelwagen leeg
 								foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item) {
-									Mage::getSingleton('checkout/cart')->removeItem($item->getId())->save();
+									Mage::getSingleton('checkout/cart')->removeItem($item->getId());
 								}
+								Mage::getSingleton('checkout/cart')->save();
 							}
 
 							// Redirect to success page
@@ -306,14 +308,14 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				}
 				else
 				{
-					Mage::throwException($this->_('U bent niet ingelogt.'));
+					Mage::throwException($this->__('U bent niet ingelogt.'));
 				}
 			}
 		}
 		catch (Exception $e)
 		{
 			Mage::log($e);
-			$this->_showException($e->getMessage(), $order->getId());
+			$this->_showException($e->getMessage(), $order_id);
 		}
 	}
 

@@ -194,7 +194,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 
 	public function setPayment ($order_id = NULL, $transaction_id = NULL, $method = 'idl', $table = '')
 	{
-		if (is_null($order_id) && is_null($transaction_id)) {
+		if (is_null($order_id) || is_null($transaction_id)) {
 			Mage::throwException('Ongeldige order_id of transaction_id...');
 		}
 
@@ -213,7 +213,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 
 	public function updatePayment ($transaction_id = NULL, $bank_status = NULL, array $customer)
 	{
-		if (is_null($transaction_id) && is_null($bank_status)) {
+		if (is_null($transaction_id) || is_null($bank_status)) {
 			Mage::throwException('Geen transaction_id en/of bank_status gevonden...');
 		}
 
