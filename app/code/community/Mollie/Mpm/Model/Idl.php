@@ -40,17 +40,20 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	/**
 	 * iDEAL settings for Magento
 	 */
-	protected $_ideal;
+	protected $_mysqlr; // Me can read
+	protected $_mysqlw; // Me can write
+	protected $_table; // Me is table
+	protected $_ideal; // Me idealsta
 	protected $_code					= "mpm_idl";
 	protected $_formBlockType			= 'mpm/payment_idl_form';
 	protected $_infoBlockType			= 'mpm/payment_idl_info';
 	protected $_paymentMethod			= 'iDEAL';
-	protected $_isGateway				= true;
-	protected $_canAuthorize			= true;
-	protected $_canUseCheckout			= true;
-	protected $_canUseInternal			= false;
-	protected $_canUseForMultishipping	= true;
-	protected $_canRefund				= false;
+	protected $_isGateway				= TRUE;
+	protected $_canAuthorize			= TRUE;
+	protected $_canUseCheckout			= TRUE;
+	protected $_canUseInternal			= FALSE;
+	protected $_canUseForMultishipping	= TRUE;
+	protected $_canRefund				= FALSE;
 
 	// Payment statusses
 	const IDL_SUCCESS                   = 'Success';
@@ -76,35 +79,36 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function __construct()
 	{
+		$this->_ideal  = Mage::Helper('mpm/idl');
+		$this->_table  = Mage::getSingleton('core/resource')->getTableName('mollie_payments');
+		$this->_mysqlr = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$this->_mysqlw = Mage::getSingleton('core/resource')->getConnection('core_write');
 		parent::_construct();
-		$this->_ideal = Mage::Helper('mpm/idl');
 	}
-
 	/**
 	 * Get checkout session namespace
 	 *
 	 * @return Mage_Checkout_Model_Session
 	 */
-	protected function _getCheckout()
-	{
+	protected function _getCheckout() {
 		return Mage::getSingleton('checkout/session');
 	}
-
 	/**
 	 * Get current quote
 	 *
 	 * @return Mage_Sales_Model_Quote
 	 */
-	public function getQuote()
-	{
+	public function getQuote() {
 		return $this->_getCheckout()->getQuote();
 	}
-
-	public function canUseForMultishipping()
-	{
-		return true;
+	/**
+	 * Can this method be used for multishipping
+	 *
+	 * @return bool
+	 */
+	public function canUseForMultishipping() {
+		return TRUE;
 	}
-
 	/**
 	 * iDEAL kan alleen in NL gebruikt worden dus word ook alleen maar geactiveerd als de billing country NL is, NIET de shipping country
 	 * 
@@ -114,14 +118,12 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	{
 		parent::canUseForCountry($country);
 
-		if ($country !== "NL")
-		{
-			return false;
+		if ($country !== 'NL') {
+			return FALSE;
 		}
 
-		return true;
+		return TRUE;
 	}
-
 	/**
 	 * iDEAL is only active if 'EURO' is currency
 	 *
@@ -132,24 +134,22 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	{
 		parent::canUseForCurrency($currencyCode);
 
-		if ($currencyCode !== "EUR")
-		{
-			return false;
+		if ($currencyCode !== 'EUR') {
+			return FALSE;
 		}
 
-		return true;
+		return TRUE;
 	}
 
 	/**
 	 * On click payment button, this function is called to assign data
 	 * 
 	 * @param type $data
-	 * @return Mollie_Ideal_Model_Ideal 
+	 * @return Mollie_Ideal_Model_Idl 
 	 */
 	public function assignData($data)
 	{
-		if (!($data instanceof Varien_Object))
-		{
+		if ( !($data instanceof Varien_Object) ) {
 			$data = new Varien_Object($data);
 		}
 
@@ -184,6 +184,44 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 				)
 			)
 		);
+	}
+
+	public function setPayment ($order_id = NULL, $transaction_id = NULL, $method = 'idl', $table = '')
+	{
+		if (is_null($order_id) && is_null($transaction_id)) {
+			Mage::throwException('Ongeldige order_id of transaction_id...');
+		}
+
+		$data  = array(
+			'order_id'       => $order_id,
+			'transaction_id' => $transaction_id,
+			'method'         => $method,
+		);
+
+		if ($this->_mysqlw->insert($this->_table, $data)) {
+			return TRUE;
+		} else {
+			Mage::throwException(mysql_error());
+		}
+	}
+
+	public function updatePayment ($transaction_id = NULL, $bank_status = NULL, array $customer)
+	{
+		if (is_null($transaction_id) && is_null($bank_status)) {
+			Mage::throwException('Geen transaction_id en/of bank_status gevonden...');
+		}
+
+		$data = array(
+			'bank_status'  => $bank_status,
+			'bank_account' => $customer['consumerAccount'],
+		);
+		$where = sprintf("transaction_id = '%s'", $transaction_id);
+
+		if ($this->_mysqlw->update($this->_table, $data, $where)) {
+			return TRUE;
+		} else {
+			Mage::throwException(mysql_error());
+		}
 	}
 
 }

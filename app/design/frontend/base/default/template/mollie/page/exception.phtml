@@ -5,5 +5,5 @@
 <?php echo $this->getException(); ?>
 
 <div class="buttons-set">
-	<p class="back-link"><a href="<?php echo $this->getUrl() ?>"><small>&laquo; </small><?php echo $this->__('Homepage') ?></a></p>
+	<p class="back-link"><a href="<?php echo $this->escapeHtml($this->getUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Homepage') ?></a></p>
 </div>

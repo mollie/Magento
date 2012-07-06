@@ -7,8 +7,8 @@ De betaling is helaas mislukt. Probeer het bedrag van
 
 <br /><br />
 
-<form name="mollie_mpm_idl" id="mollie_mpm_idl" action="<?php echo $this->getForm(); ?>" method="post">
-	<input type="hidden" name="order_id" value="<?php echo $this->getOrder()->getRealOrderId(); ?>" />
+<form name="mollie_mpm_idl" id="mollie_mpm_idl" action="<?php echo $this->escapeHtml($this->getForm()) ?>" method="post">
+	<input type="hidden" name="order_id" value="<?php echo $this->escapeHtml($this->getOrder()->getRealOrderId()) ?>" />
 	<ul class="form-list">
 		<li>
 			<label for="bank_id" class="required"><em>*</em>
@@ -18,7 +18,7 @@ De betaling is helaas mislukt. Probeer het bedrag van
 				<select name="bank_id" class="required-entry input-text" id="bank_id" title="bank_id">
 					<option value=''>--- Kies uw bank ---</option>
 					<?php foreach ($this->getBanks() as $bank_id => $bank_name): ?>
-						<option value="<?php echo $bank_id ?>"><?php echo $bank_name ?></option>
+						<option value="<?php echo $this->escapeHtml($bank_id) ?>"><?php echo $bank_name ?></option>
 					<?php endforeach; ?>
 				</select>
 			</span>
@@ -31,7 +31,7 @@ De betaling is helaas mislukt. Probeer het bedrag van
 
 <div class="buttons-set">
 	<p class="back-link">
-		<a href="<?php echo Mage::getBaseUrl() ?>">
+		<a href="<?php echo $this->escapeHtml(Mage::getBaseUrl()) ?>">
 			<small>&laquo; </small>
 			<?php echo $this->__('Homepage') ?>
 		</a>
