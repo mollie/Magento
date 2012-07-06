@@ -36,14 +36,31 @@
 
 class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 {
-
 	/**
 	 * iDEAL settings for Magento
 	 */
+
+	/**
+	 * Database connection for reading.
+	 *
+	 * @var Varien_Db_Adapter_Pdo_Mysql
+	 */
 	protected $_mysqlr; // Me can read
+
+	/**
+	 * Database connection for writing.
+	 *
+	 * @var Varien_Db_Adapter_Pdo_Mysql
+	 */
 	protected $_mysqlw; // Me can write
+
 	protected $_table; // Me is table
-	protected $_ideal; // Me idealsta
+
+	/**
+	 * @var Mollie_Mpm_Helper_Idl
+	 */
+	protected $_ideal;
+
 	protected $_code					= "mpm_idl";
 	protected $_formBlockType			= 'mpm/payment_idl_form';
 	protected $_infoBlockType			= 'mpm/payment_idl_info';
@@ -112,7 +129,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	/**
 	 * iDEAL kan alleen in NL gebruikt worden dus word ook alleen maar geactiveerd als de billing country NL is, NIET de shipping country
 	 * 
-	 * @return true/false
+	 * @return bool
 	 */
 	public function canUseForCountry($country)
 	{
@@ -130,8 +147,8 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	/**
 	 * iDEAL is only active if 'EURO' is currency
 	 *
-	 * @param type $currencyCode
-	 * @return true/false 
+	 * @param string $currencyCode
+	 * @return bool
 	 */
 	public function canUseForCurrency($currencyCode)
 	{
@@ -150,8 +167,8 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	/**
 	 * On click payment button, this function is called to assign data
 	 * 
-	 * @param type $data
-	 * @return Mollie_Ideal_Model_Idl 
+	 * @param mixed $data
+	 * @return self
 	 */
 	public function assignData($data)
 	{
@@ -192,7 +209,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 		);
 	}
 
-	public function setPayment ($order_id = NULL, $transaction_id = NULL, $method = 'idl', $table = '')
+	public function setPayment ($order_id = NULL, $transaction_id = NULL, $method = 'idl')
 	{
 		if (is_null($order_id) || is_null($transaction_id)) {
 			Mage::throwException('Ongeldige order_id of transaction_id...');

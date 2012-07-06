@@ -37,8 +37,14 @@
 class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 {
 
-	// Initialize vars
+	/**
+	 * @var Mollie_Mpm_Helper_Idl
+	 */
 	protected $_ideal;
+
+	/**
+	 * @var Mollie_Mpm_Model_Idl
+	 */
 	protected $_model;
 
 	/**
@@ -70,7 +76,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	/**
 	 * Gets the current checkout session with order information
 	 * 
-	 * @return array
+	 * @return Mage_Checkout_Model_Session
 	 */
 	protected function _getCheckout() {
 		return Mage::getSingleton('checkout/session');
@@ -81,7 +87,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 * something different than the default (e.g. nl_NL).
 	 *
 	 * @param Mage_Sales_Model_Order $order
-	 * @return int3
+	 * @return int
 	 */
 	protected function getAmountInCents (Mage_Sales_Model_Order $order)
 	{
@@ -113,10 +119,12 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	{
 		if ($this->getRequest()->getParam('order_id')) {
 			// Load failed payment order
+			/** @var $order Mage_Sales_Model_Order */
 			$order = Mage::getModel('sales/order')->loadByIncrementId($this->getRequest()->getParam('order_id'));
 			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY), false)->save();
 		} else {
 			// Load last order
+			/** @var $order Mage_Sales_Model_Order */
 			$order = Mage::getModel('sales/order')->loadByIncrementId($this->_getCheckout()->last_real_order_id);
 		}
 
@@ -149,6 +157,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				$this->_model->setPayment($order->getIncrementId(), $this->_ideal->getTransactionId());
 
 				// Creates transaction
+				/** @var $payment Mage_Sales_Model_Order_Payment */
 				$payment = Mage::getModel('sales/order_payment')
 									->setMethod('iDEAL')
 									->setTransactionId($this->_ideal->getTransactionId())
@@ -187,6 +196,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		$oId = Mage::helper('mpm/data')->getOrderById($transactionId);
 
 		// Load order by id ($oId)
+		/** @var $order Mage_Sales_Model_Order */
 		$order = Mage::getModel('sales/order')->loadByIncrementId($oId['order_id']);
 
 		try
@@ -198,6 +208,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				$customer = $this->_ideal->getConsumerInfo();
 
 				// Maakt een Order transactie aan
+				/** @var $payment Mage_Sales_Model_Order_Payment */
 				$payment = Mage::getModel('sales/order_payment')
 						->setMethod('iDEAL')
 						->setTransactionId($transactionId)
@@ -255,6 +266,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		// Get transaction_id from url (Ex: http://youmagento.com/index.php/idl/return?transaction_id=45r6tuyhijg67u3gds )
 		$transactionId = Mage::app()->getRequest()->getParam('transaction_id');
 		$order_id      = Mage::helper('mpm/data')->getOrderById($transactionId);
+		/** @var $customer Mage_Customer_Model_Session */
 		$customer      = Mage::getSingleton('customer/session');
 
 		try
@@ -283,6 +295,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 							// Redirect to success page
 							$this->_redirect('checkout/onepage/success', array('_secure' => true));
+							return;
 						}
 						else
 						{
@@ -299,16 +312,9 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 							$this->getLayout()->getBlock('content')->append($block);
 
 							$this->renderLayout();
+							return;
 						}
 					}
-					else
-					{
-						$this->_redirectUrl(Mage::getBaseUrl());
-					}
-				}
-				else
-				{
-					Mage::throwException($this->__('U bent niet ingelogt.'));
 				}
 			}
 		}
@@ -316,7 +322,10 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		{
 			Mage::log($e);
 			$this->_showException($e->getMessage(), $order_id);
+			return;
 		}
+
+		$this->_redirectUrl(Mage::getBaseUrl());
 	}
 
 	public function formAction ()
