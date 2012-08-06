@@ -47,6 +47,7 @@
 			<groups>
 				<settings translate="label" module="mpm">
 					<label>Account Gegevens</label>
+					<expanded>1</expanded>
 					<sort_order>1</sort_order>
 					<frontend_type>text</frontend_type>
 					<show_in_default>1</show_in_default>
@@ -80,6 +81,7 @@
 
 				<idl translate="label" module="mpm">
 					<label>iDEAL</label>
+					<expanded>1</expanded>
 					<sort_order>2</sort_order>
 					<frontend_type>text</frontend_type>
 					<show_in_default>1</show_in_default>
@@ -133,11 +135,11 @@
 					</fields>
 				</idl>
 				<hint>
-                    <frontend_model>mpm/adminhtml_system_config_status</frontend_model>
-                    <sort_order>99</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
+					<frontend_model>mpm/adminhtml_system_config_status</frontend_model>
+					<sort_order>99</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
                 </hint>
 			</groups>
 		</mollie>
