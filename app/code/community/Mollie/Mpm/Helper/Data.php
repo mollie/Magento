@@ -150,7 +150,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		if (count($needFiles) > 0) {
 			return $needFiles;
 		} else {
-			return '<span style="color:green">Module werkt naar toebehoren!</span>';
+			return '<span style="color:green">Module werkt naar behoren!</span>';
 		}
 	}
 
