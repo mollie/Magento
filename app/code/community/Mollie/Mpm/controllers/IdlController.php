@@ -131,7 +131,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		try
 		{
 			// Assign required value's
-			$bank_id     = Mage::app()->getRequest()->getParam('bank_id');
+			$bank_id     = $this->getRequest()->getParam('bank_id');
 			$amount      = $this->getAmountInCents($order);
 			$description = str_replace('%', $order->getIncrementId(), Mage::Helper('mpm/data')->getConfig('idl', 'description'));
 			$return_url  = Mage::getUrl('mpm/idl/return');
@@ -190,7 +190,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	public function reportAction ()
 	{
 		// Get transaction_id from url (Ex: http://yourmagento.com/index.php/idl/report?transaction_id=0144ba13aa6dec410a80d5ed4fb60054 )
-		$transactionId = Mage::app()->getRequest()->getParam('transaction_id');
+		$transactionId = $this->getRequest()->getParam('transaction_id');
 
 		// Get order by transaction_id
 		$orderId = Mage::helper('mpm/data')->getOrderIdByTransactionId($transactionId);
@@ -264,7 +264,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	public function returnAction ()
 	{
 		// Get transaction_id from url (Ex: http://youmagento.com/index.php/idl/return?transaction_id=45r6tuyhijg67u3gds )
-		$transactionId = Mage::app()->getRequest()->getParam('transaction_id');
+		$transactionId = $this->getRequest()->getParam('transaction_id');
 		$orderId      = Mage::helper('mpm/data')->getOrderIdByTransactionId($transactionId);
 
 		try
@@ -320,7 +320,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 	public function formAction ()
 	{
-		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		if ($this->getRequest()->isPost())
 		{
 			$create_new_payment = Mage::getUrl(
 				'mpm/idl/payment',
