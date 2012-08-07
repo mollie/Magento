@@ -60,9 +60,9 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	/**
 	 * Get order_id by transaction_id
 	 * 
-	 * @return array
+	 * @return int|null
 	 */
-	public function getOrderById($transaction_id)
+	public function getOrderIdByTransactionId($transaction_id)
 	{
 		$id = Mage::getSingleton('core/resource')
 					->getConnection('core_read')
@@ -74,7 +74,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 						)
 					);
 
-		return $id[0];
+		if (sizeof($id) > 0)
+		{
+			return $id[0]['order_id'];
+		}
+		return NULL;
 	}
 
 	/**

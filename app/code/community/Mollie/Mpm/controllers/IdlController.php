@@ -189,15 +189,15 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 */
 	public function reportAction ()
 	{
-		// Get transaction_id from url (Ex: http://yourmagento.com/index.php/idl/report?bank_id=9999 )
+		// Get transaction_id from url (Ex: http://yourmagento.com/index.php/idl/report?transaction_id=0144ba13aa6dec410a80d5ed4fb60054 )
 		$transactionId = Mage::app()->getRequest()->getParam('transaction_id');
 
 		// Get order by transaction_id
-		$oId = Mage::helper('mpm/data')->getOrderById($transactionId);
+		$orderId = Mage::helper('mpm/data')->getOrderIdByTransactionId($transactionId);
 
 		// Load order by id ($oId)
 		/** @var $order Mage_Sales_Model_Order */
-		$order = Mage::getModel('sales/order')->loadByIncrementId($oId['order_id']);
+		$order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
 
 		try
 		{
@@ -216,7 +216,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 				$order->setPayment($payment);
 
-				if ($this->_ideal->getPaidStatus() == TRUE)
+				if ($this->_ideal->getPaidStatus())
 				{
 					if ($this->_ideal->getAmount() == $this->getAmountInCents($order))
 					{
@@ -265,63 +265,53 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	{
 		// Get transaction_id from url (Ex: http://youmagento.com/index.php/idl/return?transaction_id=45r6tuyhijg67u3gds )
 		$transactionId = Mage::app()->getRequest()->getParam('transaction_id');
-		$order_id      = Mage::helper('mpm/data')->getOrderById($transactionId);
-		/** @var $customer Mage_Customer_Model_Session */
-		$customer      = Mage::getSingleton('customer/session');
+		$orderId      = Mage::helper('mpm/data')->getOrderIdByTransactionId($transactionId);
 
 		try
 		{
 			if (!empty($transactionId))
 			{
-				if ($customer->isLoggedIn())
+				// Get payment status from database ( `mollie_payments` )
+				$oStatus  = Mage::helper('mpm/data')->getStatusById($transactionId);
+
+				if ($oStatus['bank_status'] == Mollie_Mpm_Model_Idl::IDL_SUCCESS)
 				{
-					$order = Mage::getSingleton('sales/order')->loadByIncrementId($order_id);
-
-					if ($order->customer_id == $customer->getCustomerId())
+					if ($this->_getCheckout()->getQuote()->items_count > 0)
 					{
-						// Get payment status from database ( `mollie_payments` )
-						$oStatus  = Mage::helper('mpm/data')->getStatusById($transactionId);
-
-						if ($oStatus['bank_status'] == Mollie_Mpm_Model_Idl::IDL_SUCCESS)
-						{
-							if ($this->_getCheckout()->getQuote()->items_count > 0)
-							{
-								// Maak winkelwagen leeg
-								foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item) {
-									Mage::getSingleton('checkout/cart')->removeItem($item->getId());
-								}
-								Mage::getSingleton('checkout/cart')->save();
-							}
-
-							// Redirect to success page
-							$this->_redirect('checkout/onepage/success', array('_secure' => true));
-							return;
+						// Maak winkelwagen leeg
+						foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item) {
+							Mage::getSingleton('checkout/cart')->removeItem($item->getId());
 						}
-						else
-						{
-							// Create fail page
-							$this->loadLayout();
-
-							$block = $this->getLayout()
-									->createBlock('Mage_Core_Block_Template')
-									->setTemplate('mollie/page/fail.phtml')
-									->setData('banks', Mage::Helper('mpm/idl')->getBanks())
-									->setData('form', Mage::getUrl('mpm/idl/form'))
-									->setData('order', Mage::getModel('sales/order')->loadByIncrementId($order_id));
-
-							$this->getLayout()->getBlock('content')->append($block);
-
-							$this->renderLayout();
-							return;
-						}
+						Mage::getSingleton('checkout/cart')->save();
 					}
+
+					// Redirect to success page
+					$this->_redirect('checkout/onepage/success', array('_secure' => true));
+					return;
+				}
+				else
+				{
+					// Create fail page
+					$this->loadLayout();
+
+					$block = $this->getLayout()
+							->createBlock('Mage_Core_Block_Template')
+							->setTemplate('mollie/page/fail.phtml')
+							->setData('banks', Mage::Helper('mpm/idl')->getBanks())
+							->setData('form', Mage::getUrl('mpm/idl/form'))
+							->setData('order', Mage::getModel('sales/order')->loadByIncrementId($orderId));
+
+					$this->getLayout()->getBlock('content')->append($block);
+
+					$this->renderLayout();
+					return;
 				}
 			}
 		}
 		catch (Exception $e)
 		{
 			Mage::log($e);
-			$this->_showException($e->getMessage(), $order_id);
+			$this->_showException($e->getMessage(), $orderId);
 			return;
 		}
 
