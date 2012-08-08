@@ -330,8 +330,6 @@ class Mollie_Mpm_Helper_Idl
 
 		curl_setopt($ch, CURLOPT_URL, $host . $path);
 		curl_setopt($ch, CURLOPT_PORT, $port);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_HEADER, false);
