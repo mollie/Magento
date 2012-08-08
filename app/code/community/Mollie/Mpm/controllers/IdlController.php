@@ -121,7 +121,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			// Load failed payment order
 			/** @var $order Mage_Sales_Model_Order */
 			$order = Mage::getModel('sales/order')->loadByIncrementId($this->getRequest()->getParam('order_id'));
-			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY), false)->save();
+			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY), false)->save();
 		} else {
 			// Load last order
 			/** @var $order Mage_Sales_Model_Order */
@@ -168,7 +168,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 				$payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH);
 
-				$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_INPROGRESS), false)->save();
+				$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_INPROGRESS), false)->save();
 
 				$this->_redirectUrl($this->_ideal->getBankURL());
 			}
@@ -230,13 +230,17 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 						$this->_model->updatePayment($transactionId, $this->_ideal->getBankStatus(), $customer);
 
 						$payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
-						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), true);
-						$order->sendNewOrderEmail()->setEmailSent(true); // Sends email to customer.
+						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), true);
+
+						/*
+						 * Send an email to the customer.
+						 */
+						$order->sendNewOrderEmail()->setEmailSent(true);
 					}
 					else
 					{
 						$this->_model->updatePayment($transactionId, $this->_ideal->getBankStatus());
-						$order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD), false);
+						$order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD), false);
 					}
 				}
 				else
@@ -244,7 +248,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					$this->_model->updatePayment($transactionId, $this->_ideal->getBankStatus());
 					// Stomme Magento moet eerst op 'cancel' en dan pas setState, andersom dan zet hij de voorraad niet terug.
 					$order->cancel();
-					$order->setState(Mage_Sales_Model_Order::STATE_CANCELED, Mage_Sales_Model_Order::STATE_CANCELED, Mage::helper('mpm')->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_CANCELD), false);
+					$order->setState(Mage_Sales_Model_Order::STATE_CANCELED, Mage_Sales_Model_Order::STATE_CANCELED, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_CANCELD), false);
 				}
 
 				$order->save();
