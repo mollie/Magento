@@ -62,6 +62,7 @@ class Mollie_Mpm_Helper_Idl
 	protected $payment_url = null;
 	protected $transaction_id = null;
 	protected $paid_status = false;
+	protected $status= '';
 	protected $consumer_info = array();
 	protected $error_message = '';
 	protected $error_code = 0;
@@ -78,7 +79,7 @@ class Mollie_Mpm_Helper_Idl
 		// Set Profile-key
 		$this->setProfileKey(Mage::Helper('mpm/data')->getProfilekey());
 		// Set Testmode
-		$this->setTestmode((Mage::Helper('mpm/data')->getConfig('idl', 'testmode')==1) ? true : false);
+		$this->setTestmode(Mage::Helper('mpm/data')->getTestModeEnabled());
 	}
 
 	/**
@@ -347,14 +348,16 @@ class Mollie_Mpm_Helper_Idl
 	{
 		try
 		{
-			$xml_object = new SimpleXMLElement($xml);
+			$xml_object = @simplexml_load_string($xml);
 			if (!$xml_object)
 			{
+				$this->error_code    = -2;
 				$this->error_message = "Kon XML resultaat niet verwerken";
 				return false;
 			}
 		} catch (Exception $e)
 		{
+			$this->error_code    = -2;
 			$this->error_message = $e->getMessage();
 			return false;
 		}
