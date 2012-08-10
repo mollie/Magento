@@ -247,7 +247,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 		}
 	}
 
-	public function updatePayment ($transaction_id = NULL, $bank_status = NULL, array $customer)
+	public function updatePayment ($transaction_id = NULL, $bank_status = NULL, array $customer = NULL)
 	{
 		if (is_null($transaction_id) || is_null($bank_status)) {
 			Mage::throwException('Geen transaction_id en/of bank_status gevonden...');
