@@ -203,7 +203,10 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		{
 			if (!empty($transactionId) && $order->getData('status') == Mage_Sales_Model_Order::STATE_PENDING_PAYMENT)
 			{
-				$this->_ideal->checkPayment($transactionId);
+				if (!$this->_ideal->checkPayment($transactionId))
+				{
+					Mage::throwException($this->_ideal->getErrorMessage());
+				}
 
 				$customer = $this->_ideal->getConsumerInfo();
 
@@ -336,9 +339,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					)
 				)
 			);
-
 			$this->_redirectUrl($create_new_payment);
 		}
 	}
-
 }

@@ -67,7 +67,7 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 			->method("getRequest")
 			->will($this->returnValue($this->request));
 
-		$this->idealhelper = $this->getMock("Mollie_Mpm_Helper_Idl", array("checkPayment", "getPaidStatus", "getAmount", "getBankStatus"), array(), "", FALSE);
+		$this->idealhelper = $this->getMock("Mollie_Mpm_Helper_Idl", array("getErrorMessage", "checkPayment", "getPaidStatus", "getAmount", "getBankStatus"), array(), "", FALSE);
 		$this->datahelper  = $this->getMock("stdClass", array("getOrderIdByTransactionId"));
 
 		/*
@@ -196,6 +196,7 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 	public function testEverythingGoesGreat()
 	{
 		$this->expectsOrderModelCanBeloaded(TRUE);
+		$this->expectOrderState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
 
 		$this->expectsCheckPayment(TRUE);
 		$this->expectsPaidStatus(TRUE);
@@ -206,8 +207,6 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 		 * If successfull, add a capture transaction
 		 */
 		$this->payment_model->expects($this->once())->method("addTransaction")->with(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
-
-		$this->expectOrderState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
 
 		$this->order->expects($this->once())
 			->method("setState")
@@ -248,12 +247,11 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 	public function testNotPaid ()
 	{
 		$this->expectsOrderModelCanBeloaded(TRUE);
+		$this->expectOrderState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
 
 		$this->expectsCheckPayment(TRUE);
 
 		$this->expectsPaidStatus(FALSE);
-
-		$this->expectOrderState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
 
 		$this->expectsPaymentSetupCorrectly();
 
@@ -268,7 +266,7 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 
 		$this->order->expects($this->once())
 			->method("setState")
-			->with(Mage_Sales_Model_Order::STATE_CANCELED, Mage_Sales_Model_Order::STATE_CANCELED, Mollie_Mpm_Model_Idl::PAYMENT_FLAG_CANCELD, false);
+			->with(Mage_Sales_Model_Order::STATE_CANCELED, Mage_Sales_Model_Order::STATE_CANCELED, Mollie_Mpm_Model_Idl::PAYMENT_FLAG_CANCELD, FALSE);
 
 		$this->expectOrderSaved();
 
@@ -279,12 +277,12 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 	public function testAmountMisMatch()
 	{
 		$this->expectsOrderModelCanBeloaded(TRUE);
+		$this->expectOrderState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
 
 		$this->expectsCheckPayment(TRUE);
 
 		$this->expectsPaidStatus(TRUE);
 
-		$this->expectOrderState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
 
 		$this->expectsPaymentSetupCorrectly();
 
@@ -302,11 +300,44 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 
 		$this->order->expects($this->once())
 			->method("setState")
-			->with(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD, false);
+			->with(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD, FALSE);
 
 		$this->expectOrderSaved();
 
 		$this->controller->_construct();
 		$this->controller->reportAction();
 	}
+
+	public function testExceptionThrownWhenCheckPaymentFails()
+	{
+		$this->expectsOrderModelCanBeloaded(TRUE);
+		$this->expectOrderState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
+		$this->expectsCheckPayment(FALSE);
+
+		$this->idealhelper->expects($this->once())
+			->method("getErrorMessage")
+			->will($this->returnValue("The flux capacitors are over capacity"));
+
+		$exception = new Test_Exception();
+
+		$this->mage->expects($this->once())
+			->method("throwException")
+			->with("The flux capacitors are over capacity")
+			->will($this->throwException($exception));
+
+		$this->mage->expects($this->once())
+			->method("log")
+			->with($exception)
+			->will($this->throwException($exception)); // Throw it again, we don't want to test _showException here.
+
+		$this->setExpectedException("Test_Exception");
+
+		$this->controller->_construct();
+		$this->controller->reportAction();
+	}
 }
+
+/**
+ * @ignore
+ */
+class Test_Exception extends Exception {}
