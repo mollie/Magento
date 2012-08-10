@@ -18,7 +18,7 @@ De betaling is helaas mislukt. Probeer het bedrag van
 				<select name="bank_id" class="required-entry input-text" id="bank_id" title="bank_id">
 					<option value=''>--- Kies uw bank ---</option>
 					<?php foreach ($this->getBanks() as $bank_id => $bank_name): ?>
-						<option value="<?php echo $this->escapeHtml($bank_id) ?>"><?php echo $bank_name ?></option>
+						<option value="<?php echo $this->escapeHtml($bank_id) ?>"><?php echo $this->escapeHtml($bank_name) ?></option>
 					<?php endforeach; ?>
 				</select>
 			</span>

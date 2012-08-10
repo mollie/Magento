@@ -289,11 +289,11 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 		$this->expectsMollieAmount(100);
 		$this->expectsOrderAmount("200");
 
-		$this->expectBankStatus("Success");
+		$this->expectBankStatus(Mollie_Mpm_Model_Idl::IDL_SUCCESS);
 
 		$this->ideal_model->expects($this->once())
 			->method("updatePayment")
-			->with(self::TRANSACTION_ID, "Success");
+			->with(self::TRANSACTION_ID, Mollie_Mpm_Model_Idl::IDL_SUCCESS);
 
 		$this->order->expects($this->never())
 			->method("cancel");

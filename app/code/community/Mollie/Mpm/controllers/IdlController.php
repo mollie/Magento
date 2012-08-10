@@ -272,14 +272,14 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	{
 		// Get transaction_id from url (Ex: http://youmagento.com/index.php/idl/return?transaction_id=45r6tuyhijg67u3gds )
 		$transactionId = $this->getRequest()->getParam('transaction_id');
-		$orderId      = Mage::helper('mpm/data')->getOrderIdByTransactionId($transactionId);
+		$orderId      = Mage::Helper('mpm/data')->getOrderIdByTransactionId($transactionId);
 
 		try
 		{
 			if (!empty($transactionId))
 			{
 				// Get payment status from database ( `mollie_payments` )
-				$oStatus  = Mage::helper('mpm/data')->getStatusById($transactionId);
+				$oStatus  = Mage::Helper('mpm/data')->getStatusById($transactionId);
 
 				if ($oStatus['bank_status'] == Mollie_Mpm_Model_Idl::IDL_SUCCESS)
 				{
