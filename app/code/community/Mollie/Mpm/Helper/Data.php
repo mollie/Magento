@@ -126,6 +126,10 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		return NULL;
 	}
 
+	/**
+	 * @return string
+	 * @codeCoverageIgnore
+	 */
 	public function getModuleStatus()
 	{
 		$needFiles = array();
@@ -156,7 +160,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 		if (count($needFiles) > 0) {
-			return $needFiles;
+			return implode(" ", $needFiles);
 		} else {
 			return '<span style="color:green">Module werkt naar behoren!</span>';
 		}

@@ -270,7 +270,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 	 */
 	public function returnAction ()
 	{
-		// Get transaction_id from url (Ex: http://youmagento.com/index.php/idl/return?transaction_id=45r6tuyhijg67u3gds )
+		// Get transaction_id from url (Ex: http://yourmagento.com/index.php/idl/return?transaction_id=0144ba13aa6dec410a80d5ed4fb60054 )
 		$transactionId = $this->getRequest()->getParam('transaction_id');
 		$orderId      = Mage::Helper('mpm/data')->getOrderIdByTransactionId($transactionId);
 
