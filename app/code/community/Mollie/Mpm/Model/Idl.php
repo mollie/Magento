@@ -94,12 +94,13 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	/**
 	 * Build constructor
 	 */
-	public function __construct()
+	public function _construct()
 	{
 		$this->_ideal  = Mage::Helper('mpm/idl');
 		$this->_table  = Mage::getSingleton('core/resource')->getTableName('mollie_payments');
 		$this->_mysqlr = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$this->_mysqlw = Mage::getSingleton('core/resource')->getConnection('core_write');
+
 		parent::_construct();
 	}
 	/**
