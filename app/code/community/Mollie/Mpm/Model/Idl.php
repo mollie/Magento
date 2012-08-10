@@ -203,6 +203,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 				{
 					Mage::register('bank_id', $id);
 					Mage::register('bank_name', $name);
+					return $this;
 				}
 			}
 		}
@@ -240,11 +241,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 			'method'         => $method,
 		);
 
-		if ($this->_mysqlw->insert($this->_table, $data)) {
-			return TRUE;
-		} else {
-			Mage::throwException(mysql_error());
-		}
+		$this->_mysqlw->insert($this->_table, $data);
 	}
 
 	public function updatePayment ($transaction_id = NULL, $bank_status = NULL, array $customer = NULL)
@@ -255,15 +252,15 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 
 		$data = array(
 			'bank_status'  => $bank_status,
-			'bank_account' => $customer['consumerAccount'],
 		);
+
+		if ($customer)
+		{
+			$data['bank_account'] = $customer['consumerAccount'];
+		}
+
 		$where = sprintf("transaction_id = '%s'", $transaction_id);
 
-		if ($this->_mysqlw->update($this->_table, $data, $where)) {
-			return TRUE;
-		} else {
-			Mage::throwException(mysql_error());
-		}
+		$this->_mysqlw->update($this->_table, $data, $where);
 	}
-
 }
