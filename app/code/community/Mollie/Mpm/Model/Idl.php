@@ -118,6 +118,25 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	public function getQuote() {
 		return $this->_getCheckout()->getQuote();
 	}
+
+	/**
+	 * Check whether payment method can be used
+	 *
+	 * @param Mage_Sales_Model_Quote
+	 * @return bool
+	 */
+    public function isAvailable($quote = null)
+	{
+		$enabled = (bool) Mage::Helper('mpm/data')->getConfig('idl', 'active');
+
+		if (!$enabled)
+		{
+			return FALSE;
+		}
+
+		return parent::isAvailable($quote);
+	}
+
 	/**
 	 * Can this method be used for multishipping
 	 *
