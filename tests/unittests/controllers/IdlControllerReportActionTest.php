@@ -85,7 +85,7 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 		 */
 		$this->payment_model = $this->getMock("Mage_Sales_Model_Order_Payment", array("setMethod", "setTransactionId", "setIsTransactionClosed", "addTransaction"));
 		$this->ideal_model   = $this->getMock("Mollie_Mpm_Model_Idl", array("updatePayment"));
-		$this->order_model   = $this->getMock("stdClass", array("loadByIncrementId"));
+		$this->order_model   = $this->getMock("stdClass", array("load"));
 
 		/*
 		 * Mage::getModel() method
@@ -141,7 +141,7 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 			->will($this->returnValue(self::ORDER_ID));
 
 		$this->order_model->expects($this->once())
-			->method("loadByIncrementId")
+			->method("load")
 			->with(self::ORDER_ID)
 			->will($this->returnValue($success ? $this->order : NULL));
 	}

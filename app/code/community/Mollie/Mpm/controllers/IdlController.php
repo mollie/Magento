@@ -59,6 +59,10 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		parent::_construct();
 	}
 
+	/**
+	 * @param string $e Exceptiom message
+	 * @param null $order_id An OrderID
+	 */
 	protected function _showException ($e = '', $order_id = NULL)
 	{
 		$this->loadLayout();
@@ -120,12 +124,12 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		if ($this->getRequest()->getParam('order_id')) {
 			// Load failed payment order
 			/** @var $order Mage_Sales_Model_Order */
-			$order = Mage::getModel('sales/order')->loadByIncrementId($this->getRequest()->getParam('order_id'));
-			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY), false)->save();
+			$order = Mage::getModel('sales/order')->load($this->getRequest()->getParam('order_id'));
+			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY), FALSE)->save();
 		} else {
 			// Load last order
 			/** @var $order Mage_Sales_Model_Order */
-			$order = Mage::getModel('sales/order')->loadByIncrementId($this->_getCheckout()->last_real_order_id);
+			$order = Mage::getModel('sales/order')->load($this->_getCheckout()->last_real_order_id);
 		}
 
 		try
@@ -154,7 +158,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					Mage::throwException('Geen order voor verwerking gevonden');
 				}
 
-				$this->_model->setPayment($order->getIncrementId(), $this->_ideal->getTransactionId());
+				$this->_model->setPayment($order->getId(), $this->_ideal->getTransactionId());
 
 				// Creates transaction
 				/** @var $payment Mage_Sales_Model_Order_Payment */
@@ -197,7 +201,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 		// Load order by id ($oId)
 		/** @var $order Mage_Sales_Model_Order */
-		$order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
+		$order = Mage::getModel('sales/order')->load($orderId);
 
 		try
 		{
@@ -215,7 +219,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 				$payment = Mage::getModel('sales/order_payment')
 						->setMethod('iDEAL')
 						->setTransactionId($transactionId)
-						->setIsTransactionClosed(true);
+						->setIsTransactionClosed(TRUE);
 
 				$order->setPayment($payment);
 
@@ -233,17 +237,17 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 						$this->_model->updatePayment($transactionId, $this->_ideal->getBankStatus(), $customer);
 
 						$payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
-						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), true);
+						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED), TRUE);
 
 						/*
 						 * Send an email to the customer.
 						 */
-						$order->sendNewOrderEmail()->setEmailSent(true);
+						$order->sendNewOrderEmail()->setEmailSent(TRUE);
 					}
 					else
 					{
 						$this->_model->updatePayment($transactionId, $this->_ideal->getBankStatus());
-						$order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD), false);
+						$order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD), FALSE);
 					}
 				}
 				else
@@ -251,7 +255,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					$this->_model->updatePayment($transactionId, $this->_ideal->getBankStatus());
 					// Stomme Magento moet eerst op 'cancel' en dan pas setState, andersom dan zet hij de voorraad niet terug.
 					$order->cancel();
-					$order->setState(Mage_Sales_Model_Order::STATE_CANCELED, Mage_Sales_Model_Order::STATE_CANCELED, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_CANCELD), false);
+					$order->setState(Mage_Sales_Model_Order::STATE_CANCELED, Mage_Sales_Model_Order::STATE_CANCELED, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_CANCELD), FALSE);
 				}
 
 				$order->save();
@@ -293,7 +297,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					}
 
 					// Redirect to success page
-					$this->_redirect('checkout/onepage/success', array('_secure' => true));
+					$this->_redirect('checkout/onepage/success', array('_secure' => TRUE));
 					return;
 				}
 				else
@@ -306,7 +310,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 							->setTemplate('mollie/page/fail.phtml')
 							->setData('banks', Mage::Helper('mpm/idl')->getBanks())
 							->setData('form', Mage::getUrl('mpm/idl/form'))
-							->setData('order', Mage::getModel('sales/order')->loadByIncrementId($orderId));
+							->setData('order', Mage::getModel('sales/order')->load($orderId));
 
 					$this->getLayout()->getBlock('content')->append($block);
 

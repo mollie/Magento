@@ -75,7 +75,7 @@ class Mollie_Mpm_IdlControllerReturnActionTest extends MagentoPlugin_TestCase
 
 		$this->order = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save"));
 
-		$this->order_model   = $this->getMock("stdClass", array("loadByIncrementId"));
+		$this->order_model   = $this->getMock("stdClass", array("load"));
 
 		/*
 		 * Mage::getModel() method

@@ -126,7 +126,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	 * @param Mage_Sales_Model_Quote
 	 * @return bool
 	 */
-    public function isAvailable($quote = null)
+    public function isAvailable($quote = NULL)
 	{
 		$enabled = (bool) Mage::Helper('mpm/data')->getConfig('idl', 'active');
 
@@ -222,7 +222,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 		return Mage::getUrl(
 			'mpm/idl/payment',
 			array(
-				'_secure' => true,
+				'_secure' => TRUE,
 				'_query' => array(
 					'bank_id' => Mage::registry('bank_id')
 				)
@@ -230,6 +230,13 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 		);
 	}
 
+	/**
+	 * Stores the payment information in the mollie_payments table.
+	 *
+	 * @param null $order_id The order's Id
+	 * @param null $transaction_id TransactionID, provided by Mollie (32 char md5 hash)
+	 * @param string $method
+	 */
 	public function setPayment ($order_id = NULL, $transaction_id = NULL, $method = 'idl')
 	{
 		if (is_null($order_id) || is_null($transaction_id)) {
