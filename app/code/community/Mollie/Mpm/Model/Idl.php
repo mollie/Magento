@@ -260,7 +260,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 			$data['bank_account'] = $customer['consumerAccount'];
 		}
 
-		$where = sprintf("transaction_id = '%s'", $transaction_id);
+		$where = sprintf("transaction_id = %s", $this->_mysqlw->quote($transaction_id));
 
 		$this->_mysqlw->update($this->_table, $data, $where);
 	}

@@ -44,13 +44,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getStatusById($transaction_id)
 	{
-		$status = Mage::getSingleton('core/resource')
-					->getConnection('core_read')
-					->fetchAll(
+		/** @var $connection Varien_Db_Adapter_Interface */
+		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$status = $connection->fetchAll(
 						sprintf(
-							"SELECT `bank_status` FROM `%s` WHERE `transaction_id` = '%s'",
+							"SELECT `bank_status` FROM `%s` WHERE `transaction_id` = %s",
 							Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
-							$transaction_id
+							$connection->quote($transaction_id)
 						)
 					);
 
@@ -64,13 +64,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getOrderIdByTransactionId($transaction_id)
 	{
-		$id = Mage::getSingleton('core/resource')
-					->getConnection('core_read')
-					->fetchAll(
+		/** @var $connection Varien_Db_Adapter_Interface */
+		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$id = $connection->fetchAll(
 						sprintf(
-							"SELECT `order_id` FROM `%s` WHERE `transaction_id` = '%s'",
+							"SELECT `order_id` FROM `%s` WHERE `transaction_id` = %s",
 							Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
-							$transaction_id
+							$connection->quote($transaction_id)
 						)
 					);
 

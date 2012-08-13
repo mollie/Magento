@@ -46,8 +46,8 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 				array("core/resource", $this->resource)
 		)));
 
-		$this->readconn = $this->getMock("stdClass", array("fetchAll"));
-		$this->writeconn = $this->getMock("stdClass", array("fetchAll"));
+		$this->readconn = $this->getMock("stdClass", array("fetchAll", "quote"));
+		$this->writeconn = $this->getMock("stdClass", array("fetchAll", "quote"));
 
 		$this->resource->expects($this->any())
 			->method("getConnection")
@@ -55,6 +55,16 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 				array("core_read", $this->readconn),
 				array("core_write", $this->writeconn),
 		)));
+
+		/*
+		 * Stubs that are fake quote-ers, does not really escape but just quote.
+		 */
+		$this->readconn->expects($this->any())
+			->method("quote")
+			->will($this->returnCallback(function ($arg) { return "'$arg'"; }));
+        $this->writeconn->expects($this->any())
+			->method("quote")
+			->will($this->returnCallback(function ($arg) { return "'$arg'"; }));
 
 		$this->resource->expects($this->any())
 			->method("getTableName")
