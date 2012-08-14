@@ -71,6 +71,42 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 			->will($this->returnArgument(0));
 	}
 
+	public function testGetConfigWithInvalidKeyReturnsNull()
+	{
+		$this->mage->expects($this->never())
+			->method("getStoreConfig");
+
+		$this->assertNull($this->HelperData->getConfig("idl", "foo"));
+	}
+
+	public function testGetVersion()
+	{
+
+		$xml = simplexml_load_string('
+	<modules>
+		<Mollie_Mpm>
+			<active>true</active>
+			<codePool>community</codePool>
+			<depends>
+				<Mage_Payment />
+			</depends>
+			<version>3.7.0</version>
+		</Mollie_Mpm>
+	</modules>
+');
+
+		$config = $this->getMock("stdClass", array("getNode"));
+		$config->expects($this->once())
+			->method("getNode")
+			->will($this->returnValue($xml));
+
+		$this->mage->expects($this->once())
+			->method("getConfig")
+			->will($this->returnValue($config));
+
+		$this->assertEquals("3.7.0", $this->HelperData->getModuleVersion());
+	}
+
 	public function testGetStatusById()
 	{
 		$this->readconn->expects($this->once())
