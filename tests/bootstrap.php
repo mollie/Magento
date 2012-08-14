@@ -96,6 +96,8 @@ class Mage
  */
 class Mage_Payment_Model_Method_Abstract
 {
+	public function __construct () {}
+
 	public function isAvailable()
 	{
 		return TRUE;

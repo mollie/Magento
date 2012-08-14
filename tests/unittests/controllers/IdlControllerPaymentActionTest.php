@@ -43,6 +43,8 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 
 	const ORDER_ID = 1337;
 
+	const ORDER_INCREMENT_ID = 100000001;
+
 	const BANK_ID = "0999";
 
 	const RETURN_URL = "http://mijnwebshop.local/index.php/magento/idl/return";
@@ -53,7 +55,7 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 	{
 		parent::setUp();
 
-		$this->controller = $this->getMock("Mollie_Mpm_IdlController", array("getRequest", "_redirectUrl", "_showException"), array());
+		$this->controller = $this->getMock("Mollie_Mpm_IdlController", array("getRequest", "_redirectUrl", "_showException", "_getCheckout"), array());
 
 		/**
 		 * transaction_id is passed in from Mollie, must be checked in this code.
@@ -84,11 +86,7 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 
 		$this->ideal_model   = $this->getMock("Mollie_Mpm_Model_Idl", array("setPayment"));
 
-		$this->order_model   = $this->getMock("Mage_Sales_Model_Order", array("load", "save", "setState", "getId", "getIncrementId", "getGrandTotal", "setPayment"));
-		$this->order_model->expects($this->any())
-			->method("load")
-			->with(self::ORDER_ID)
-			->will($this->returnSelf());
+		$this->order_model   = $this->getMock("Mage_Sales_Model_Order", array("load", "loadByIncrementId", "save", "setState", "getId", "getIncrementId", "getGrandTotal", "setPayment"));
 
 		$this->order_model->expects($this->any())
 			->method("getId")
@@ -105,13 +103,28 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 			array("sales/order_payment", $this->payment_model),
 		)));
 
+	}
+
+	protected function expectOrderIdInRequestPresent($present)
+	{
 		$this->request->expects($this->any())
 			->method("getParam")
 			->will($this->returnValueMap(array(
-			array("order_id", self::ORDER_ID),
+			array("order_id", $present ? self::ORDER_ID : NULL),
 			array("bank_id", self::BANK_ID),
 		)));
 
+		if ($present)
+		{
+			$this->order_model->expects($this->any())
+				->method("load")
+				->with(self::ORDER_ID)
+				->will($this->returnSelf());
+		}
+	}
+
+	protected function expectConfigRetrieved()
+	{
 		$this->datahelper->expects($this->atLeastOnce())
 			->method("getConfig")
 			->will($this->returnValueMap(array(
@@ -122,6 +135,7 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 
 	public function testPaymentSetupCorrectly()
 	{
+		$this->expectOrderIdInRequestPresent(TRUE);
 
 		$this->order_model->expects($this->exactly(2))
 			->method("setState")
@@ -134,6 +148,8 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 		$this->order_model->expects($this->atLeastOnce())
 			->method("getGrandTotal")
 			->will($this->returnValue("13.37"));
+
+		$this->expectConfigRetrieved();
 
 		$this->order_model->expects($this->atLeastOnce())
 			->method("getIncrementId")
@@ -192,6 +208,8 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 
 	public function testOrderAmountLessThanMinimumGivesException()
 	{
+		$this->expectOrderIdInRequestPresent(TRUE);
+
 		$this->order_model->expects($this->once())
 			->method("setState")
 			->with(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT,Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY, FALSE)
@@ -204,6 +222,8 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 			->method("getGrandTotal")
 			->will($this->returnValue("1.17"));
 
+		$this->expectConfigRetrieved();
+
 		$this->mage->expects($this->once())
 			->method("throwException")
 			->with("Order bedrag (117 centen) is lager dan ingesteld (118 centen)")
@@ -215,7 +235,29 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 
 		$this->controller->_construct();
 		$this->controller->paymentAction();
-
 	}
 
+	public function testOrderLoadedByIncrementIdIfNoOrderIdInPost()
+	{
+		$this->expectOrderIdInRequestPresent(FALSE);
+
+		$checkout = $this->getMock("stdClass", array("getLastRealOrderId"));
+		$checkout->expects($this->once())
+			->method("getLastRealOrderId")
+			->will($this->returnValue(self::ORDER_INCREMENT_ID));
+
+		$this->controller->expects($this->atLeastOnce())
+			->method("_getCheckout")
+			->will($this->returnValue($checkout));
+
+		$this->order_model->expects($this->once())
+			->method("loadByIncrementId")
+			->with(self::ORDER_INCREMENT_ID)
+			->will($this->throwException(new Test_Exception("STOP", 400))); // Stop testing from here on.
+
+		$this->setExpectedException("Test_Exception", "STOP", 400);
+
+		$this->controller->_construct();
+		$this->controller->paymentAction();
+	}
 }

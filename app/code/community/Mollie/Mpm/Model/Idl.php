@@ -37,24 +37,25 @@
 class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 {
 	/**
-	 * iDEAL settings for Magento
-	 */
-
-	/**
 	 * Database connection for reading.
 	 *
 	 * @var Varien_Db_Adapter_Pdo_Mysql
 	 */
-	protected $_mysqlr; // Me can read
+	protected $_mysqlr;
 
 	/**
 	 * Database connection for writing.
 	 *
 	 * @var Varien_Db_Adapter_Pdo_Mysql
 	 */
-	protected $_mysqlw; // Me can write
+	protected $_mysqlw;
 
-	protected $_table; // Me is table
+	/**
+	 * Table name.
+	 *
+	 * @var string
+	 */
+	protected $_table;
 
 	/**
 	 * @var Mollie_Mpm_Helper_Idl
@@ -92,16 +93,16 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	const PAYMENT_FLAG_UNKOWN			= "Er is een onbekende fout opgetreden";
 
 	/**
-	 * Build constructor
+	 * Build constructor (must be a normal constructor, not a Magento _construct() method.
 	 */
 	public function _construct()
 	{
+		parent::__construct();
+
 		$this->_ideal  = Mage::Helper('mpm/idl');
 		$this->_table  = Mage::getSingleton('core/resource')->getTableName('mollie_payments');
 		$this->_mysqlr = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$this->_mysqlw = Mage::getSingleton('core/resource')->getConnection('core_write');
-
-		parent::_construct();
 	}
 	/**
 	 * Get checkout session namespace

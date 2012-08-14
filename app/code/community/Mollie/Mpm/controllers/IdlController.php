@@ -127,9 +127,10 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 			$order = Mage::getModel('sales/order')->load($this->getRequest()->getParam('order_id'));
 			$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, $this->__(Mollie_Mpm_Model_Idl::PAYMENT_FLAG_RETRY), FALSE)->save();
 		} else {
-			// Load last order
+			// Load last order by IncrementId
 			/** @var $order Mage_Sales_Model_Order */
-			$order = Mage::getModel('sales/order')->load($this->_getCheckout()->last_real_order_id);
+			$orderIncrementId = $this->_getCheckout()->getLastRealOrderId();
+			$order = Mage::getModel('sales/order')->loadByIncrementId($orderIncrementId);
 		}
 
 		try
