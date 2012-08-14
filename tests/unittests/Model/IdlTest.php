@@ -19,6 +19,16 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 	 */
 	protected $resource;
 
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $readconn;
+
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $writeconn;
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -46,6 +56,26 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 		$this->resource->expects($this->any())
 			->method("getTableName")
 			->will($this->returnArgument(0));
+
+		$this->readconn = $this->getMock("stdClass", array("fetchAll", "quote", "update", "insert"));
+		$this->writeconn = $this->getMock("stdClass", array("fetchAll", "quote", "update", "insert"));
+
+		$this->resource->expects($this->any())
+			->method("getConnection")
+			->will($this->returnValueMap(array(
+			array("core_read", $this->readconn),
+			array("core_write", $this->writeconn),
+		)));
+
+		/*
+		 * Stubs that are fake quote-ers, does not really escape but just quote.
+		 */
+		$this->readconn->expects($this->any())
+			->method("quote")
+			->will($this->returnCallback(function ($arg) { return "'$arg'"; }));
+		$this->writeconn->expects($this->any())
+			->method("quote")
+			->will($this->returnCallback(function ($arg) { return "'$arg'"; }));
 	}
 
 	public function testIsNotAvailableIfDisabledInAdmin()
@@ -88,5 +118,70 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 	{
 		$model = new Mollie_Mpm_Model_Idl();
 		$this->assertTrue($model->canUseForMultishipping());
+	}
+
+	public function testSetPaymentDoesNotAcceptNull()
+	{
+		$this->mage->expects($this->once())
+			->method("throwException")
+			->with('Ongeldige order_id of transaction_id...')
+			->will($this->throwException(new Test_Exception("NO_NULL", 400)));
+
+		$this->setExpectedException("Test_Exception", "NO_NULL", 400);
+
+		$model = new Mollie_Mpm_Model_Idl;
+		$model->setPayment(NULL, NULL);
+	}
+
+	const TRANSACTION_ID = "1bba1d8fdbd8103b46151634bdbe0a60";
+
+	const ORDER_ID = 1337;
+
+	public function testSetPaymentWorksPerfectly()
+	{
+		$this->writeconn->expects($this->once())
+			->method("insert")
+			->with("mollie_payments", array("order_id" => self::ORDER_ID, "transaction_id" => self::TRANSACTION_ID, "method" => "idl"));
+
+		$this->writeconn->expects($this->never())
+			->method("update");
+
+		$this->readconn->expects($this->never())
+			->method("insert");
+
+		$model = new Mollie_Mpm_Model_Idl();
+		$model->setPayment(self::ORDER_ID, self::TRANSACTION_ID);
+	}
+
+	public function testUpdatePaymentWithCancelledPayment()
+	{
+		$this->writeconn->expects($this->once())
+			->method("update")
+			->with("mollie_payments", array("bank_status" => "Cancelled"), "transaction_id = '".self::TRANSACTION_ID."'");
+
+		$this->writeconn->expects($this->never())
+			->method("insert");
+
+		$this->readconn->expects($this->never())
+			->method("update");
+
+		$model = new Mollie_Mpm_Model_Idl();
+		$model->updatePayment(self::TRANSACTION_ID, "Cancelled");
+	}
+
+	public function testUpdatePaymentWithSuccessfullPayment()
+	{
+		$this->writeconn->expects($this->once())
+			->method("update")
+			->with("mollie_payments", array("bank_status" => "Success", "bank_account" => "123456789"), "transaction_id = '".self::TRANSACTION_ID."'");
+
+		$this->writeconn->expects($this->never())
+			->method("insert");
+
+		$this->readconn->expects($this->never())
+			->method("update");
+
+		$model = new Mollie_Mpm_Model_Idl();
+		$model->updatePayment(self::TRANSACTION_ID, "Success", array("consumerAccount" => "123456789"));
 	}
 }
