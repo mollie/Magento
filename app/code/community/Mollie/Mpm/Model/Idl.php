@@ -95,7 +95,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	/**
 	 * Build constructor (must be a normal constructor, not a Magento _construct() method.
 	 */
-	public function _construct()
+	public function __construct()
 	{
 		parent::__construct();
 

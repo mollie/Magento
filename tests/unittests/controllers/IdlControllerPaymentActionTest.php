@@ -55,17 +55,6 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 	{
 		parent::setUp();
 
-		$this->controller = $this->getMock("Mollie_Mpm_IdlController", array("getRequest", "_redirectUrl", "_showException", "_getCheckout"), array());
-
-		/**
-		 * transaction_id is passed in from Mollie, must be checked in this code.
-		 */
-		$this->request = $this->getMock("stdClass", array("getParam"));
-
-		$this->controller->expects($this->any())
-			->method("getRequest")
-			->will($this->returnValue($this->request));
-
 		$this->datahelper  = $this->getMock("stdClass", array("getConfig"));
 		$this->idealhelper = $this->getMock("Mollie_Mpm_Helper_Idl", array("createPayment", "getTransactionId", "getBankURL"), array(), "", FALSE);
 
@@ -79,12 +68,23 @@ class Mollie_Mpm_IdlControllerPaymentActionTest extends MagentoPlugin_TestCase
 			array("mpm/idl", $this->idealhelper),
 		)));
 
+		$this->controller = $this->getMock("Mollie_Mpm_IdlController", array("getRequest", "_redirectUrl", "_showException", "_getCheckout"), array());
+
+		/**
+		 * transaction_id is passed in from Mollie, must be checked in this code.
+		 */
+		$this->request = $this->getMock("stdClass", array("getParam"));
+
+		$this->controller->expects($this->any())
+			->method("getRequest")
+			->will($this->returnValue($this->request));
+
 		/*
 		 * Models.
 		 */
 		$this->payment_model = $this->getMock("Mage_Sales_Model_Order_Payment", array("setMethod", "setTransactionId", "setIsTransactionClosed", "addTransaction"));
 
-		$this->ideal_model   = $this->getMock("Mollie_Mpm_Model_Idl", array("setPayment"));
+		$this->ideal_model   = $this->getMock("Mollie_Mpm_Model_Idl", array("setPayment"), array(), "", FALSE);
 
 		$this->order_model   = $this->getMock("Mage_Sales_Model_Order", array("load", "loadByIncrementId", "save", "setState", "getId", "getIncrementId", "getGrandTotal", "setPayment"));
 

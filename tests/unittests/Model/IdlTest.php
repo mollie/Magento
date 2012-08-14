@@ -4,19 +4,56 @@
  */
 class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 {
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject|Mollie_Mpm_Helper_Idl
+	 */
+	protected $idealhelper;
+
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject|Mollie_Mpm_Helper_Data
+	 */
+	protected $datahelper;
+
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $resource;
+
+	public function setUp()
+	{
+		parent::setUp();
+
+		$this->datahelper  = $this->getMock("Mollie_Mpm_Helper_Data", array("getConfig"));
+		$this->idealhelper = $this->getMock("Mollie_Mpm_Helper_Idl", array("createPayment", "getTransactionId", "getBankURL"), array(), "", FALSE);
+
+		/*
+		 * Mage::Helper() method
+		 */
+		$this->mage->expects($this->any())
+			->method("Helper")
+			->will($this->returnValueMap(array(
+			array("mpm/data", $this->datahelper),
+			array("mpm/idl", $this->idealhelper),
+		)));
+
+		$this->resource = $this->getMock("stdClass", array("getConnection", "getTableName"));
+		$this->mage->expects($this->any())
+			->method("getSingleton")
+			->will($this->returnValueMap(array(
+			array("core/resource", $this->resource)
+		)));
+
+		$this->resource->expects($this->any())
+			->method("getTableName")
+			->will($this->returnArgument(0));
+	}
+
 	public function testIsNotAvailableIfDisabledInAdmin()
 	{
-		$data = $this->getMock("stdClass", array("getConfig"));
-
-		$data->expects($this->once())
+		$this->datahelper->expects($this->once())
 			->method("getConfig")
 			->with("idl","active")
 			->will($this->returnValue(FALSE));
-
-		$this->mage->expects($this->any())
-			->method("Helper")
-			->with("mpm/data")
-			->will($this->returnValue($data));
 
 		$model = new Mollie_Mpm_Model_Idl();
 		$this->assertFalse($model->isAvailable());
@@ -24,17 +61,10 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 
 	public function testIsAvailableIfEnabledInAdmin()
 	{
-		$data = $this->getMock("stdClass", array("getConfig"));
-
-		$data->expects($this->once())
+		$this->datahelper->expects($this->once())
 			->method("getConfig")
 			->with("idl","active")
 			->will($this->returnValue(TRUE));
-
-		$this->mage->expects($this->any())
-			->method("Helper")
-			->with("mpm/data")
-			->will($this->returnValue($data));
 
 		$model = new Mollie_Mpm_Model_Idl();
 		$this->assertTrue($model->isAvailable());

@@ -84,7 +84,7 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 		 * Models.
 		 */
 		$this->payment_model = $this->getMock("Mage_Sales_Model_Order_Payment", array("setMethod", "setTransactionId", "setIsTransactionClosed", "addTransaction"));
-		$this->ideal_model   = $this->getMock("Mollie_Mpm_Model_Idl", array("updatePayment"));
+		$this->ideal_model   = $this->getMock("Mollie_Mpm_Model_Idl", array("updatePayment"), array(), "", FALSE);
 		$this->order_model   = $this->getMock("stdClass", array("load"));
 
 		/*
