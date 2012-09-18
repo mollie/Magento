@@ -98,7 +98,7 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 			array("sales/order_payment", $this->payment_model),
 		)));
 
-		$this->order = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save"));
+		$this->order = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "setTotalPaid", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save"));
 	}
 
 	protected function expectsCheckPayment($returnValue)
@@ -212,6 +212,10 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 			->method("setState")
 			->with(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, Mollie_Mpm_Model_Idl::PAYMENT_FLAG_PROCESSED, TRUE);
 
+		$this->order->expects($this->once())
+			->method("setTotalPaid")
+			->with(500.15);
+
 		$this->expectsMollieAmount(50015);
 		$this->expectsOrderAmount("500.15");
 
@@ -301,6 +305,10 @@ class Mollie_Mpm_IdlControllerReportActionTest extends MagentoPlugin_TestCase
 		$this->order->expects($this->once())
 			->method("setState")
 			->with(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD, Mollie_Mpm_Model_Idl::PAYMENT_FLAG_FRAUD, FALSE);
+
+		$this->order->expects($this->once())
+			->method("setTotalPaid")
+			->with(1);
 
 		$this->expectOrderSaved();
 

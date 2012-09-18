@@ -226,6 +226,12 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 				if ($this->_ideal->getPaidStatus())
 				{
+					/*
+					 * Update the total amount paid, keep that in the order. We do not care if this is the correct
+					 * amount or not at this moment.
+					 */
+					$order->setTotalPaid($this->_ideal->getAmount() / 100);
+
 					if ($this->_ideal->getAmount() == $this->getAmountInCents($order))
 					{
 						// Als de vorige betaling was mislukt dan zijn de producten 'Canceled' die un-canceled worden
