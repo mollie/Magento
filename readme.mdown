@@ -24,13 +24,17 @@ E: info@mollie.nl
 T: +31 20 - 612 88 55
 
 # Veel gestelde vragen #
-+ Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?  
++ Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?
 
 Doordat Magento veel pagina's in zijn geheugen opslaat (cache) kan het zijn dat de module niet in één keer volledig geladen wordt. Daarom dient u handmatig de cache te legen op de Cache Management pagina (System -> Cache Management).
 
++ Moet ik ook een return- en / of report-URL instellen?
+
+Het is niet nodig een return- of report-URL in te stellen, de module stelt dit automatisch in.
+
 + Als ik in het Administratiepaneel mijn Mollie gegevens voor de eerste keer wil wijzigen krijg ik een foutmelding 404
 
-Als u de melding "404 Access Denied" of "404 Toegang Geweigerd" krijgt dan dient u opnieuw in te loggen. Magento heeft dan de instellingen pagina nog niet goed in zijn geheugen staan.
+Als u de melding "403 Access Denied" of "404 Toegang Geweigerd" krijgt dan dient u opnieuw in te loggen. Magento heeft dan de instellingen pagina nog niet goed in zijn geheugen staan.
 
 [Meer informatie over iDEAL via Mollie](https://www.mollie.nl/betaaldiensten/ideal/)
 
