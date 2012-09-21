@@ -1,0 +1,4 @@
+![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
+
+# Wijzigingen in versie 3.8.0 #
++ Probleem opgelost waarbij het betaalde bedrag niet aan in de order werd opgeslagen.
