@@ -50,7 +50,7 @@ abstract class MagentoPlugin_TestCase extends PHPUnit_Framework_TestCase
 
 	protected function setUp()
 	{
-		$this->mage = $this->getMock("stdClass", array("Helper", "getModel", "log", "throwException", "getSingleton", "getStoreConfig", "getUrl", "getConfig"));
+		$this->mage = $this->getMock("stdClass", array("Helper", "getModel", "log", "throwException", "getSingleton", "getStoreConfig", "getUrl", "getConfig", "getBaseUrl"));
 		Mage::setImplementation($this->mage);
 	}
 }
@@ -148,3 +148,5 @@ class Mage_Sales_Model_Order_Payment_Transaction {
 	const TYPE_VOID    = 'void';
 	const TYPE_REFUND  = 'refund';
 }
+
+define("PROJECT_ROOT", dirname(dirname(__FILE__)));

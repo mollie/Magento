@@ -16,11 +16,12 @@
         <blacklist>
             <directory>/usr/share/php</directory>
         </blacklist>
-        <whitelist>
+        <whitelist addUncoveredFilesFromWhitelist="true">
             <directory>../app/code/community/Mollie/Mpm/Block</directory>
             <directory>../app/code/community/Mollie/Mpm/controllers</directory>
             <directory>../app/code/community/Mollie/Mpm/Helper</directory>
             <directory>../app/code/community/Mollie/Mpm/Model</directory>
+            <file>../app/design/frontend/base/default/template/mollie/page/fail.phtml</file>
         </whitelist>
     </filter>
 </phpunit>

@@ -8,7 +8,7 @@ De betaling is helaas mislukt. Probeer het bedrag van
 <br /><br />
 
 <form name="mollie_mpm_idl" id="mollie_mpm_idl" action="<?php echo $this->escapeHtml($this->getForm()) ?>" method="post">
-	<input type="hidden" name="order_id" value="<?php echo $this->escapeHtml($this->getOrder()->getRealOrderId()) ?>" />
+	<input type="hidden" name="order_id" value="<?php echo $this->escapeHtml($this->getOrder()->getId()) ?>" />
 	<ul class="form-list">
 		<li>
 			<label for="bank_id" class="required"><em>*</em>
