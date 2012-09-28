@@ -1,7 +1,9 @@
-![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
+![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
-# Wijzigingen in versie 3.9.0 #
+# Changelog #
+
+## Wijzigingen in versie 3.9 ##
 + Probleem opgelost waardoor sommige klanten na een betalingsfout de order niet opnieuw konden afrekenen.
 
-# Wijzigingen in versie 3.8.0 #
+## Wijzigingen in versie 3.8 ##
 + Probleem opgelost waarbij het betaalde bedrag niet bij de order werd opgeslagen.
