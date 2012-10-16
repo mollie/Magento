@@ -336,8 +336,29 @@ class Mollie_Mpm_Helper_Idl
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_ENCODING, ""); // Tell server which Encodings (gzip, deflate) we support.
 
 		$body = curl_exec($ch);
+
+		if (strpos(curl_error($ch), "error setting certificate verify locations") !== FALSE)
+		{
+			/*
+			 * On some servers, the ca-bundle.crt is not installed correctly. This check detects that error, and then
+			 * retries the request.
+			 */
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			$body = curl_exec($ch);
+		}
+
+		if (strpos(curl_error($ch), "certificate subject name 'mollie.nl' does not match target host") !== FALSE)
+		{
+			/*
+			 * On some servers, the wildcard SSL certificate is not processed correctly. This happens with OpenSSL 0.9.7
+			 * from 2003.
+			 */
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+			$body = curl_exec($ch);
+		}
 
 		curl_close($ch);
 
