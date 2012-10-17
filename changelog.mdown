@@ -2,6 +2,9 @@
 
 # Changelog #
 
+## Wijzigingen in versie 3.10 ##
++ Probleem opgelost waardoor op sommige webservers de bankenlijst leeg bleef.
+
 ## Wijzigingen in versie 3.9 ##
 + Probleem opgelost waardoor sommige klanten na een betalingsfout de order niet opnieuw konden afrekenen.
 
