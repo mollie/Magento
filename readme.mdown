@@ -24,6 +24,9 @@ E: info@mollie.nl
 T: +31 20 - 612 88 55
 
 # Veel gestelde vragen #
++ Ik heb een probleem met deze module.
+Neemt u alstublieft contact op met info@mollie.nl voor ondersteuning.
+
 + Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?
 
 Doordat Magento veel pagina's in zijn geheugen opslaat (cache) kan het zijn dat de module niet in één keer volledig geladen wordt. Daarom dient u handmatig de cache te legen op de Cache Management pagina (System -> Cache Management).
