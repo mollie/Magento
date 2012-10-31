@@ -25,6 +25,7 @@ T: +31 20 - 612 88 55
 
 # Veel gestelde vragen #
 + Ik heb een probleem met deze module.
+
 Neemt u alstublieft contact op met info@mollie.nl voor ondersteuning.
 
 + Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?
