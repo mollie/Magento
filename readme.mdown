@@ -40,6 +40,12 @@ Het is niet nodig een return- of report-URL in te stellen, de module stelt dit a
 
 Als u de melding "403 Access Denied" of "404 Toegang Geweigerd" krijgt dan dient u opnieuw in te loggen. Magento heeft dan de instellingen pagina nog niet goed in zijn geheugen staan.
 
++ Waarom bevat de module een lijst van rootcertificaten?
+
+Op sommige servers is de lijst met rootcertificaten niet aanwezig of gedateerd. Hierdoor werkt SSL communicatie met
+Mollie soms niet. De module bevat daarom de rootcertificaten die nodig zijn om veilig met Mollie te communiceren. Deze
+worden alleen gebruikt wanneer het communiceren met de al geïnstalleerde certificaten niet mogelijk is.
+
 [Meer informatie over iDEAL via Mollie](https://www.mollie.nl/betaaldiensten/ideal/)
 
 ![Powerd By Mollie](http://www.mollie.nl/images/badge-betaling-medium.png)
