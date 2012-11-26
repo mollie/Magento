@@ -28,19 +28,25 @@ T: +31 20 - 612 88 55
 
 Neemt u alstublieft contact op met info@mollie.nl voor ondersteuning.
 
-+ Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?
+**Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?**
 
 Doordat Magento veel pagina's in zijn geheugen opslaat (cache) kan het zijn dat de module niet in één keer volledig geladen wordt. Daarom dient u handmatig de cache te legen op de Cache Management pagina (System -> Cache Management).
 
-+ Moet ik ook een return- en / of report-URL instellen?
+**Ik heb meerdere _Store Views_, maar ik wil per _Store View_ andere instellingen**
+
+Dat is mogelijk. Ga naar de instellingenpagina van de plugin, en kies linksboven in bij "Current Configuration Scope" de store view die u anders wilt instellen. 
+
+Maak de instelling die u wilt en schakel het _Use Website_ vakje uit. U kunt per _Store View_ bijvoorbeeld een ander websiteprofiel kiezen.
+
+**Moet ik ook een return- en / of report-URL instellen?**
 
 Het is niet nodig een return- of report-URL in te stellen, de module stelt dit automatisch in.
 
-+ Als ik in het Administratiepaneel mijn Mollie gegevens voor de eerste keer wil wijzigen krijg ik een foutmelding 404
+**Als ik in het Administratiepaneel mijn Mollie gegevens voor de eerste keer wil wijzigen krijg ik een foutmelding 404**
 
 Als u de melding "403 Access Denied" of "404 Toegang Geweigerd" krijgt dan dient u opnieuw in te loggen. Magento heeft dan de instellingen pagina nog niet goed in zijn geheugen staan.
 
-+ Waarom bevat de module een lijst van rootcertificaten?
+**Waarom bevat de module een lijst van rootcertificaten?**
 
 Op sommige servers is de lijst met rootcertificaten niet aanwezig of gedateerd. Hierdoor werkt SSL communicatie met
 Mollie soms niet. De module bevat daarom de rootcertificaten die nodig zijn om veilig met Mollie te communiceren. Deze
