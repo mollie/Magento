@@ -100,13 +100,6 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 		$this->assertTrue($model->isAvailable());
 	}
 
-	public function testCannotUseForOtherCountryThanNL()
-	{
-		$model = new Mollie_Mpm_Model_Idl();
-		$this->assertTrue($model->canUseForCountry("NL"));
-		$this->assertFalse($model->canUseForCountry("BE"));
-	}
-
 	public function testCannotUseForOtherCurrencyThanEUR()
 	{
 		$model = new Mollie_Mpm_Model_Idl();

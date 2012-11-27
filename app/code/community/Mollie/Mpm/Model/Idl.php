@@ -147,24 +147,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	public function canUseForMultishipping() {
 		return TRUE;
 	}
-	/**
-	 * iDEAL kan alleen in NL gebruikt worden dus word ook alleen maar geactiveerd als de billing country NL is, NIET de shipping country
-	 * 
-	 * @return bool
-	 */
-	public function canUseForCountry($country)
-	{
-		if (!parent::canUseForCountry($country))
-		{
-			return FALSE;
-		}
 
-		if ($country !== 'NL') {
-			return FALSE;
-		}
-
-		return TRUE;
-	}
 	/**
 	 * iDEAL is only active if 'EURO' is currency
 	 *
