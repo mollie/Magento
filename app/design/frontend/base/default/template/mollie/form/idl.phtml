@@ -9,7 +9,7 @@
 	<li>
 		<label for="<?php echo $this->escapeHtml($_code) ?>_bank_id" class="required"><em>*</em><?php echo $this->__('Selecteer uw bank:') ?></label>
 		<span class="input-box">
-			<select name="payment[bankid]" class="required-entry input-text" id="<?php echo $this->escapeHtml($_code) ?>_bank_id" title="<?php echo $this->escapeHtml($_code) ?>_bank_id">
+			<select name="payment[bankid]" class="required-entry input-text" id="<?php echo $this->escapeHtml($_code) ?>_bank_id">
 				<option value=''>Kies uw bank</option>
 				<?php foreach ($_banks as $bank_id => $bank_name): ?>
 					<option value="<?php echo $this->escapeHtml($bank_id) ?>"><?php echo $this->escapeHtml($bank_name) ?></option>
