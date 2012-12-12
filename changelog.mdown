@@ -2,6 +2,12 @@
 
 # Changelog #
 
+## Wijzigingen in versie 3.11 ##
++ Probleem opgelost waardoor op sommige webservers de bankenlijst leeg bleef.
++ Wijzig link naar de nieuwe Mollie profielenpagina
++ Verwijder beperking dat factuuradres in Nederland moet zijn om iDEAL te kunnen gebruiken.
++ Los klein HTML probleem op
+
 ## Wijzigingen in versie 3.10 ##
 + Probleem opgelost waardoor op sommige webservers de bankenlijst leeg bleef.
 
