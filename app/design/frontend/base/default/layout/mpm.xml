@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout version="0.1.0">
-	<default>
+	<mpm_idl_return>
 		<reference name="root">
-			<action method="setTemplate"><template>page/1column.phtml</template></action>
+			<action method="setTemplate">
+				<template>page/1column.phtml</template>
+			</action>
 		</reference>
-	</default>
+	</mpm_idl_return>
 </layout>
