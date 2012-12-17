@@ -90,7 +90,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 			<depends>
 				<Mage_Payment />
 			</depends>
-			<version>3.11.0</version>
+			<version>3.12.0</version>
 		</Mollie_Mpm>
 	</modules>
 ');
@@ -104,7 +104,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 			->method("getConfig")
 			->will($this->returnValue($config));
 
-		$this->assertEquals("3.11.0", $this->HelperData->getModuleVersion());
+		$this->assertEquals("3.12.0", $this->HelperData->getModuleVersion());
 	}
 
 	public function testGetStatusById()
