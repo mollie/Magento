@@ -158,8 +158,6 @@
 				<model>mpm/idl</model>
 				<title>iDEAL</title>
 				<currency>EUR</currency>
-				<allowspecific>1</allowspecific>
-				<specificcountry>NL</specificcountry>
 			</mpm_idl>
 		</payment>
 	</default>
