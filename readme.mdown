@@ -1,18 +1,18 @@
 ![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Installatie #
-+ Kopieër de structuur van de repository naar uw Magento of clone hem direct naar je webserver
-+ ```git clone git://github.com/mollienl/Magento.git ~/pad/naar/uw/magento```
-+ Ga in het menu naar ‘Systeem’ en selecteer ‘Beheer Cache’ vervolgens klikt u op het knopje ‘Verwijder Magento cache’
-+ Log vervolgens opnieuw in uw Administratie paneel
-+ Als u weer bent ingelogd klik dan in het menu onder ‘Systeem’ op ‘Configuratie’ aan de linkerkant ziet u dan ons logo verschijnen
-+ Klik op het Mollie logo om de betaalmethodes in te stellen
-+ Vul uw accountgegevens in en sla de gegevens vervolgens op
+* Download de laatste versie van de module via de [Tags-pagina](https://github.com/mollienl/Magento/tags).
+* Kopieer alles in de map "app" naar uw Magento installatie.
+* Ga in het menu naar ‘Systeem’ en selecteer ‘Beheer Cache’ vervolgens klikt u op het knopje ‘Verwijder Magento cache’.
+* Log vervolgens opnieuw in uw Administratie paneel.
+* Als u weer bent ingelogd klik dan in het menu onder ‘Systeem’ op ‘Configuratie’ aan de linkerkant ziet u dan ons logo verschijnen.
+* Klik op het Mollie logo om de betaalmethodes in te stellen.
+* Vul uw accountgegevens in en sla de gegevens vervolgens op.
 
 # Ondersteunde betaalmethodes #
 ### iDEAL ###
-Met iDEAL kunt u vertrouwd, veilig en gemakkelijk uw online aankopen afrekenen. iDEAL is het systeem dat u direct koppelt aan uw internetbankierprogramma bij een online aankoop.
-Via [Mollie](http://www.mollie.nl/) is iDEAL gemakkelijk aan te sluiten zonder de gebruikelijke technische en administratieve rompslomp. Mollie geeft u op ieder moment toegang tot uw transactieoverzichten en andere statistieken. Tevens is het mogelijk per e-mail of SMS een notificatie te ontvangen bij elke gelukte betaling. [Mollie](http://www.mollie.nl/) is hierdoor dus een perfecte partner op het gebied van iDEAL en is het dan ook niet verbazingwekkend dat [Mollie](http://www.mollie.nl/) ondertussen op meer dan 10.000 websites iDEAL-betalingen mag verzorgen.
+Met [iDEAL via Mollie](http://www.mollie.nl/betaaldiensten/ideal/) kunt u vertrouwd, veilig en gemakkelijk uw online aankopen afrekenen. iDEAL is het systeem dat u direct koppelt aan uw internetbankierprogramma bij een online aankoop.
+Via [Mollie](http://www.mollie.nl/) is iDEAL gemakkelijk aan te sluiten zonder de gebruikelijke technische en administratieve rompslomp. Mollie geeft u op ieder moment toegang tot uw transactieoverzichten en andere statistieken. Tevens is het mogelijk per e-mail of SMS een notificatie te ontvangen bij elke gelukte betaling. [Mollie](http://www.mollie.nl/) is hierdoor dus een perfecte partner op het gebied van iDEAL en is het dan ook niet verbazingwekkend dat [Mollie](http://www.mollie.nl/) ondertussen op meer dan 20.000 websites iDEAL-betalingen mag verzorgen.
 
 # Licentie #
 Wij maken gebruik van de [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).  
@@ -54,4 +54,4 @@ worden alleen gebruikt wanneer het communiceren met de al geïnstalleerde certif
 
 [Meer informatie over iDEAL via Mollie](https://www.mollie.nl/betaaldiensten/ideal/)
 
-![Powerd By Mollie](http://www.mollie.nl/images/badge-betaling-medium.png)
+![Powerd By Mollie](https://www.mollie.nl/images/badge-betaling-medium.png)
