@@ -386,7 +386,7 @@ class Mollie_Mpm_Helper_Idl
 		return $xml_object;
 	}
 
-	protected function _XMLisError($xml)
+	protected function _XMLisError(SimpleXMLElement $xml)
 	{
 		if (isset($xml->item))
 		{
