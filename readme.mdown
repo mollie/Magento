@@ -2,7 +2,7 @@
 
 # Installatie #
 * Download de laatste versie van de module via de [Tags-pagina](https://github.com/mollienl/Magento/tags).
-* Kopieer alles in de map "app" naar uw Magento installatie.
+* Kopieer alles in de map "app" naar de map "app" van uw Magento installatie.
 * Ga in het menu naar ‘Systeem’ en selecteer ‘Beheer Cache’ vervolgens klikt u op het knopje ‘Verwijder Magento cache’.
 * Log vervolgens opnieuw in uw Administratie paneel.
 * Als u weer bent ingelogd klik dan in het menu onder ‘Systeem’ op ‘Configuratie’ aan de linkerkant ziet u dan ons logo verschijnen.
