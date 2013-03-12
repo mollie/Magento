@@ -161,9 +161,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
 		if (count($needFiles) > 0) {
 			return implode(" ", $needFiles);
-		} else {
-			return '<span style="color:green">Module werkt naar behoren!</span>';
 		}
+		if ( version_compare(Mage::getVersion(), '1.4.1.0', '<')) {
+			return '<span style="color:red">Magento versie niet compatible met module!<br>
+				- Minimale versie verwacht: 1.4.1.x<br>
+				- Gevonden versie: '. Mage::getVersion() .'</span>';
+		}
+
+		return '<span style="color:green">Module werkt naar behoren!</span>';
 	}
 
 	public function getModuleVersion()
