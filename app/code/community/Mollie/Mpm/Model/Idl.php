@@ -231,6 +231,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 			'order_id'       => $order_id,
 			'transaction_id' => $transaction_id,
 			'method'         => $method,
+			'created_at'     => date("Y-m-d H:i:s"),
 		);
 
 		$this->_mysqlw->insert($this->_table, $data);
@@ -244,6 +245,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 
 		$data = array(
 			'bank_status'  => $bank_status,
+			'updated_at'   => date("Y-m-d H:i:s"),
 		);
 
 		if ($customer)
