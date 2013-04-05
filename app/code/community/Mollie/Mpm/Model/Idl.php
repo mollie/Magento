@@ -215,6 +215,17 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 	}
 
 	/**
+	 * Get the current date in SQL format.
+	 *
+	 * @codeCoverageIgnore
+	 * @return string
+	 */
+	protected function getCurrentDate()
+	{
+		return date("Y-m-d H:i:s");
+	}
+
+	/**
 	 * Stores the payment information in the mollie_payments table.
 	 *
 	 * @param null $order_id The order's Id
@@ -231,7 +242,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 			'order_id'       => $order_id,
 			'transaction_id' => $transaction_id,
 			'method'         => $method,
-			'created_at'     => date("Y-m-d H:i:s"),
+			'created_at'     => $this->getCurrentDate(),
 		);
 
 		$this->_mysqlw->insert($this->_table, $data);
@@ -245,7 +256,7 @@ class Mollie_Mpm_Model_Idl extends Mage_Payment_Model_Method_Abstract
 
 		$data = array(
 			'bank_status'  => $bank_status,
-			'updated_at'   => date("Y-m-d H:i:s"),
+			'updated_at'   => $this->getCurrentDate(),
 		);
 
 		if ($customer)

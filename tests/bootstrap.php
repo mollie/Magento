@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set("CET");
+
 /*
  * An autoloader to load the Mollie Payment Module classes.
  */
