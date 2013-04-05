@@ -2,6 +2,12 @@
 
 # Changelog #
 
+## Wijzigingen in versie 3.13 ##
++ Performance verbeterd voor webshops met grote hoeveelheden betalingen.
++ iDEAL betalingen nu ook mogelijk bij factuuradressen buiten Nederland.
++ Controleer compatibiliteit met geinstalleerde Magento versie.
++ Vanaf deze versie wordt de kwaliteit van de module bewaakt door de open source continuous integration server [Travis CI](https://travis-ci.org/mollienl/magento)
+
 ## Wijzigingen in versie 3.12 ##
 + Probleem opgelost waarbij in layouts met twee kolommen op de categoriepagina de rechter kolom verdween.
 
