@@ -134,7 +134,7 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 	{
 		$this->writeconn->expects($this->once())
 			->method("insert")
-			->with("mollie_payments", array("order_id" => self::ORDER_ID, "transaction_id" => self::TRANSACTION_ID, "method" => "idl"));
+			->with("mollie_payments", array("order_id" => self::ORDER_ID, "transaction_id" => self::TRANSACTION_ID, "method" => "idl", "created_at" => "2013-12-11 10:09:09",));
 
 		$this->writeconn->expects($this->never())
 			->method("update");
@@ -142,7 +142,12 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 		$this->readconn->expects($this->never())
 			->method("insert");
 
-		$model = new Mollie_Mpm_Model_Idl();
+		/** @var $model Mollie_Mpm_Model_Idl|PHPUnit_Framework_MockObject_MockObject */
+		$model = $this->getMock("Mollie_Mpm_Model_Idl", array("getCurrentDate"));
+		$model->expects($this->once())
+			->method("getCurrentDate")
+			->will($this->returnValue("2013-12-11 10:09:09"));
+
 		$model->setPayment(self::ORDER_ID, self::TRANSACTION_ID);
 	}
 
@@ -150,7 +155,10 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 	{
 		$this->writeconn->expects($this->once())
 			->method("update")
-			->with("mollie_payments", array("bank_status" => "Cancelled"), "transaction_id = '".self::TRANSACTION_ID."'");
+			->with("mollie_payments", array(
+			"bank_status" => "Cancelled",
+			"updated_at" => "2013-12-11 10:09:09",
+		), "transaction_id = '".self::TRANSACTION_ID."'");
 
 		$this->writeconn->expects($this->never())
 			->method("insert");
@@ -158,7 +166,12 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 		$this->readconn->expects($this->never())
 			->method("update");
 
-		$model = new Mollie_Mpm_Model_Idl();
+		/** @var $model Mollie_Mpm_Model_Idl|PHPUnit_Framework_MockObject_MockObject */
+		$model = $this->getMock("Mollie_Mpm_Model_Idl", array("getCurrentDate"));
+		$model->expects($this->once())
+			->method("getCurrentDate")
+			->will($this->returnValue("2013-12-11 10:09:09"));
+
 		$model->updatePayment(self::TRANSACTION_ID, "Cancelled");
 	}
 
@@ -166,7 +179,7 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 	{
 		$this->writeconn->expects($this->once())
 			->method("update")
-			->with("mollie_payments", array("bank_status" => "Success", "bank_account" => "123456789"), "transaction_id = '".self::TRANSACTION_ID."'");
+			->with("mollie_payments", array("bank_status" => "Success", "bank_account" => "123456789", "updated_at" => "2013-12-11 10:09:09",), "transaction_id = '".self::TRANSACTION_ID."'");
 
 		$this->writeconn->expects($this->never())
 			->method("insert");
@@ -174,7 +187,12 @@ class Mollie_Mpm_Model_IdlTest extends MagentoPlugin_TestCase
 		$this->readconn->expects($this->never())
 			->method("update");
 
-		$model = new Mollie_Mpm_Model_Idl();
+		/** @var $model Mollie_Mpm_Model_Idl|PHPUnit_Framework_MockObject_MockObject */
+		$model = $this->getMock("Mollie_Mpm_Model_Idl", array("getCurrentDate"));
+		$model->expects($this->once())
+			->method("getCurrentDate")
+			->will($this->returnValue("2013-12-11 10:09:09"));
+
 		$model->updatePayment(self::TRANSACTION_ID, "Success", array("consumerAccount" => "123456789"));
 	}
 }
