@@ -1,0 +1,9 @@
+![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
+
+# Upgrading #
+
+* Download de laatste versie van de module via de [Tags-pagina](https://github.com/mollienl/Magento/tags).
+* Kopieer alles in de map "app" naar de map "app" van uw Magento installatie. U kunt de bestaande bestanden vervangen.
+* Ga in het menu naar ‘Systeem’ en selecteer ‘Beheer Cache’ vervolgens klikt u op het knopje ‘Verwijder Magento cache’.
+
+Controleer de versie van de module via ‘Systeem’ en ‘Configuratie’ en klik dan op het Mollie-logo.
