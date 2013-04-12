@@ -2,6 +2,10 @@
 
 # Changelog #
 
+## Wijzigingen in versie 3.14 ##
++ Problemen opgelost met upgraden vanaf versie 3.12.
++ Toon juiste meldingen wanneer klant terugkomt op de website na een mislukte iDEAL betaling.
+
 ## Wijzigingen in versie 3.13 ##
 + Performance verbeterd voor webshops met grote hoeveelheden betalingen.
 + iDEAL betalingen nu ook mogelijk bij factuuradressen buiten Nederland.
