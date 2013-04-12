@@ -37,11 +37,13 @@
 $installer = $this;
 $installer->startSetup();
 
+$table_mollie_payments = $installer->getTable('mollie_payments');
+
 /*
  * Mollie tabel maken.
  */
 $installer->run(
-	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
+	"CREATE TABLE IF NOT EXISTS $table_mollie_payments (
 		`order_id` int(11) NOT NULL,
 		`method` varchar(3) NOT NULL,
 		`transaction_id` varchar(32) NOT NULL,
@@ -51,10 +53,23 @@ $installer->run(
 		`updated_at` datetime DEFAULT NULL,
 		 UNIQUE KEY `transaction_id` (`transaction_id`),
 		 KEY `order_id` (`order_id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-		$installer->getTable('mollie_payments')
-	)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );
+
+/*
+ * Bestaande Mollie tabel updaten.
+ */
+try {
+	$installer->run(
+		"ALTER TABLE $table_mollie_payments
+		   ADD COLUMN `created_at` datetime NOT NULL AFTER `bank_status`,
+		   ADD COLUMN `updated_at` datetime DEFAULT NULL AFTER `created_at`,
+		   ADD UNIQUE KEY `transaction_id` (`transaction_id`),
+		   ADD KEY `order_id` (`order_id`) ;"
+	);
+} catch (Exception $e) {
+	// Tabel hoeft niet aangepast te worden.
+}
 
 /*
  * Een waarschuwing in de beheerder-sectie geven dat de Mollie instellingen ingesteld moeten worden.
