@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2012, Mollie B.V.
+ * Copyright (c) 2012-2013, Mollie B.V.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -29,7 +29,7 @@
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
  * @version     v3.13.0
- * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2013 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
  **/
@@ -65,7 +65,7 @@ if(strlen(Mage::getStoreConfig("mollie/settings/partnerid")) == 0)
 			sprintf("INSERT INTO `%s` (`severity`, `date_added`, `title`, `description`, `url`, `is_read`, `is_remove`) 
 				VALUES ('4', '%s', 'Ga naar System -> Configuration -> Mollie om uw Mollie gegevens in te vullen om onze betaalmethode(s) te gebruiken',
 				'Uw Mollie instellingen moeten ingesteld worden. Als u dit niet doet dan kunnen uw klanten geen gebruik maken van de betaalmethode(s).',
-				'http://www.mollie.nl/', '0', '0');",
+				'https://www.mollie.nl/', '0', '0');",
 				$installer->getTable('adminnotification_inbox'),
 				date("Y/m/d H:i:s", time())
 			)

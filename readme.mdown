@@ -1,4 +1,4 @@
-![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png) 
+![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Magento plugin voor [iDEAL betalingen via Mollie](https://www.mollie.nl/betaaldiensten/ideal/). #
 
@@ -13,12 +13,12 @@
 
 # Ondersteunde betaalmethodes #
 ### iDEAL ###
-Met [iDEAL via Mollie](http://www.mollie.nl/betaaldiensten/ideal/) kunt u vertrouwd, veilig en gemakkelijk uw online aankopen afrekenen. iDEAL is het systeem dat u direct koppelt aan uw internetbankierprogramma bij een online aankoop.
-Via [Mollie](http://www.mollie.nl/) is iDEAL gemakkelijk aan te sluiten zonder de gebruikelijke technische en administratieve rompslomp. Mollie geeft u op ieder moment toegang tot uw transactieoverzichten en andere statistieken. Tevens is het mogelijk per e-mail of SMS een notificatie te ontvangen bij elke gelukte betaling. [Mollie](http://www.mollie.nl/) is hierdoor dus een perfecte partner op het gebied van iDEAL en is het dan ook niet verbazingwekkend dat [Mollie](http://www.mollie.nl/) ondertussen op meer dan 20.000 websites iDEAL-betalingen mag verzorgen.
+Met [iDEAL via Mollie](https://www.mollie.nl/betaaldiensten/ideal/) kunt u vertrouwd, veilig en gemakkelijk uw online aankopen afrekenen. iDEAL is het systeem dat u direct koppelt aan uw internetbankierprogramma bij een online aankoop.
+Via [Mollie](https://www.mollie.nl/) is iDEAL gemakkelijk aan te sluiten zonder de gebruikelijke technische en administratieve rompslomp. Mollie geeft u op ieder moment toegang tot uw transactieoverzichten en andere statistieken. Tevens is het mogelijk per e-mail of SMS een notificatie te ontvangen bij elke gelukte betaling. [Mollie](https://www.mollie.nl/) is hierdoor dus een perfecte partner op het gebied van iDEAL en is het dan ook niet verbazingwekkend dat [Mollie](https://www.mollie.nl/) ondertussen op meer dan 20.000 websites iDEAL-betalingen mag verzorgen.
 
 # Licentie #
 Wij maken gebruik van de [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).  
-Copyright (c) 2012, Mollie B.V.
+Copyright (c) 2012-2013, Mollie B.V.
 
 # Support #
 W: www.mollie.nl  

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2012, Mollie B.V.
+ * Copyright (c) 2012-2013, Mollie B.V.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -29,11 +29,10 @@
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
  * @version     v3.13.0
- * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2013 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
- **/
-
+ */
 class Mollie_Mpm_Block_Adminhtml_System_Config_Status
 	extends Mage_Adminhtml_Block_Abstract
 	implements Varien_Data_Form_Element_Renderer_Interface
