@@ -151,4 +151,62 @@ class Mage_Sales_Model_Order_Payment_Transaction {
 	const TYPE_REFUND  = 'refund';
 }
 
+
+/**
+ * Only here for some testing.
+ *
+ * @ignore
+ */
+class Magento_Template
+{
+	private $data = array();
+
+	public function setData($key, $mixed)
+	{
+		$this->data[$key] = $mixed;
+	}
+
+	public function __call($method, array $arguments)
+	{
+		if (strpos($method, "get") === 0)
+		{
+
+			$method = preg_replace("!^get!", "", $method);
+
+			$method = preg_replace_callback("![a-z]([A-Z])!", function ($matches) {
+				return str_replace($matches[1], "_" . $matches[1], $matches[0]);
+			}, $method);
+
+			if (isset($data[strtolower($method)]))
+			{
+				return $data[strtolower($method)];
+			}
+
+			return NULL;
+		}
+
+		throw new BadMethodCallException("Method does not exist: {$method}.");
+	}
+
+	protected function getForm()
+	{
+		return "/path/to/form";
+	}
+
+	public function __($text)
+	{
+		return $text;
+	}
+
+	protected function escapeHtml($plaintext)
+	{
+		return htmlspecialchars($plaintext, ENT_QUOTES, "UTF-8");
+	}
+
+	public function render($filename)
+	{
+		include PROJECT_ROOT . DIRECTORY_SEPARATOR . $filename;
+	}
+}
+
 define("PROJECT_ROOT", dirname(dirname(__FILE__)));

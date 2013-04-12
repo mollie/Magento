@@ -31,7 +31,7 @@
  * @version     v3.13.0
  * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- * 
+ *
  **/
 
 class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
@@ -79,7 +79,7 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 
 	/**
 	 * Gets the current checkout session with order information
-	 * 
+	 *
 	 * @return Mage_Checkout_Model_Session
 	 */
 	protected function _getCheckout() {
@@ -307,23 +307,9 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 					$this->_redirect('checkout/onepage/success', array('_secure' => TRUE));
 					return;
 				}
-				else
-				{
-					// Create fail page
-					$this->loadLayout();
 
-					$block = $this->getLayout()
-							->createBlock('Mage_Core_Block_Template')
-							->setTemplate('mollie/page/fail.phtml')
-							->setData('banks', Mage::Helper('mpm/idl')->getBanks())
-							->setData('form', Mage::getUrl('mpm/idl/form'))
-							->setData('order', Mage::getModel('sales/order')->load($orderId));
-
-					$this->getLayout()->getBlock('content')->append($block);
-
-					$this->renderLayout();
-					return;
-				}
+				$this->renderErrorPage($oStatus, $orderId);
+				return;
 			}
 		}
 		catch (Exception $e)
@@ -334,6 +320,63 @@ class Mollie_Mpm_IdlController extends Mage_Core_Controller_Front_Action
 		}
 
 		$this->_redirectUrl(Mage::getBaseUrl());
+	}
+
+	/**
+	 * Render the error page if an error occurs during the return to the payment page.
+	 *
+	 * @param array $oStatus
+	 * @param       $orderId
+	 */
+	protected function renderErrorPage(array $oStatus, $orderId)
+	{
+		/** @var $retry bool Should the customer retry the payment? */
+		$retry = FALSE;
+
+		switch ($oStatus['bank_status'])
+		{
+			case NULL:
+			case "":
+				$error_title   = $this->__("Betaling wordt verwerkt");
+				$error_message = $this->__("De bank heeft nog niet aan ons doorgegeven of de betaling gelukt is. U krijgt een email zodra de status van uw betaling bij ons bekend is.");
+				break;
+			case Mollie_Mpm_Model_Idl::IDL_CANCELLED:
+				$error_title   = $this->__("Betaling geannuleerd");
+				$error_message = $this->__("U heeft de betaling geannuleerd. Probeer het bedrag van € %s nogmaals af te rekenen met iDEAL.");
+				$retry         = TRUE;
+				break;
+			case Mollie_Mpm_Model_Idl::IDL_EXPIRED:
+				$error_title   = $this->__("Betaling verlopen");
+				$error_message = $this->__("De betaling is verlopen. Probeer het bedrag van € %s nogmaals af te rekenen met iDEAL.");
+				$retry         = TRUE;
+				break;
+			case Mollie_Mpm_Model_Idl::IDL_FAILURE:
+				$retry         = TRUE;
+				$error_title   = $this->__("De betaling is mislukt");
+				$error_message = $this->__("De betaling is helaas mislukt. Probeer het bedrag van € %s nogmaals af te rekenen met iDEAL.");
+				break;
+			case Mollie_Mpm_Model_Idl::IDL_CHECKEDBEFORE:
+				$error_title   = $this->__("Uw betaling is al verwerkt");
+				$error_message = $this->__("Uw betaling is eerder al verwerkt.");
+				break;
+		}
+
+		// Create fail page
+		$this->loadLayout();
+
+		$block = $this->getLayout()
+			->createBlock('Mage_Core_Block_Template')
+			->setTemplate('mollie/page/fail.phtml')
+			->setData('error_title', $error_title)
+			->setData('error_message', $error_message)
+			->setData('retry', $retry)
+			->setData('banks', Mage::Helper('mpm/idl')->getBanks())
+			->setData('form', Mage::getUrl('mpm/idl/form'))
+			->setData('order', Mage::getModel('sales/order')->load($orderId));
+
+		$this->getLayout()->getBlock('content')->append($block);
+
+		$this->renderLayout();
 	}
 
 	public function formAction ()

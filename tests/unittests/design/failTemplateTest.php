@@ -8,7 +8,7 @@ class failTemplateTest extends MagentoPlugin_TestCase
 
 	public function testGeneratedHtml()
 	{
-		$template = $this->getMock("MagentoTemplate", array("getOrder", "getBanks"));
+		$template = $this->getMock("Magento_Template", array("getOrder", "getBanks", "getRetry"));
 
 		$order = $this->getMock("Mage_Sales_Model_Order", array("getId", "getRealOrderId", "getGrandTotal"));
 
@@ -22,6 +22,10 @@ class failTemplateTest extends MagentoPlugin_TestCase
 		$template->expects($this->atLeastOnce())
 			->method("getOrder")
 			->will($this->returnValue($order));
+
+		$template->expects($this->atLeastOnce())
+			->method("getRetry")
+			->will($this->returnValue(TRUE));
 
 		$template->expects($this->atLeastOnce())
 			->method("getBanks")
@@ -38,33 +42,5 @@ class failTemplateTest extends MagentoPlugin_TestCase
 		$this->assertContains('<select name="bank_id"', $html);
 		$this->assertContains('<option value="1234">Test bank 1</option>', $html);
 		$this->assertContains('<option value="0678">Test bank 2</option>', $html);
-	}
-}
-
-/**
- * Only here for some testing.
- *
- * @ignore
- */
-class MagentoTemplate
-{
-	protected function getForm()
-	{
-		return "/path/to/form";
-	}
-
-	public function __($text)
-	{
-		return $text;
-	}
-
-	protected function escapeHtml($plaintext)
-	{
-		return htmlspecialchars($plaintext, ENT_QUOTES, "UTF-8");
-	}
-
-	public function render($filename)
-	{
-		include PROJECT_ROOT . DIRECTORY_SEPARATOR . $filename;
 	}
 }
