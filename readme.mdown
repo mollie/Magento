@@ -30,19 +30,23 @@ T: +31 20 - 612 88 55
 
 Neemt u alstublieft contact op met info@mollie.nl voor ondersteuning.
 
-**Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?**
-
-Doordat Magento veel pagina's in zijn geheugen opslaat (cache) kan het zijn dat de module niet in één keer volledig geladen wordt. Daarom dient u handmatig de cache te legen op de Cache Management pagina (System -> Cache Management).
-
 **Ik heb meerdere _Store Views_, maar ik wil per _Store View_ andere instellingen**
 
 Dat is mogelijk. Ga naar de instellingenpagina van de plugin, en kies linksboven in bij "Current Configuration Scope" de store view die u anders wilt instellen. 
 
 Maak de instelling die u wilt en schakel het _Use Website_ vakje uit. U kunt per _Store View_ bijvoorbeeld een ander websiteprofiel kiezen.
 
+**Ik heb alles ingesteld, maar de module verschijnt niet bij het afrekenen.**
+
+Controleert u alstublieft of de module ingeschakeld is, én of uw bestelling in Euro's. Via iDEAL kunnen alleen orders in Euro's afgerekend worden. De standaardinstelling van Magento is USD ($). U kunt dit aanpassen via de admin.
+
 **Moet ik ook een return- en / of report-URL instellen?**
 
 Het is niet nodig een return- of report-URL in te stellen, de module stelt dit automatisch in.
+
+**Ik krijg "Call to a member function setMethod() on a non-object in ..." foutmelding wat moet ik doen?**
+
+Doordat Magento veel pagina's in zijn geheugen opslaat (cache) kan het zijn dat de module niet in één keer volledig geladen wordt. Daarom dient u handmatig de cache te legen op de Cache Management pagina (System -> Cache Management).
 
 **Als ik in het Administratiepaneel mijn Mollie gegevens voor de eerste keer wil wijzigen krijg ik een foutmelding 404**
 
