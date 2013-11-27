@@ -112,6 +112,7 @@ class Mollie_Mpm_Helper_Idl
 
 		if (!$banks_object or $this->_XMlisError($banks_object))
 		{
+			$this->error_message = "Geen XML of XML met API fout ontvangen van Mollie";
 			return false;
 		}
 
@@ -358,6 +359,12 @@ class Mollie_Mpm_Helper_Idl
 			 */
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 			$body = curl_exec($ch);
+		}
+
+		if (curl_error($ch))
+		{
+			$this->error_message = "Fout bij communiceren met Mollie: " . curl_error($ch);
+			$this->error_code    = curl_errno($ch);
 		}
 
 		curl_close($ch);
