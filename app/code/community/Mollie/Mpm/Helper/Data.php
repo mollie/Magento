@@ -88,7 +88,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getPartnerid()
 	{
-		return Mage::getStoreConfig("mollie/settings/partnerid");
+		return trim(Mage::getStoreConfig("mollie/settings/partnerid"));
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getProfilekey()
 	{
-		return Mage::getStoreConfig("mollie/settings/profilekey");
+		return trim(Mage::getStoreConfig("mollie/settings/profilekey"));
 	}
 
 	/**
@@ -111,17 +111,19 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
 	/**
 	 * Get store config
-	 * 
+	 *
+	 * @param string $paymentmethod
 	 * @param string $key
+	 *
 	 * @return string
 	 */
-	public function getConfig($pm = NULL, $key = NULL)
+	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
 		$arr = array('active', 'testmode', 'description', 'minvalue');
 		$paymentmethods = array('idl');
 
-		if(in_array($key, $arr) && in_array($pm, $paymentmethods))
-			return Mage::getStoreConfig("mollie/{$pm}/{$key}");
+		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
+			return Mage::getStoreConfig("mollie/{$paymentmethod}/{$key}");
 
 		return NULL;
 	}

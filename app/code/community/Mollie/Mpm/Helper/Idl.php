@@ -477,9 +477,9 @@ class Mollie_Mpm_Helper_Idl
 		return $this->amount;
 	}
 
-	public function setDescription($description)
+	public function setDescription ($description)
 	{
-		$description = substr($description, 0, 29);
+		$description = function_exists("mb_substr") ? mb_substr($description, 0, 29) : substr($description, 0, 29);
 
 		return ($this->description = $description);
 	}
