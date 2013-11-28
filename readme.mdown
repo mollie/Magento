@@ -2,8 +2,8 @@
 
 # Magento plugin voor [iDEAL betalingen via Mollie](https://www.mollie.nl/betaaldiensten/ideal/). #
 
-# Installatie [![Build Status](https://travis-ci.org/mollienl/Magento.png)](https://travis-ci.org/mollienl/Magento) #
-* Download de laatste versie van de module via de [Tags-pagina](https://github.com/mollienl/Magento/tags).
+# Installatie [![Build Status](https://travis-ci.org/mollie/Magento.png)](https://travis-ci.org/mollie/Magento) #
+* Download de laatste versie van de module via de [Tags-pagina](https://github.com/mollie/Magento/tags).
 * Kopieer alles in de map "app" naar de map "app" van uw Magento installatie.
 * Ga in het menu naar ‘Systeem’ en selecteer ‘Beheer Cache’ vervolgens klikt u op het knopje ‘Verwijder Magento cache’.
 * Log vervolgens opnieuw in uw Administratie paneel.
