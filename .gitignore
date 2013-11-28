@@ -1,3 +1,5 @@
 .DS_Store
-.idea/
-build/
+/.idea/
+/build/
+/vendor/
+/composer.lock
