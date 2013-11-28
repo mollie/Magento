@@ -2,6 +2,10 @@
 
 # Changelog #
 
+## Wijzigingen in versie 3.15 ##
++ Verbeter communicatie met Mollie bij bepaalde SSL fouten.
++ Toon foutmelding tijdens afrekenen wanneer de bankenlijst niet opgehaald kan worden.
+
 ## Wijzigingen in versie 3.14 ##
 + Problemen opgelost met upgraden vanaf versie 3.12.
 + Toon juiste meldingen wanneer klant terugkomt op de website na een mislukte iDEAL betaling.
