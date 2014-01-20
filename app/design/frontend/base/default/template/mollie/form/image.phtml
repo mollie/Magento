@@ -1,0 +1,26 @@
+<?php
+$_code = $this->getMethodCode();
+?>
+<ul class="form-list" id="payment_form_<?php echo $this->escapeHtml($_code) ?>" style="display:none;">
+	<li style="display:none;">
+		<script type="text/javascript"> // Add a logo to the method title
+			if (!window.findElementByAttribute) window.findElementByAttribute = function (tagname, attribute, value)
+			{
+				var allElements = document.getElementsByTagName(tagname);
+				for (var i = 0; i < allElements.length; i++)
+				{
+					if (allElements[i].getAttribute(attribute) == value)
+					{
+						return allElements[i];
+					}
+				}
+				return null;
+			}
+			var element = findElementByAttribute('label', 'for', 'p_method_<?=$_code; ?>');
+			if (element)
+			{
+				element.innerHTML = '<img src="<?=Mage::getModel('mpm/api')->getMethodByPlaceholderName($_code)->image->normal; ?>" alt="" height="20" margin="0" /> ' + element.innerHTML;
+			}
+		</script>
+	</li>
+</ul>

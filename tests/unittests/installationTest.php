@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * @covers Mollie_Mpm_Model_Idl
+	 * @covers Mollie_Mpm_Model_Api
 	 */
 class InstallationTest extends MagentoPlugin_TestCase
 {

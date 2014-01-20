@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <phpunit bootstrap="bootstrap.php" backupStaticAttributes="false" colors="true">
     <testsuites>
-        <testsuite name="mollie magento iDEAL plugin tests">
+        <testsuite name="mollie magento plugin tests">
             <directory>.</directory>
         </testsuite>
     </testsuites>

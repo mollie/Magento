@@ -76,24 +76,24 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->never())
 			->method("getStoreConfig");
 
-		$this->assertNull($this->HelperData->getConfig("idl", "foo"));
+		$this->assertNull($this->HelperData->getConfig("api", "foo"));
 	}
 
 	public function testGetVersion()
 	{
 
 		$xml = simplexml_load_string('
-	<modules>
-		<Mollie_Mpm>
-			<active>true</active>
-			<codePool>community</codePool>
-			<depends>
-				<Mage_Payment />
-			</depends>
-			<version>3.15.0</version>
-		</Mollie_Mpm>
-	</modules>
-');
+			<modules>
+				<Mollie_Mpm>
+					<active>true</active>
+					<codePool>community</codePool>
+					<depends>
+						<Mage_Payment />
+					</depends>
+					<version>4.0.0</version>
+				</Mollie_Mpm>
+			</modules>
+		');
 
 		$config = $this->getMock("stdClass", array("getNode"));
 		$config->expects($this->once())
@@ -104,7 +104,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 			->method("getConfig")
 			->will($this->returnValue($config));
 
-		$this->assertEquals("3.15.0", $this->HelperData->getModuleVersion());
+		$this->assertEquals("4.0.0", $this->HelperData->getModuleVersion());
 	}
 
 	public function testGetStatusById()
@@ -112,13 +112,13 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 		$this->readconn->expects($this->once())
 			->method("fetchAll")
 			->with("SELECT `bank_status` FROM `mollie_payments` WHERE `transaction_id` = '1bba1d8fdbd8103b46151634bdbe0a60'")
-			->will($this->returnValue(array(array("bank_status" => Mollie_Mpm_Model_Idl::IDL_SUCCESS))))
+			->will($this->returnValue(array(array("bank_status" => Mollie_Mpm_Model_Api::STATUS_PAID))))
 		;
 
 		$this->writeconn->expects($this->never())
 			->method("fetchAll");
 
-		$this->assertEquals(array("bank_status" => Mollie_Mpm_Model_Idl::IDL_SUCCESS), $this->HelperData->getStatusById(self::TRANSACTION_ID));
+		$this->assertEquals(array("bank_status" => Mollie_Mpm_Model_Api::STATUS_PAID), $this->HelperData->getStatusById(self::TRANSACTION_ID));
 	}
 
 	public function testGetOrderIdByTransactionId()
@@ -149,33 +149,13 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 		$this->assertNull($this->HelperData->getOrderIdByTransactionId(self::TRANSACTION_ID));
 	}
 
-	public function testGetPartnerid()
+	public function testGetApikey()
 	{
 		$this->mage->expects($this->once())
 			->method("getStoreConfig")
-			->with("mollie/settings/partnerid")
-			->will($this->returnValue(1001));
-
-		$this->assertEquals(1001, $this->HelperData->getPartnerid());
-	}
-
-	public function testGetProfilekey()
-	{
-		$this->mage->expects($this->once())
-			->method("getStoreConfig")
-			->with("mollie/settings/profilekey")
+			->with("payment/mollie/apikey")
 			->will($this->returnValue("decafbad"));
 
-		$this->assertEquals("decafbad", $this->HelperData->getProfilekey());
-	}
-
-	public function testGetTestModeEnabled()
-	{
-		$this->mage->expects($this->once())
-			->method("getStoreConfig")
-			->with("mollie/idl/testmode")
-			->will($this->returnValue(TRUE));
-
-		$this->assertTrue($this->HelperData->getTestModeEnabled());
+		$this->assertEquals("decafbad", $this->HelperData->getApiKey());
 	}
 }

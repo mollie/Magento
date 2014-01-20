@@ -2,7 +2,7 @@
 
 <!--
  *
- * Copyright (c) 2012-2013, Mollie B.V.
+ * Copyright (c) 2012-2014, Mollie B.V.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -27,138 +27,406 @@
  * DAMAGE. 
  *
  * @category    Mollie
- * @package     Mollie_Ideal
+ * @package     Mollie_Payment_Module
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v3.15.0
- * @copyright   Copyright (c) 2012-2013 Mollie B.V. (https://www.mollie.nl)
+ * @version     v4.0.0
+ * @copyright   Copyright (c) 2012-2014 Mollie B.V. (http://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
 -->
 
 <config>
-	<modules>
-		<Mollie_Mpm>
-			<version>3.15.0</version>
-		</Mollie_Mpm>
-	</modules>
+    <modules>
+        <Mollie_Mpm>
+            <version>4.0.0</version>
+        </Mollie_Mpm>
+    </modules>
 
-	<global>
-		<models>
-			<mpm>
-				<class>Mollie_Mpm_Model</class>
-			</mpm>
-		</models>
-		<blocks>
-			<mpm>
-				<class>Mollie_Mpm_Block</class>
-			</mpm>
-			<payment>
-				<class>Mollie_Mpm_Block</class>
-				<class>Mage_Payment_Block</class>
-			</payment>
-		</blocks>
-		<helpers>
-			<mpm>
-				<class>Mollie_Mpm_Helper</class>
-			</mpm>
-		</helpers>
-		<payment>
-			<groups>
-				<mollie>mollie</mollie>
-			</groups>
-		</payment>
-		<resources>
-			<mpm_setup>
-				<setup>
-					<module>Mollie_Mpm</module>
-				</setup>
-				<connection>
-					<use>core_setup</use>
-				</connection>
-			</mpm_setup>
-			<mpm_write>
-				<connection>
-					<use>core_write</use>
-				</connection>
-			</mpm_write>
-			<mpm_read>
-				<connection>
-					<use>core_read</use>
-				</connection>
-			</mpm_read>
-		</resources>
-		<layouts>
-			<mollie_exception>
-				<label>Mollie Exception</label>
-				<template>mollie/page/exception.phtml</template>
-			</mollie_exception>
-			<idl_payment_fail>
-				<label>Payment Failed</label>
-				<template>mollie/page/payment_fail.phtml</template>
-			</idl_payment_fail>
-		</layouts>
-	</global>
+    <global>
+        <models>
+            <mpm>
+                <class>Mollie_Mpm_Model</class>
+            </mpm>
+        </models>
+        <blocks>
+            <mpm>
+                <class>Mollie_Mpm_Block</class>
+            </mpm>
+            <payment>
+                <class>Mollie_Mpm_Block</class>
+                <class>Mage_Payment_Block</class>
+            </payment>
+        </blocks>
+        <helpers>
+            <mpm>
+                <class>Mollie_Mpm_Helper</class>
+            </mpm>
+        </helpers>
+        <payment>
+            <groups>
+                <mollie>mollie</mollie>
+            </groups>
+        </payment>
+        <resources>
+            <mpm_setup>
+                <setup>
+                    <module>Mollie_Mpm</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </mpm_setup>
+            <mpm_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </mpm_write>
+            <mpm_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </mpm_read>
+        </resources>
+        <layouts>
+            <mollie_exception>
+                <label>Mollie Exception</label>
+                <template>mollie/page/exception.phtml</template>
+            </mollie_exception>
+            <api_payment_fail>
+                <label>Payment Failed</label>
+                <template>mollie/page/payment_fail.phtml</template>
+            </api_payment_fail>
+        </layouts>
+    </global>
 
-	<frontend>
-		<routers>
-			<mpm>
-				<use>standard</use>
-				<args>
-					<module>Mollie_Mpm</module>
-					<frontName>mpm</frontName>
-				</args>
-			</mpm>
-		</routers>
-		<layout>
-			<updates>
-				<mpm>
-					<file>mpm.xml</file>
-				</mpm>
-			</updates>
-		</layout>
-	</frontend>
+    <frontend>
+        <routers>
+            <mpm>
+                <use>standard</use>
+                <args>
+                    <module>Mollie_Mpm</module>
+                    <frontName>mpm</frontName>
+                </args>
+            </mpm>
+        </routers>
+        <translate>
+            <modules>
+                <Mollie_Mpm>
+                    <files>
+                        <default>Mollie_Mpm.csv</default>
+                    </files>
+                </Mollie_Mpm>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <mpm>
+                    <file>mpm.xml</file>
+                </mpm>
+            </updates>
+        </layout>
+    </frontend>
 
-	<adminhtml>
-		<acl>
-			<resources>
-				<all>
-					<title>Allow Everything</title>
-				</all>
-				<admin>
-					<children>
-						<system>
-							<children>
-								<config>
-									<children>
-										<mollie>
-											<title>Mollie Betaal Methode(s)</title>
-										</mollie>
-									</children>
-								</config>
-							</children>
-						</system>
-					</children>
-				</admin>
-			</resources>
-		</acl>
-		<layout>
-			<updates>
-				<mpm>
-					<file>mpm.xml</file>
-				</mpm>
-			</updates>
-		</layout>
-	</adminhtml>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Mollie_Mpm>
+                    <files>
+                        <default>Mollie_Mpm.csv</default>
+                    </files>
+                </Mollie_Mpm>
+            </modules>
+        </translate>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <mollie>
+                                            <title>Mollie Betaalmethodes</title>
+                                        </mollie>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <mpm>
+                    <file>mpm.xml</file>
+                </mpm>
+            </updates>
+        </layout>
+    </adminhtml>
 
-	<default>
-		<payment>
-			<mpm_idl>
-				<group>mollie</group>
-				<active>1</active>
-				<model>mpm/idl</model>
-				<title>iDEAL</title>
-				<currency>EUR</currency>
-			</mpm_idl>
-		</payment>
-	</default>
+    <default>
+        <payment>
+
+            <mpm_void_00 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-32</sort_order>
+                <model>mpm/void00</model>
+                <currency>EUR</currency>
+            </mpm_void_00>
+
+            <mpm_void_01 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-31</sort_order>
+                <model>mpm/void01</model>
+                <currency>EUR</currency>
+            </mpm_void_01>
+
+            <mpm_void_02 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-30</sort_order>
+                <model>mpm/void02</model>
+                <currency>EUR</currency>
+            </mpm_void_02>
+
+            <mpm_void_03 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-29</sort_order>
+                <model>mpm/void03</model>
+                <currency>EUR</currency>
+            </mpm_void_03>
+
+            <mpm_void_04 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-28</sort_order>
+                <model>mpm/void04</model>
+                <currency>EUR</currency>
+            </mpm_void_04>
+
+            <mpm_void_05 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-27</sort_order>
+                <model>mpm/void05</model>
+                <currency>EUR</currency>
+            </mpm_void_05>
+
+            <mpm_void_06 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-26</sort_order>
+                <model>mpm/void06</model>
+                <currency>EUR</currency>
+            </mpm_void_06>
+
+            <mpm_void_07 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-25</sort_order>
+                <model>mpm/void07</model>
+                <currency>EUR</currency>
+            </mpm_void_07>
+
+            <mpm_void_08 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-24</sort_order>
+                <model>mpm/void08</model>
+                <currency>EUR</currency>
+            </mpm_void_08>
+
+            <mpm_void_09 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-23</sort_order>
+                <model>mpm/void09</model>
+                <currency>EUR</currency>
+            </mpm_void_09>
+
+            <mpm_void_10 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-22</sort_order>
+                <model>mpm/void10</model>
+                <currency>EUR</currency>
+            </mpm_void_10>
+
+            <mpm_void_11 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-21</sort_order>
+                <model>mpm/void11</model>
+                <currency>EUR</currency>
+            </mpm_void_11>
+
+            <mpm_void_12 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-20</sort_order>
+                <model>mpm/void12</model>
+                <currency>EUR</currency>
+            </mpm_void_12>
+
+            <mpm_void_13 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-19</sort_order>
+                <model>mpm/void13</model>
+                <currency>EUR</currency>
+            </mpm_void_13>
+
+            <mpm_void_14 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-18</sort_order>
+                <model>mpm/void14</model>
+                <currency>EUR</currency>
+            </mpm_void_14>
+
+            <mpm_void_15 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-17</sort_order>
+                <model>mpm/void15</model>
+                <currency>EUR</currency>
+            </mpm_void_15>
+
+            <mpm_void_16 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-16</sort_order>
+                <model>mpm/void16</model>
+                <currency>EUR</currency>
+            </mpm_void_16>
+
+            <mpm_void_17 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-15</sort_order>
+                <model>mpm/void17</model>
+                <currency>EUR</currency>
+            </mpm_void_17>
+
+            <mpm_void_18 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-14</sort_order>
+                <model>mpm/void18</model>
+                <currency>EUR</currency>
+            </mpm_void_18>
+
+            <mpm_void_19 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-13</sort_order>
+                <model>mpm/void19</model>
+                <currency>EUR</currency>
+            </mpm_void_19>
+
+            <mpm_void_20 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-12</sort_order>
+                <model>mpm/void20</model>
+                <currency>EUR</currency>
+            </mpm_void_20>
+
+            <mpm_void_21 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-11</sort_order>
+                <model>mpm/void21</model>
+                <currency>EUR</currency>
+            </mpm_void_21>
+
+            <mpm_void_22 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-10</sort_order>
+                <model>mpm/void22</model>
+                <currency>EUR</currency>
+            </mpm_void_22>
+
+            <mpm_void_23 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-9</sort_order>
+                <model>mpm/void23</model>
+                <currency>EUR</currency>
+            </mpm_void_23>
+
+            <mpm_void_24 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-8</sort_order>
+                <model>mpm/void24</model>
+                <currency>EUR</currency>
+            </mpm_void_24>
+
+            <mpm_void_25 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-7</sort_order>
+                <model>mpm/void25</model>
+                <currency>EUR</currency>
+            </mpm_void_25>
+
+            <mpm_void_26 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-6</sort_order>
+                <model>mpm/void26</model>
+                <currency>EUR</currency>
+            </mpm_void_26>
+
+            <mpm_void_27 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-5</sort_order>
+                <model>mpm/void27</model>
+                <currency>EUR</currency>
+            </mpm_void_27>
+
+            <mpm_void_28 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-4</sort_order>
+                <model>mpm/void28</model>
+                <currency>EUR</currency>
+            </mpm_void_28>
+
+            <mpm_void_29 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-3</sort_order>
+                <model>mpm/void29</model>
+                <currency>EUR</currency>
+            </mpm_void_29>
+
+            <mpm_void_30 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-2</sort_order>
+                <model>mpm/void30</model>
+                <currency>EUR</currency>
+            </mpm_void_30>
+
+            <mpm_void_31 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-1</sort_order>
+                <model>mpm/void31</model>
+                <currency>EUR</currency>
+            </mpm_void_31>
+
+        </payment>
+    </default>
 </config>

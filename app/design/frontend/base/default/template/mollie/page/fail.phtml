@@ -4,35 +4,6 @@
 
 <p><?php echo $this->escapeHtml(sprintf($this->getErrorMessage(), number_format($this->getOrder()->getGrandTotal(),2))) ?></p>
 
-<?php if ($this->getRetry()):?>
-<form name="mollie_mpm_idl" id="mollie_mpm_idl" action="<?php echo $this->escapeHtml($this->getForm()) ?>" method="post">
-	<input type="hidden" name="order_id" value="<?php echo $this->escapeHtml($this->getOrder()->getId()) ?>" />
-	<ul class="form-list">
-		<li>
-			<label for="bank_id" class="required"><em>*</em>
-				<?php echo $this->__('Selecteer uw bank:') ?>
-			</label>
-				<span class="input-box">
-					<select name="bank_id" class="required-entry input-text" id="bank_id" title="bank_id">
-						<option value=''>--- Kies uw bank ---</option>
-						<?php foreach ($this->getBanks() as $bank_id => $bank_name): ?>
-						<option value="<?php echo $this->escapeHtml($bank_id) ?>"><?php echo $this->escapeHtml($bank_name) ?></option>
-						<?php endforeach; ?>
-					</select>
-				</span>
-		</li>
-		<li>
-			<button class="form-button" style="padding:5px;" type="submit">Opnieuw betalen</button>
-		</li>
-	</ul>
-</form>
-<script type="text/javascript">
-	//<![CDATA[
-	var iDEALForm = new VarienForm('mollie_mpm_idl');
-	//]]>
-</script>
-<?php endif; ?>
-
 <div class="buttons-set">
 	<p><?php echo $this->__('Click <a href="%s">here</a> to continue shopping.', Mage::getBaseUrl()) ?></p>
 </div>

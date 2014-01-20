@@ -1,30 +1,86 @@
-<div class="fieldset">
-	<p>
-		<strong><?php echo $this->__('BELANGRIJK!'); ?></strong>
-		<br/>
-		Vergeet niet de cache te verwijderen! Ga naar: <strong><?php echo $this->__('<a href="%s">Systeem > Cache Beheer</a>', $this->getUrl('adminhtml/cache')); ?></strong> om de cache te verwijderen.
-	</p>
-	<br/>
-	<p>
+<?php
+$core = Mage::helper('core');
+$methods = Mage::Helper('mpm/api')->getPaymentMethods();
+$message = $core->__('Your Mollie Account is reachable from the Magento store, but <a href="http://mollie.dev/beheer/diensten/">seems to lack payment methods</a>.');
+if (is_string($methods)) {
+	$message = $methods;
+	$methods = array();
+}
+$method_count = count($methods);
+?>
+<tr><td>
+	<b><?=$core->__('Api Key'); ?></b><br />
+	<?=$core->__('You can find your <i>Api Key</i> in your <a href="https://www.mollie.nl/beheer/account/profielen/" title="Mollie Profiles">Mollie Profile</a>.');?><br />
+	<br />
+
+	<b><?=$core->__('Webhook'); ?></b><br />
+	<?=$core->__('Your webhook URL is:'); ?><br />
+	<input id="webhook" value="<?=$this->escapeHtml(Mage::getUrl('mpm/api/webhook')); ?>" readonly onclick="this.select();" /><br />
+	<script type="text/javascript">
+		var el = document.getElementById('webhook');
+		el.size = el.value.length + 20;
+	</script>
+	<br />
+
+	<b><?=$core->__('Payment methods'); ?></b><br />
+	<?php if ($method_count > 0): ?>
 		<?php
-			if (is_array(Mage::Helper('mpm/data')->getModuleStatus()))
+			if ($method_count !== 1)
 			{
-				foreach (Mage::Helper('mpm/data')->getModuleStatus() as $file) {
-					echo "Bestand bestaat niet: '$file'<br/>";
-				}
-			} else {
-				echo Mage::Helper('mpm/data')->getModuleStatus();
+				echo sprintf($core->__('%d payment methods available:'), $method_count);
+			}
+			else
+			{
+				echo $core->__('One payment method available:');
 			}
 		?>
-	</p>
+		<table>
+			<tr>
+				<th style="width:150px;"><?=$core->__('Description');?></th>
+				<th style="width:150px;"><?=$core->__('Minimum Amount');?></th>
+				<th style="width:150px;"><?=$core->__('Maximum Amount');?></th>
+			</tr>
+			<?php
+			foreach($methods as $method):
+				?>
+				<tr>
+					<td><?=$core->__($method->description); ?></td>
+					<td>&euro; <?=$method->amount->minimum; ?></td>
+					<td>&euro; <?=$method->amount->maximum; ?></td>
+				</tr>
+			<?php
+			endforeach;
+			?>
+		</table>
+	<?php else:
+		echo $core->__('No payment methods available for this account.<br />Reason: ') . $message;
+	endif; ?>
+	<br /><br />
+
+	<b><?=$core->__('Version'); ?></b><br />
+	<?=sprintf($core->__('This is version &quot;v%s&quot; of Mollie&lsquo;s Magento module.'), $this->escapeHtml(Mage::Helper('mpm/data')->getModuleVersion())); ?><br />
+	<br />
+	<?=Mage::Helper('mpm/data')->getModuleStatus($method_count, 32); ?><br />
+	<br />
+	<?=$core->__('If you have any questions or suggestions, please contact <a href="https://www.mollie.nl/bedrijf/contact" title="Mollie Support Contact">Mollie B.V.</a>');?><br />
 	<br/>
-	<p>
-		<ul>
-			<li>- Uw <a href="https://www.mollie.nl/beheer" title="Mollie Beheer">Mollie Account Beheer</a></li>
-			<li>- Uw <a href="https://www.mollie.nl/beheer/account/" title="Profile">Mollie PartnerID</a></li>
-			<li>- Uw <a href="https://www.mollie.nl/beheer/account/profielen/" title="Mollie Beheer">Mollie Profielen</a></li>
-			<li>- Versie: v<?php echo $this->escapeHtml(Mage::Helper('mpm/data')->getModuleVersion()); ?></li>
-			<li>- Support: <a href="https://www.mollie.nl/bedrijf/contact" title="Support Contact">Mollie B.V.</a></li>
-		</ul>
-	</p>
-</div>
+	<img src="https://www.mollie.nl/images/badge-powered-big.png" alt='Mollie' /><br/>
+	<script type="text/javascript">
+		if (!window.pushDownPaypal) window.pushDownPaypal = function ()
+		{
+			var i, notice = document.getElementsByClassName('paypal-payment-notice');
+			for (i = 0; i < notice.length; i++)
+			{
+				notice[i].style.marginTop = '50px';
+			}
+		}
+		if (document.addEventListener)
+		{
+			document.addEventListener("DOMContentLoaded", pushDownPaypal, false);
+		}
+		else if (document.attachEvent)
+		{
+			document.attachEvent("onreadystatechange", pushDownPaypal);
+		}
+	</script>
+</td></tr>
