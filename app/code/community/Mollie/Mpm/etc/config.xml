@@ -171,6 +171,13 @@
     <default>
         <payment>
 
+            <mpm_idl>
+                <group>mollie</group>
+                <active>0</active>
+                <model>mpm/idl</model>
+                <currency>EUR</currency>
+            </mpm_idl>
+
             <mpm_void_00 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
