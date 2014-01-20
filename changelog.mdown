@@ -2,6 +2,9 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.0.1 ##
++ Probleem opgelost waarbij oude orders zochten naar een niet-meer-bestaande betaalmethode.
+
 ## Wijzigingen in versie 4.0.0 ##
 + De module gebruikt nu de nieuwe betalings-API van Mollie. Dit betekent dat de module naast [iDEAL](https://www.mollie.nl/betaaldiensten/ideal/), nu
     ook [creditcard](https://www.mollie.nl/betaaldiensten/creditcard/), [Mister Cash](https://www.mollie.nl/betaaldiensten/mistercash/) en
