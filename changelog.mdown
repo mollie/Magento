@@ -2,6 +2,16 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.0.0 ##
++ De module gebruikt nu de nieuwe betalings-API van Mollie. Dit betekent dat de module naast [iDEAL](https://www.mollie.nl/betaaldiensten/ideal/), nu
+    ook [creditcard](https://www.mollie.nl/betaaldiensten/creditcard/), [Mister Cash](https://www.mollie.nl/betaaldiensten/mistercash/) en
+    [paysafecard](https://www.mollie.nl/betaaldiensten/paysafecard/) ondersteunt. Mocht een betaling om wat voor reden dan ook niet lukken, dat kan uw
+    klant het gelijk nog een keer proberen. U hoeft hiervoor niets extra's te implementeren. In de toekomst zullen ook nog nieuwe betaalmethodes
+    toegevoegd worden. Deze zijn dan direct beschikbaar in uw webshop.
++ Het instellingenscherm is verplaatst naar Payment Methods. Er zijn nieuwe links in het hoofdmenu om de navigatie te vereenvoudigen.
++ Er worden automatisch facturen gegenereerd bij succesvolle betalingen. Dit was een veelgevraagde feature van onze klanten.
++ Engelse en Franse vertalingen zijn toegevoegd.
+
 ## Wijzigingen in versie 3.15 ##
 + Verbeter communicatie met Mollie bij bepaalde SSL fouten.
 + Toon foutmelding tijdens afrekenen wanneer de bankenlijst niet opgehaald kan worden.

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2012-2013, Mollie B.V.
+ * Copyright (c) 2012-2014, Mollie B.V.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -28,8 +28,8 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v3.15.0
- * @copyright   Copyright (c) 2012-2013 Mollie B.V. (https://www.mollie.nl)
+ * @version     v4.0.0
+ * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
  **/
@@ -38,7 +38,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
 	/**
-	 * Get payment bank status by transaction_id
+	 * Get payment bank status by order_id
 	 *
 	 * @return array
 	 */
@@ -59,7 +59,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
 	/**
 	 * Get order_id by transaction_id
-	 * 
+	 *
 	 * @return int|null
 	 */
 	public function getOrderIdByTransactionId($transaction_id)
@@ -82,31 +82,37 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * Gets partner ID from `config_core_data`
+	 * Get transaction_id by order_id
 	 *
-	 * @return string
+	 * @return int|null
 	 */
-	public function getPartnerid()
+	public function getTransactionIdByOrderId($order_id)
 	{
-		return trim(Mage::getStoreConfig("mollie/settings/partnerid"));
+		/** @var $connection Varien_Db_Adapter_Interface */
+		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+		$id = $connection->fetchAll(
+			sprintf(
+				"SELECT `transaction_id` FROM `%s` WHERE `order_id` = %s",
+				Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
+				$connection->quote($order_id)
+			)
+		);
+
+		if (sizeof($id) > 0)
+		{
+			return $id[0]['transaction_id'];
+		}
+		return NULL;
 	}
 
 	/**
-	 * Gets profile key from `config_core_data`
+	 * Gets Api key from `config_core_data`
 	 *
 	 * @return string
 	 */
-	public function getProfilekey()
+	public function getApiKey()
 	{
-		return trim(Mage::getStoreConfig("mollie/settings/profilekey"));
-	}
-
-	/**
-	 * Check if testmode is enabled.
-	 */
-	public function getTestModeEnabled()
-	{
-		return $this->getConfig('idl', 'testmode');
+		return trim(Mage::getStoreConfig("payment/mollie/apikey"));
 	}
 
 	/**
@@ -119,11 +125,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'testmode', 'description', 'minvalue');
-		$paymentmethods = array('idl');
+		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images');
+		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
-			return Mage::getStoreConfig("mollie/{$paymentmethod}/{$key}");
+			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}");
 
 		return NULL;
 	}
@@ -132,26 +138,29 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @return string
 	 * @codeCoverageIgnore
 	 */
-	public function getModuleStatus()
+	public function getModuleStatus($method_count, $method_limit)
 	{
+		$core = Mage::helper('core');
+		// check missing files
 		$needFiles = array();
 		$modFiles  = array(
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Adminhtml/System/Config/Status.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Fail.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Form.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Info.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/IdlController.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Form.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Info.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/ApiController.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/adminhtml.xml',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/config.xml',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/system.xml',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Data.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Idl.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Api.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Api.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Void00.php',
 
 			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/idl.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/image.phtml',
 		);
 
 		foreach ($modFiles as $file)
@@ -161,16 +170,62 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 		}
 
-		if (count($needFiles) > 0) {
-			return implode(" ", $needFiles);
-		}
-		if ( version_compare(Mage::getVersion(), '1.4.1.0', '<')) {
-			return '<span style="color:red">Magento versie niet compatible met module!<br>
-				- Minimale versie verwacht: 1.4.1.x<br>
-				- Gevonden versie: '. Mage::getVersion() .'</span>';
+		if (count($needFiles) > 0)
+		{
+			return '<b>'.$core->__('Missing file(s) detected!').'</b><br />' . implode('<br />', $needFiles);
 		}
 
-		return '<span style="color:green">Module werkt naar behoren!</span>';
+
+		// check version
+		if ( version_compare(Mage::getVersion(), '1.4.1.0', '<'))
+		{
+			return '<b>'.$core->__('Version incompatible!').'</b><br />
+				<span style="color:red">'.$core->__('Your Magento version is incompatible with this module!').'<br>
+				- '.$core->__('Minimal version requirement: ').'1.4.1.x<br>
+				- '.$core->__('Current version: ').Mage::getVersion() .'
+				</span>
+			';
+		}
+
+
+		// check method count
+		if ($method_count > $method_limit)
+		{
+			return '<b>'.$core->__('Module outdated!').'</b><br />
+				<span style="color:#EB5E00">'.sprintf($core->__('Mollie currently provides %d payment methods, while this module only supports %d method slots.'), $method_count, $method_limit).'</span><br />
+				'.$core->__('To enable all supported payment methods, get the latest Magento plugin from the <a href="https://www.mollie.nl/betaaldiensten/ideal/modules/" title="Mollie Modules">Mollie Modules list</a>.').'
+				<br />
+				If no newer version is available, please <a href="https://www.mollie.nl/bedrijf/contact" title="Mollie Support">contact Mollie BV</a>.
+			';
+		}
+
+
+		// check deprecated files
+		$deprFiles = array();
+		$oldFiles = array(
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Fail.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Form.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Info.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/IdlController.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Idl.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/idl.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/api.phtml',
+		);
+
+		foreach ($oldFiles as $file)
+		{
+			if(file_exists($file)) {
+				$deprFiles[] = '<span style="color:#EB5E00">'.$file.'</span>';
+			}
+		}
+
+		if (count($deprFiles) > 0)
+		{
+			return '<b>'.$core->__('Outdated file(s) found!').'</b><br />' . implode('<br />', $deprFiles) . '<br />'.$core->__('These aren&lsquo;t needed any longer; you might as well delete them.');
+		}
+
+		return '<b>'.$core->__('Status').'</b><br /><span style="color:green">'.$core->__('Module status: OK!').'</span>';
 	}
 
 	public function getModuleVersion()

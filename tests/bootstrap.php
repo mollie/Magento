@@ -9,9 +9,9 @@ spl_autoload_register(function($className) {
 
 	$filename = dirname(dirname(__FILE__)) . "/app/code/community/" . str_replace("_", DIRECTORY_SEPARATOR, $className) . '.php';
 
-	if ($className === "Mollie_Mpm_IdlController")
+	if ($className === "Mollie_Mpm_ApiController")
 	{
-		$filename = str_replace("IdlController", "controllers/IdlController", $filename);
+		$filename = str_replace("ApiController", "controllers/ApiController", $filename);
 	}
 
 	if (file_exists($filename))
@@ -37,6 +37,14 @@ spl_autoload_register(function($className) {
 		}
 	}
 });
+
+
+
+/**
+ * @ignore
+ */
+class Test_Exception extends Exception {}
+
 
 /**
  * A special testcase that enables mocking of the static Mage methods.
@@ -88,6 +96,43 @@ class Mage
 	public static function __callStatic($method, array $args)
 	{
 		return call_user_func_array(array(self::$mock, $method), $args);
+	}
+
+	// Static functions
+
+	/**
+	 * @param $place
+	 * @return string
+	 */
+	public static function getBaseDir($place)
+	{
+		$base = __DIR__ . '/../';
+		switch ($place)
+		{
+			case 'app':		return $base . '/app';
+			case 'code':	return $base . '/app/code';
+			case 'design':	return $base . '/app/design';
+			case 'etc':		return $base . '/app/etc';
+			case 'lib':		return $base . '/lib';
+			case 'locale':	return $base . '/app/locale';
+			case 'media':	return $base . '/media';
+			case 'skin':	return $base . '/skin';
+			case 'var':		return $base . '/var';
+			case 'tmp':		return $base . '/var/tmp';
+			case 'cache':	return $base . '/var/cache';
+			case 'log':		return $base . '/var/log';
+			case 'session':	return $base . '/var/session';
+			case 'upload':	return $base . '/media/upload';
+			case 'export':	return $base . '/var/export';
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getVersion()
+	{
+		return '1.8.0';
 	}
 
 }
@@ -149,6 +194,12 @@ class Mage_Sales_Model_Order_Payment_Transaction {
 	const TYPE_CAPTURE = 'capture';
 	const TYPE_VOID    = 'void';
 	const TYPE_REFUND  = 'refund';
+}
+
+class Mage_Core_Helper_Data {
+	public function __($value){
+		return $value;
+	}
 }
 
 

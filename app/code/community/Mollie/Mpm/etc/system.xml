@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- * Copyright (c) 2012-2013, Mollie B.V.
+ * Copyright (c) 2012-2014, Mollie B.V.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -28,120 +28,101 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v3.15.0
- * @copyright   Copyright (c) 2012-2013 Mollie B.V. (https://www.mollie.nl)
+ * @version     v4.0.0
+ * @copyright   Copyright (c) 2012 Mollie B.V. (http://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
 -->
 
 <config>
-	<sections>
-		<mollie>
-			<label><![CDATA[ <img src="https://www.mollie.nl/files/Mollie-Logo-Style-Small.png" alt='Mollie' height='22' /> ]]></label>
-			<tab>sales</tab>
-			<frontend_type>text</frontend_type>
-			<sort_order>910</sort_order>
-			<show_in_default>1</show_in_default>
-			<show_in_website>1</show_in_website>
-			<show_in_store>1</show_in_store>
-			<groups>
-				<settings translate="label" module="mpm">
-					<label>Account Gegevens</label>
-					<expanded>1</expanded>
-					<sort_order>1</sort_order>
-					<frontend_type>text</frontend_type>
-					<show_in_default>1</show_in_default>
-					<show_in_website>0</show_in_website>
-					<show_in_store>1</show_in_store>
+    <sections>
+        <payment>
+            <groups>
+                <mollie translate="label" module="mpm">
+                    <label>Mollie Settings</label>
+                    <expanded>1</expanded>
+                    <sort_order>-100</sort_order>
+                    <frontend_type>text</frontend_type>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>1</show_in_store>
 
-					<fields>
-						<partnerid translate="label">
-							<label>Partner ID</label>
-							<frontend_type>text</frontend_type>
-							<sort_order>1</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<tooltip><![CDATA[<b>Mollie partner ID:</b> <br/>]]> Uw Mollie partner ID. Op dit account wordt de betaling toegevoegd.</tooltip>
-							<validate>required-entry validate-not-negative-number validate-digits</validate>
-						</partnerid>
-						
-						<profilekey translate="label">
-							<label>Profile Key</label>
-							<frontend_type>text</frontend_type>
-							<sort_order>2</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<tooltip><![CDATA[<b>Profilekey:</b> <br/>]]> Vul het betaalprofiel in die u wilt gebruiken.</tooltip>
-							<validate>required-entry validate-alphanum</validate>
-						</profilekey>
-					</fields>
-				</settings>
+                    <fields>
+                        <apikey translate="label tooltip">
+                            <label>Api Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Mollie Api Key:</b> <br/>]]> Your Mollie Api Key. The payment is added to this account.</tooltip>
+                            <validate>required-entry</validate>
+                        </apikey>
 
-				<idl translate="label" module="mpm">
-					<label>iDEAL</label>
-					<expanded>1</expanded>
-					<sort_order>2</sort_order>
-					<frontend_type>text</frontend_type>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
+                        <active translate="label tooltip">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Status:</b> <br/>]]> Enable or disable the Mollie plugin.</tooltip>
+                        </active>
 
-					<fields>
-						<active translate="label">
-							<label>Enabled</label>
-							<frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>1</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<tooltip><![CDATA[<b>Status:</b> <br/>]]> De betaalmodule activeren of deactiveren.</tooltip>
-						</active>
+                        <description translate="label tooltip">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Description:</b> <br/>]]> Enter a description here. Use '%' for the order id. Payment methods may have a character limit: best keep the description under 29 characters.</tooltip>
+                            <validate>required-entry</validate>
+                        </description>
 
-						<testmode translate="label">
-							<label>Testmode</label>
-							<frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>2</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<tooltip><![CDATA[<b>Testmode:</b> <br/>]]> Gebruik de testmode om betalingen te testen zonder een echte betaling te doen.</tooltip>
-						</testmode>
+                        <skip_invoice translate="label tooltip">
+                            <label>Manual invoicing</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Manual invoices:</b> <br/>]]> Enable this option to skip auto-invoicing.</tooltip>
+                        </skip_invoice>
 
-						<description translate="label">
-							<label>Beschrijving</label>
-							<frontend_type>text</frontend_type>
-							<sort_order>3</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<tooltip><![CDATA[<b>Beschrijving:</b> <br/>]]> Vul hier een omschrijving in van maximaal 29 karakters (bijv. een ordernummer). Tip: gebruik '%' voor het ordernummer. Houdt u er wel rekening mee dat dit meetelt met het aantal beschikbare karakters.</tooltip>
-							<validate>required-entry</validate>
-						</description>
-
-						<minvalue translate="label">
-							<label>Minimale order bedrag (CENTEN)</label>
-							<frontend_type>text</frontend_type>
-							<sort_order>4</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<tooltip><![CDATA[<b>Minimaal bestelbedrag:</b> <br/>]]> Minimale bedrag voor iDEAL wordt weergeven bij een bestelling (MEEGEGEVEN IN CENTEN!).</tooltip>
-							<validate>required-entry validate-not-negative-number validate-digits validate-greater-than-zero</validate>
-						</minvalue>
-					</fields>
-				</idl>
-				<hint>
-					<frontend_model>mpm/adminhtml_system_config_status</frontend_model>
-					<sort_order>99</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-                </hint>
-			</groups>
-		</mollie>
-	</sections>
+                        <show_images translate="label tooltip">
+                            <label>Show Images</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Show Images:</b> <br/>]]> Enable or disable payment method logos.</tooltip>
+                        </show_images>
+                    </fields>
+                </mollie>
+                <mollie_support translate="label" module="mpm">
+                    <label>Mollie Support</label>
+                    <expanded>1</expanded>
+                    <sort_order>-90</sort_order>
+                    <frontend_type>text</frontend_type>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <hint>
+                            <sort_order>0</sort_order>
+                            <frontend_model>mpm/adminhtml_system_config_status</frontend_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </hint>
+                    </fields>
+                </mollie_support>
+            </groups>
+        </payment>
+    </sections>
 </config>
