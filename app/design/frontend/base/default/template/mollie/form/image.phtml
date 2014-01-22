@@ -19,7 +19,7 @@ $_code = $this->getMethodCode();
 			var element = findElementByAttribute('label', 'for', 'p_method_<?=$_code; ?>');
 			if (element)
 			{
-				element.innerHTML = '<img src="<?=Mage::getModel('mpm/api')->getMethodByPlaceholderName($_code)->image->normal; ?>" alt="" height="20" margin="0" /> ' + element.innerHTML;
+				element.innerHTML = '<img src="<?=Mage::Helper('mpm/api')->getMethodByCode($_code)['image']->normal; ?>" alt="" height="20" margin="0" /> ' + element.innerHTML;
 			}
 		</script>
 	</li>

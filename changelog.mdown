@@ -2,6 +2,9 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.0.2 ##
++ Probleem met uitgeschakelde betaalmethoden opgelost.
+
 ## Wijzigingen in versie 4.0.1 ##
 + Probleem opgelost waarbij oude orders zochten naar een niet-meer-bestaande betaalmethode.
 

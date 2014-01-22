@@ -2,33 +2,33 @@
 
 /**
  * Copyright (c) 2012-2014, Mollie B.V.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met: 
- * 
- * - Redistributions of source code must retain the above copyright notice, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright 
+ * - Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY 
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY 
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
- * DAMAGE. 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
  *
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.0
+ * @version     v4.0.2
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -120,15 +120,15 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function getConfigData($field, $storeId = null)
 	{
-		if ($this->_api->methods instanceof Mollie_API_Object_List)
+		if (is_array($this->_api->methods))
 		{
 			if ($field == "min_order_total")
 			{
-				return $this->_api->methods[$this->_index]->amount->minimum;
+				return $this->_api->methods[$this->_index]['amount']->minimum;
 			}
 			if ($field == "max_order_total")
 			{
-				return $this->_api->methods[$this->_index]->amount->maximum;
+				return $this->_api->methods[$this->_index]['amount']->maximum;
 			}
 		}
 		return parent::getConfigData($field, $storeId);
@@ -146,7 +146,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		// If this is a void field to be filled, fill it
 		if ($this->isValidIndex())
 		{
-			return Mage::helper('core')->__($this->_api->methods[$this->_index]->description);
+			return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
 		}
 		// Otherwise, translate the title from config.xml
 		return Mage::helper('core')->__(parent::getTitle());
@@ -176,7 +176,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 * @param Mage_Sales_Model_Quote
 	 * @return bool
 	 */
-    public function isAvailable($quote = NULL)
+	public function isAvailable($quote = NULL)
 	{
 		$enabled = (bool) Mage::Helper('mpm/data')->getConfig('mollie', 'active');
 
@@ -185,6 +185,10 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			return FALSE;
 		}
 		if (!$this->isValidIndex())
+		{
+			return FALSE;
+		}
+		if (!$this->_api->methods[$this->_index]['available'])
 		{
 			return FALSE;
 		}
@@ -235,8 +239,8 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
 		if(strlen(Mage::registry('method_id')) == 0)
 		{
-			$method = $this->getMethodByPlaceholderName($data->_data["method"]);
-			Mage::register('method_id', $method->id);
+			$method = $this->_api->getMethodByCode($data->_data['method']);
+			Mage::register('method_id', $method['method_id']);
 		}
 
 		return $this;
@@ -319,11 +323,5 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	public function isValidIndex ()
 	{
 		return isset($this->_index) && $this->_index >= 0 && $this->_index < sizeof($this->_api->methods);
-	}
-
-	public function getMethodByPlaceholderName($placeholder_name)
-	{
-		$method_id = (int) str_replace('mpm_void_', '', $placeholder_name);
-		return $this->_api->methods[$method_id];
 	}
 }

@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.0
+ * @version     v4.0.2
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -195,6 +195,11 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 	 */
 	public function webhookAction ()
 	{
+		// Determine if this is a connection test
+		if ($this->getRequest()->getParam('testByMollie'))
+		{
+			Mage::getConfig()->saveConfig('payment/mollie/webhook_tested', '1');
+		}
 		// Get transaction_id from post parameter
 		$transactionId = $this->getRequest()->getParam('id');
 

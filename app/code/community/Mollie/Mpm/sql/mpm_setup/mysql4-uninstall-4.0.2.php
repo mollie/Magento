@@ -28,53 +28,32 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.0
+ * @version     v4.0.2
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
- * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  Open Software License (OSL 3.0)
  * 
  **/
 
 $installer = $this;
+
 $installer->startSetup();
 
-/*
- * Mollie tabel maken.
- */
 $installer->run(
-	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
-		`order_id` int(11) NOT NULL,
-		`method` varchar(3) NOT NULL,
-		`transaction_id` varchar(32) NOT NULL,
-		`bank_account` varchar(15) NOT NULL,
-		`bank_status` varchar(20) NOT NULL,
-		`created_at` datetime NOT NULL,
-		`updated_at` datetime DEFAULT NULL,
-		 UNIQUE KEY `transaction_id` (`transaction_id`),
-		 KEY `order_id` (`order_id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	sprintf("DROP TABLE IF EXISTS `%s`",
 		$installer->getTable('mollie_payments')
-	) . "REPLACE INTO `{$installer->getTable('core_config_data')}` SET `path` = 'payment/mollie/description', `value` = 'Order %';"
+	)
+);
+$installer->run(
+	sprintf("DROP TABLE IF EXISTS `%s`",
+		$installer->getTable('mollie_methods')
+	)
 );
 
-/*
- * Een waarschuwing in de beheerder-sectie geven dat de Mollie instellingen ingesteld moeten worden.
- */
-if(strlen(Mage::getStoreConfig("mollie/settings/apikey")) === 0)
-{
-	$installer->run(
-		sprintf("INSERT INTO `%s` (`severity`, `date_added`, `title`, `description`, `url`, `is_read`, `is_remove`)
-			VALUES ('4', '%s', 'Go to System -> Configuration -> Payment Methods and enter your Mollie settings to enable the payment method',
-			'Your Mollie settings need to be set. Before doing so, your customers will not be able to use the Mollie payment methods',
-			'https://www.mollie.nl/', '0', '0');",
-			$installer->getTable('adminnotification_inbox'),
-			date("Y/m/d H:i:s", time())
-		)
-	);
-}
-
-// Clear cache
-// Mage::app()->cleanCache();
-// Mage::app()->getCache()->clean();
-// Mage::app()->getCacheInstance()->flush();
+$installer->run("
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'payment/mollie/active';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'payment/mollie/description';
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` = 'payment/mollie/apikey';
+	DELETE FROM `{$installer->getTable('core_resource')}` where `code` = 'mpm_setup';"
+);
 
 $installer->endSetup();

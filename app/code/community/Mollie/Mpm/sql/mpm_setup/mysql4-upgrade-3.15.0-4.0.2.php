@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.0
+ * @version     v4.0.2
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -36,11 +36,23 @@
 
 $installer = $this;
 
-$table_mollie_payments = $installer->getTable('mollie_payments');
-
 $installer->run("
 	UPDATE `{$installer->getTable('core_config_data')}` SET `path` = REPLACE(`path`, 'mollie/idl', 'payment/api') WHERE `path` LIKE '%mollie/idl%';
 	DELETE FROM `{$installer->getTable('core_config_data')}` WHERE `path` = 'mollie/settings/partnerid';
 	DELETE FROM `{$installer->getTable('core_config_data')}` WHERE `path` = 'mollie/settings/profilekey';
 	REPLACE INTO `{$installer->getTable('core_config_data')}` SET `path` = 'payment/mollie/description', `value` = 'Order %';
 ");
+
+/*
+ * Tabel Betaalmethodes
+ */
+$installer->run(
+	sprintf("CREATE TABLE `%s` (
+		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		  `method_id` varchar(32) NOT NULL DEFAULT '',
+		  `description` varchar(32) NOT NULL DEFAULT '',
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+		$installer->getTable('mollie_methods')
+	)
+);

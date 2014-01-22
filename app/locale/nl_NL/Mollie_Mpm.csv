@@ -1,7 +1,9 @@
 "The payment service is currently unavailable.","De betaalservice is momenteel niet beschikbaar."
 "The module is configured incorrectly.","De module is niet correct geconfigureerd."
 "Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>.","Uw Mollie Account is bereikbaar vanuit Magento, maar <a href=""http://mollie.dev/beheer/diensten/"">heeft geen ingeschakelde betaalmethoden</a>."
+"Warning: It seems you have not set a webhook in your Mollie profile.", "Waarschuwing: Het lijkt erop dat u nog geen webhook hebt ingesteld in uw Mollie profiel. Zonder een bij Mollie bekende webhook kunnen uw betalingen niet slagen!!"
 
+"Webhook not set!", "Webhook niet ingesteld!"
 "Missing file(s) detected!","Missende bestanden gedetecteerd!"
 "Version incompatible!","Incompatibele versie!"
 "Your Magento version is incompatible with this module!","Uw Magento versie is incompatibel met deze module!"

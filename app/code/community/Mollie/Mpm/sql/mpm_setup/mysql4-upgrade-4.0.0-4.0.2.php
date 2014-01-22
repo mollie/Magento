@@ -1,7 +1,6 @@
-<?xml version="1.0"?>
+<?php
 
-<!--
- *
+/**
  * Copyright (c) 2012-2014, Mollie B.V.
  * All rights reserved.
  *
@@ -27,37 +26,26 @@
  * DAMAGE.
  *
  * @category    Mollie
- * @package     Mollie_Payment_Module
+ * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
  * @version     v4.0.2
- * @copyright   Copyright (c) 2012-2014 Mollie B.V. (http://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
--->
+ **/
 
+$installer = $this;
 
-<config>
-    <menu>
-        <mollie module="mpm">
-            <title>Mollie</title>
-            <sort_order>100</sort_order>
-            <children>
-                <settings translate="title" module="mpm">
-                    <title>Settings</title>
-                    <sort_order>10</sort_order>
-                    <action>adminhtml/system_config/edit/section/payment</action>
-                </settings>
-                <profiles translate="title" module="mpm">
-                    <title>Mollie Profiles <![CDATA[[&rarr;]]]></title>
-                    <sort_order>20</sort_order>
-                    <action>mpm/api/profiles</action>
-                </profiles>
-                <molliebv translate="title" module="mpm">
-                    <title>Mollie Dashboard <![CDATA[[&rarr;]]]></title>
-                    <sort_order>30</sort_order>
-                    <action>mpm/api/dashboard</action>
-                </molliebv>
-            </children>
-        </mollie>
-    </menu>
-</config>
+/*
+ * Tabel Betaalmethodes
+ */
+$installer->run(
+	sprintf("CREATE TABLE `%s` (
+		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		  `method_id` varchar(32) NOT NULL DEFAULT '',
+		  `description` varchar(32) NOT NULL DEFAULT '',
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+		$installer->getTable('mollie_methods')
+	)
+);

@@ -2,36 +2,36 @@
 
 /**
  * Copyright (c) 2012-2014, Mollie B.V.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met: 
- * 
- * - Redistributions of source code must retain the above copyright notice, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright 
+ * - Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY 
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY 
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
- * DAMAGE. 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
  *
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.0
+ * @version     v4.0.2
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- * 
+ *
  **/
 
 class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
@@ -47,12 +47,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		/** @var $connection Varien_Db_Adapter_Interface */
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$status = $connection->fetchAll(
-						sprintf(
-							"SELECT `bank_status` FROM `%s` WHERE `transaction_id` = %s",
-							Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
-							$connection->quote($transaction_id)
-						)
-					);
+			sprintf(
+				"SELECT `bank_status` FROM `%s` WHERE `transaction_id` = %s",
+				Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
+				$connection->quote($transaction_id)
+			)
+		);
 
 		return $status[0];
 	}
@@ -67,12 +67,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		/** @var $connection Varien_Db_Adapter_Interface */
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$id = $connection->fetchAll(
-						sprintf(
-							"SELECT `order_id` FROM `%s` WHERE `transaction_id` = %s",
-							Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
-							$connection->quote($transaction_id)
-						)
-					);
+			sprintf(
+				"SELECT `order_id` FROM `%s` WHERE `transaction_id` = %s",
+				Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
+				$connection->quote($transaction_id)
+			)
+		);
 
 		if (sizeof($id) > 0)
 		{
@@ -105,6 +105,36 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		return NULL;
 	}
 
+	public function getStoredMethods()
+	{
+		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+		//$connection->setFetchMode(Zend_Db::FETCH_OBJ);
+		$methods = $connection->fetchAll(
+			sprintf(
+				"SELECT * FROM `%s`",
+				Mage::getSingleton('core/resource')->getTableName('mollie_methods')
+			)
+		);
+		return $methods;
+	}
+
+	public function setStoredMethods($methods)
+	{
+		$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+		$connection->query(sprintf('TRUNCATE TABLE `%s`', Mage::getSingleton('core/resource')->getTableName('mollie_methods')));
+		foreach ($methods as $method)
+		{
+			$connection->insert(
+				Mage::getSingleton('core/resource')->getTableName('mollie_methods'),
+				array(
+					'method_id' => $method['method_id'],
+					'description' => $method['description'],
+				)
+			);
+		}
+		return $this;
+	}
+
 	/**
 	 * Gets Api key from `config_core_data`
 	 *
@@ -125,7 +155,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images');
+		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images', 'webhook_tested');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
@@ -154,6 +184,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Data.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Api.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Api.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Void00.php',
 
 			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
@@ -200,6 +231,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 
+		// Check if webhook is set
+		if (!Mage::Helper('mpm/data')->getConfig('mollie', 'webhook_tested'))
+		{
+			return '<b>'.$core->__('Webhook not set!').'</b><br /><span style="color:red;">'.$core->__('Warning: It seems you have not set a webhook in your Mollie profile.').'</span><br />';
+		}
+
+
 		// check deprecated files
 		$deprFiles = array();
 		$oldFiles = array(
@@ -208,7 +246,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Info.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/IdlController.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Idl.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/idl.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/api.phtml',
 		);
