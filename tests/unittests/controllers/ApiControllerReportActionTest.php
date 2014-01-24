@@ -60,8 +60,7 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 		$this->request = $this->getMock("stdClass", array("getParam"));
 		$this->request->expects($this->atLeastOnce())
 			->method("getParam")
-			->with("id")
-			->will($this->returnValue(self::TRANSACTION_ID));
+			->will($this->onConsecutiveCalls(0, self::TRANSACTION_ID));
 
 		$this->controller->expects($this->any())
 			->method("getRequest")

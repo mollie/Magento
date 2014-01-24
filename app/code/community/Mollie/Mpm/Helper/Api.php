@@ -290,42 +290,47 @@ class Mollie_Mpm_Helper_Api
 			$api_methods = $api->methods->all();
 			$all_methods = Mage::Helper('mpm/data')->getStoredMethods();
 
-			foreach ($all_methods as $i => $s)
+			foreach ($all_methods as $index => $stored_method)
 			{
-				$all_methods[$i]['available'] = FALSE;
-				foreach ($api_methods as $c)
+				$all_methods[$index]['available'] = FALSE;
+
+				foreach ($api_methods as $api_method)
 				{
-					if ($s['method_id'] === $c->id)
+					if ($stored_method['method_id'] === $api_method->id)
 					{
-						$all_methods[$i]['available'] = TRUE;
+						$all_methods[$index]['available'] = TRUE;
 						break;
 					}
 				}
 			}
-			foreach ($api_methods as $c)
+
+			foreach ($api_methods as $api_method)
 			{
-				$c->available = FALSE;
+				$api_method->available = FALSE;
+
 				foreach ($all_methods as $i => $s)
 				{
-					if ($c->id === $s['method_id'])
+					if ($api_method->id === $s['method_id'])
 					{
 						// recognised method, put in correct order
-						$c->available = TRUE;
-						$c->method_id = $c->id;
-						$all_methods[$i] = (array) $c;
+						$api_method->available = TRUE;
+						$api_method->method_id = $api_method->id;
+						$all_methods[$i] = (array) $api_method;
 						break;
 					}
 				}
-				if (!$c->available)
+
+				if (!$api_method->available)
 				{
 					// newly added method, add to end of array
-					$c->available = TRUE;
-					$c->method_id = $c->id;
-					$all_methods[] = (array) $c;
+					$api_method->available = TRUE;
+					$api_method->method_id = $api_method->id;
+					$all_methods[] = (array) $api_method;
 				}
 			}
 
 			Mage::Helper('mpm/data')->setStoredMethods($all_methods);
+
 			return $all_methods;
 		}
 		catch (Mollie_API_Exception $e)

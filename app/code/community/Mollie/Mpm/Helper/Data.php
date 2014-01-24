@@ -118,20 +118,33 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		return $methods;
 	}
 
-	public function setStoredMethods($methods)
+	public function setStoredMethods (array $methods)
 	{
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
-		$connection->query(sprintf('TRUNCATE TABLE `%s`', Mage::getSingleton('core/resource')->getTableName('mollie_methods')));
+		$table_name = Mage::getSingleton('core/resource')->getTableName('mollie_methods');
+
+		$connection->query("DELETE FROM `{$table_name}` WHERE 1");
+
+		$inserted_methods = array();
+
 		foreach ($methods as $method)
 		{
+			if (isset($inserted_methods[$method['method_id']]))
+			{
+				continue;
+			}
+
+			$inserted_methods[$method['method_id']] = TRUE;
+
 			$connection->insert(
-				Mage::getSingleton('core/resource')->getTableName('mollie_methods'),
+				$table_name,
 				array(
-					'method_id' => $method['method_id'],
+					'method_id'   => $method['method_id'],
 					'description' => $method['description'],
 				)
 			);
 		}
+
 		return $this;
 	}
 

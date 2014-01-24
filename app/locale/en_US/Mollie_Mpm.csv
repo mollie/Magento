@@ -1,7 +1,7 @@
 "The payment service is currently unavailable.","The payment service is currently unavailable."
 "The module is configured incorrectly.","The module is configured incorrectly."
 "Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>.","Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>."
-"Warning: It seems you have not set a webhook in your Mollie profile.", "Warning: It seems you have not set a webhook in your Mollie profile. Without a webhook known to Mollie, your payments cannot succeed!"
+"Warning: It seems you have not set a webhook in your Mollie profile.", "Warning: It seems you have not set a webhook in your Mollie profile. Without the webhook orders will stay in pending status."
 
 "Webhook not set!", "Webhook not set!"
 "Missing file(s) detected!","Missing file(s) detected!"
