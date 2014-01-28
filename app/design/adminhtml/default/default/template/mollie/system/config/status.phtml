@@ -16,20 +16,20 @@ foreach ($methods as $method)
 }
 ?>
 	<tr><td>
-		<b><?=$core->__('Api Key'); ?></b><br />
-		<?=$core->__('You can find your <i>Api Key</i> in your <a href="https://www.mollie.nl/beheer/account/profielen/" title="Mollie Profiles">Mollie Profile</a>.');?><br />
+		<b><?php echo $core->__('Api Key'); ?></b><br />
+		<?php echo $core->__('You can find your <i>Api Key</i> in your <a href="https://www.mollie.nl/beheer/account/profielen/" title="Mollie Profiles">Mollie Profile</a>.');?><br />
 		<br />
 
-		<b><?=$core->__('Webhook'); ?></b><br />
-		<?=$core->__('Your webhook URL is:'); ?><br />
-		<input id="webhook" value="<?=$this->escapeHtml(Mage::getUrl('mpm/api/webhook')); ?>" readonly onclick="this.select();" /><br />
+		<b><?php echo $core->__('Webhook'); ?></b><br />
+		<?php echo $core->__('Your webhook URL is:'); ?><br />
+		<input id="webhook" value="<?php echo $this->escapeHtml(Mage::getUrl('mpm/api/webhook')); ?>" readonly onclick="this.select();" /><br />
 		<script type="text/javascript">
 			var el = document.getElementById('webhook');
 			el.size = el.value.length + 20;
 		</script>
 		<br />
 
-		<b><?=$core->__('Payment methods'); ?></b><br />
+		<b><?php echo $core->__('Payment methods'); ?></b><br />
 		<?php if ($method_count > 0): ?>
 			<?php
 			if ($method_count !== 1)
@@ -43,18 +43,18 @@ foreach ($methods as $method)
 			?>
 			<table>
 				<tr>
-					<th style="width:150px;"><?=$core->__('Description');?></th>
-					<th style="width:150px;"><?=$core->__('Minimum Amount');?></th>
-					<th style="width:150px;"><?=$core->__('Maximum Amount');?></th>
+					<th style="width:150px;"><?php echo $core->__('Description');?></th>
+					<th style="width:150px;"><?php echo $core->__('Minimum Amount');?></th>
+					<th style="width:150px;"><?php echo $core->__('Maximum Amount');?></th>
 				</tr>
 				<?php
 				foreach($methods as $method):
 					if ($method['available']):
 						?>
 						<tr>
-							<td><?=$core->__($method['description']); ?></td>
-							<td>&euro; <?=number_format($method['amount']->minimum, 2); ?></td>
-							<td>&euro; <?=number_format($method['amount']->maximum, 2); ?></td>
+							<td><?php echo $core->__($method['description']); ?></td>
+							<td>&euro; <?php echo number_format($method['amount']->minimum, 2); ?></td>
+							<td>&euro; <?php echo number_format($method['amount']->maximum, 2); ?></td>
 						</tr>
 					<?php
 					endif;
@@ -66,12 +66,12 @@ foreach ($methods as $method)
 		endif; ?>
 		<br />
 
-		<b><?=$core->__('Version'); ?></b><br />
-		<?=sprintf($core->__('This is version &quot;v%s&quot; of Mollie&lsquo;s Magento module.'), $this->escapeHtml(Mage::Helper('mpm/data')->getModuleVersion())); ?><br />
+		<b><?php echo $core->__('Version'); ?></b><br />
+		<?php echo sprintf($core->__('This is version &quot;v%s&quot; of Mollie&lsquo;s Magento module.'), $this->escapeHtml(Mage::Helper('mpm/data')->getModuleVersion())); ?><br />
 		<br />
-		<?=Mage::Helper('mpm/data')->getModuleStatus($method_count, 32); ?><br />
+		<?php echo Mage::Helper('mpm/data')->getModuleStatus($method_count, 32); ?><br />
 		<br />
-		<?=$core->__('If you have any questions or suggestions, please contact <a href="https://www.mollie.nl/bedrijf/contact" title="Mollie Support Contact">Mollie B.V.</a>');?><br />
+		<?php echo $core->__('If you have any questions or suggestions, please contact <a href="https://www.mollie.nl/bedrijf/contact" title="Mollie Support Contact">Mollie B.V.</a>');?><br />
 		<br/>
 		<img src="https://www.mollie.nl/images/badge-powered-big.png" alt='Mollie' /><br/>
 		<script type="text/javascript">
