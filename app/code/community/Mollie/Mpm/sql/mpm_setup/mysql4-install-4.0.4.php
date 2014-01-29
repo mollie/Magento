@@ -59,20 +59,31 @@ $installer->run(
 /*
  * Tabel Betaalmethodes
  */
-$installer->run(
-	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
-		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-		  `method_id` varchar(32) NOT NULL DEFAULT '',
-		  `description` varchar(32) NOT NULL DEFAULT '',
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-		$installer->getTable('mollie_methods')
-	)
+
+$table = $installer->getTable('mollie_methods');
+$installer->run("
+	DROP TABLE IF EXISTS `".$table."`;
+	CREATE TABLE `".$table."` (
+		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		`method_id` varchar(32) NOT NULL DEFAULT '',
+		`description` varchar(32) NOT NULL DEFAULT '',
+		PRIMARY KEY (`id`),
+		UNIQUE KEY `method_id` (`method_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	INSERT INTO `".$table."` SET `method_id` = 'ideal', `description` = 'iDEAL';"
 );
+// update sales_flat_order_payment
+$table = $installer->getTable('sales_flat_order_payment');
+$sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mollie', 'mpm_void_0');";
+for ($i = 1; $i < 10; $i++)
+{
+	$sql .= "UPDATE `".$table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';";
+}
+$installer->run($sql);
 
 // Clear cache
-// Mage::app()->cleanCache();
-// Mage::app()->getCache()->clean();
-// Mage::app()->getCacheInstance()->flush();
+//Mage::app()->cleanCache();
+//Mage::app()->getCache()->clean();
+//Mage::app()->getCacheInstance()->flush();
 
 $installer->endSetup();

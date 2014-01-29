@@ -167,6 +167,10 @@ class Mollie_Mpm_Helper_Api
 
 	protected function _setAutoLoader()
 	{
+		if (!file_exists(Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php"))
+		{
+			return;
+		}
 		$autoloader_callbacks = spl_autoload_functions();
 		$original_autoload = null;
 		foreach($autoloader_callbacks as $callback)
@@ -286,65 +290,72 @@ class Mollie_Mpm_Helper_Api
 	{
 		try
 		{
-			$api = $this->_getMollieAPi();
-			$api_methods = $api->methods->all();
-			$all_methods = Mage::Helper('mpm/data')->getStoredMethods();
-
-			foreach ($all_methods as $index => $stored_method)
+			try
 			{
-				$all_methods[$index]['available'] = FALSE;
+				$api = $this->_getMollieAPi();
+				$api_methods = $api->methods->all();
+				$all_methods = Mage::Helper('mpm/data')->getStoredMethods();
+
+				foreach ($all_methods as $index => $stored_method)
+				{
+					$all_methods[$index]['available'] = FALSE;
+
+					foreach ($api_methods as $api_method)
+					{
+						if ($stored_method['method_id'] === $api_method->id)
+						{
+							$all_methods[$index]['available'] = TRUE;
+							break;
+						}
+					}
+				}
 
 				foreach ($api_methods as $api_method)
 				{
-					if ($stored_method['method_id'] === $api_method->id)
+					$api_method->available = FALSE;
+
+					foreach ($all_methods as $i => $s)
 					{
-						$all_methods[$index]['available'] = TRUE;
-						break;
+						if ($api_method->id === $s['method_id'])
+						{
+							// recognised method, put in correct order
+							$api_method->available = TRUE;
+							$api_method->method_id = $api_method->id;
+							$all_methods[$i] = (array) $api_method;
+							break;
+						}
 					}
-				}
-			}
 
-			foreach ($api_methods as $api_method)
-			{
-				$api_method->available = FALSE;
-
-				foreach ($all_methods as $i => $s)
-				{
-					if ($api_method->id === $s['method_id'])
+					if (!$api_method->available)
 					{
-						// recognised method, put in correct order
+						// newly added method, add to end of array
 						$api_method->available = TRUE;
 						$api_method->method_id = $api_method->id;
-						$all_methods[$i] = (array) $api_method;
-						break;
+						$all_methods[] = (array) $api_method;
 					}
 				}
 
-				if (!$api_method->available)
+				Mage::Helper('mpm/data')->setStoredMethods($all_methods);
+
+				return $all_methods;
+			}
+			catch (Mollie_API_Exception $e)
+			{
+				Mage::log(__CLASS__ . '::' . __FUNCTION__ . '() failed to fetch available payment methods. API said: ' . $e->getMessage() . ' (' . $e->getCode() . ') ' );
+
+				if (strpos($e->getMessage(), "Unable to communicate with Mollie") === 0)
 				{
-					// newly added method, add to end of array
-					$api_method->available = TRUE;
-					$api_method->method_id = $api_method->id;
-					$all_methods[] = (array) $api_method;
+					return Mage::helper('core')->__('The payment service is currently unavailable.');
+				}
+				else
+				{
+					return Mage::helper('core')->__('The module is configured incorrectly.');
 				}
 			}
-
-			Mage::Helper('mpm/data')->setStoredMethods($all_methods);
-
-			return $all_methods;
 		}
-		catch (Mollie_API_Exception $e)
+		catch (Exception $e)
 		{
-			Mage::log(__CLASS__ . '::' . __FUNCTION__ . '() failed to fetch available payment methods. API said: ' . $e->getMessage() . ' (' . $e->getCode() . ') ' );
-
-			if (strpos($e->getMessage(), "Unable to communicate with Mollie") === 0)
-			{
-				return Mage::helper('core')->__('The payment service is currently unavailable.');
-			}
-			else
-			{
-				return Mage::helper('core')->__('The module is configured incorrectly.');
-			}
+			return Mage::helper('core')->__('The API client seems to be missing. Did you upload the &quot;lib&quot; folder?<br />'.$e);
 		}
 	}
 

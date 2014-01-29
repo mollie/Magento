@@ -108,7 +108,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	public function getStoredMethods()
 	{
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
-		//$connection->setFetchMode(Zend_Db::FETCH_OBJ);
+
 		$methods = $connection->fetchAll(
 			sprintf(
 				"SELECT * FROM `%s`",
@@ -123,26 +123,17 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
 		$table_name = Mage::getSingleton('core/resource')->getTableName('mollie_methods');
 
-		$connection->query("DELETE FROM `{$table_name}` WHERE 1");
-
-		$inserted_methods = array();
-
 		foreach ($methods as $method)
 		{
-			if (isset($inserted_methods[$method['method_id']]))
-			{
-				continue;
-			}
-
-			$inserted_methods[$method['method_id']] = TRUE;
-
-			$connection->insert(
-				$table_name,
-				array(
-					'method_id'   => $method['method_id'],
-					'description' => $method['description'],
+			$id = $method['method_id'];
+			$desc = $method['description'];
+			$connection->query("
+				INSERT INTO `".$table_name."` SELECT '".$id."', '".$desc."' FROM `".$table_name."`
+				WHERE NOT EXISTS(
+					SELECT `method_id` FROM `".$table_name."`
+					WHERE `method_id`='".$id."' LIMIT 1
 				)
-			);
+			");
 		}
 
 		return $this;
@@ -205,6 +196,18 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/image.phtml',
+
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Exception.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Issuer.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/List.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Method.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Payment.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Base.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Issuers.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Methods.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Payments.php",
 		);
 
 		foreach ($modFiles as $file)

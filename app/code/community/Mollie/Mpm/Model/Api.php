@@ -322,6 +322,10 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
 	public function isValidIndex ()
 	{
+		if (!is_array($this->_api->methods))
+		{
+			return FALSE;
+		}
 		return isset($this->_index) && $this->_index >= 0 && $this->_index < sizeof($this->_api->methods);
 	}
 }

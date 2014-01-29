@@ -1,3 +1,4 @@
+"The API client seems to be missing. Did you upload the &quot;lib&quot; folder?","De API client lijkt te missen. Id de map &quot;lib&quot; geupload?"
 "The payment service is currently unavailable.","De betaalservice is momenteel niet beschikbaar."
 "The module is configured incorrectly.","De module is niet correct geconfigureerd."
 "Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>.","Uw Mollie Account is bereikbaar vanuit Magento, maar <a href=""http://mollie.dev/beheer/diensten/"">heeft geen ingeschakelde betaalmethoden</a>."
