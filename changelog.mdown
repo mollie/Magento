@@ -2,6 +2,10 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.0.4 $$
++ Probleemoplosser in het installatiescript toegevoegd
++ Webhookverificatie toegevoegd
+
 ## Wijzigingen in versie 4.0.2 ##
 + Probleem met uitgeschakelde betaalmethoden opgelost.
 
