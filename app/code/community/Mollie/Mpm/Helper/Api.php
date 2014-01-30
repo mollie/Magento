@@ -355,7 +355,7 @@ class Mollie_Mpm_Helper_Api
 		}
 		catch (Exception $e)
 		{
-			return Mage::helper('core')->__('The API client seems to be missing. Did you upload the &quot;lib&quot; folder?<br />'.$e);
+			return Mage::helper('core')->__('The API client seems to be missing. Did you upload the &quot;lib&quot; folder?');
 		}
 	}
 
