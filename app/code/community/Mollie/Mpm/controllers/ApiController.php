@@ -199,6 +199,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		if ($this->getRequest()->getParam('testByMollie'))
 		{
 			Mage::getConfig()->saveConfig('payment/mollie/webhook_tested', '1');
+			return;
 		}
 		// Get transaction_id from post parameter
 		$transactionId = $this->getRequest()->getParam('id');
