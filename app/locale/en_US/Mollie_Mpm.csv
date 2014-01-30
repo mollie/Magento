@@ -1,4 +1,4 @@
-"The API client seems to be missing. Did you upload the &quot;lib&quot; folder?","The API client seems to be missing. Did you upload the &quot;lib&quot; folder?"
+"There was an error:","There was an error:"
 "The payment service is currently unavailable.","The payment service is currently unavailable."
 "The module is configured incorrectly.","The module is configured incorrectly."
 "Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>.","Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>."
