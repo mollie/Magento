@@ -260,10 +260,16 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 						$this->_savePaidInvoice($order);
 					}
 
-					$transaction = $payment->getTransaction($transactionId);
-					$transaction->setTxnType(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
-					$transaction->setIsClosed(TRUE);
-					$transaction->save();
+					if ($transaction = $payment->getTransaction($transactionId))
+					{
+						$transaction->setTxnType(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
+						$transaction->setIsClosed(TRUE);
+						$transaction->save();
+					}
+					else
+					{
+						Mage::log(__CLASS__ . '::' . __METHOD__ . ' said: Could not find a transaction with id ' . $transactionId . ' for order ' . $orderId);
+					}
 				}
 				else
 				{
