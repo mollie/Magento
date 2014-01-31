@@ -120,7 +120,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function getConfigData($field, $storeId = null)
 	{
-		if (is_array($this->_api->methods))
+		if ($this->isValidIndex())
 		{
 			if ($field == "min_order_total")
 			{
@@ -129,6 +129,10 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			if ($field == "max_order_total")
 			{
 				return $this->_api->methods[$this->_index]['amount']->maximum;
+			}
+			if ($field == "title")
+			{
+				return $this->_api->methods[$this->_index]['description'];
 			}
 		}
 		return parent::getConfigData($field, $storeId);
