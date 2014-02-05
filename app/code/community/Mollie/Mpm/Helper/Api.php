@@ -93,27 +93,28 @@ class Mollie_Mpm_Helper_Api
 		$billing = $order->getBillingAddress();
 
 		$params = array(
-			"amount" => $this->getAmount(),
-			"description" => $this->getDescription(),
-			"redirectUrl" => $this->getRedirectURL(),
-			"method" => $method,
-			"metadata" => array(
-				"order_id" => $order->getId(),
+			"amount"				=> $this->getAmount(),
+			"description"			=> $this->getDescription(),
+			"redirectUrl"			=> $this->getRedirectURL(),
+			"method"				=> $method,
+			"issuer"				=> (empty($issuer) ? null : $issuer),
+			"metadata"				=> array(
+				"order_id"			=> $order->getId(),
 			),
-			"billingCity" => $billing->getCity(),
-			"billingRegion" => $billing->getRegion(),
-			"billingPostal" => $billing->getPostcode(),
-			"billingCountry" => $billing->getCountryId(),
+			"billingCity"			=> $billing->getCity(),
+			"billingRegion"			=> $billing->getRegion(),
+			"billingPostal"			=> $billing->getPostcode(),
+			"billingCountry"		=> $billing->getCountryId(),
 		);
 
 		if ($shipping = $order->getShippingAddress())
 		{
 			$params += array(
-				"shippingAddress" => $shipping->getStreetFull(),
-				"shippingCity"    => $shipping->getCity(),
-				"shippingRegion"  => $shipping->getRegion(),
-				"shippingPostal"  => $shipping->getPostcode(),
-				"shippingCountry" => $shipping->getCountry(),
+				"shippingAddress"	=> $shipping->getStreetFull(),
+				"shippingCity"		=> $shipping->getCity(),
+				"shippingRegion"	=> $shipping->getRegion(),
+				"shippingPostal"	=> $shipping->getPostcode(),
+				"shippingCountry"	=> $shipping->getCountry(),
 			);
 		}
 
