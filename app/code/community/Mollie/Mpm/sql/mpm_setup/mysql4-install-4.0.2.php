@@ -60,7 +60,7 @@ $installer->run(
  * Tabel Betaalmethodes
  */
 $installer->run(
-	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
+	sprintf("CREATE TABLE `%s` (
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `method_id` varchar(32) NOT NULL DEFAULT '',
 		  `description` varchar(32) NOT NULL DEFAULT '',

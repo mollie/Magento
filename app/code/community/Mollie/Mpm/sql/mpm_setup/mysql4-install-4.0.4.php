@@ -62,7 +62,7 @@ $installer->run(
 
 $table = $installer->getTable('mollie_methods');
 $installer->run("
-	CREATE TABLE IF NOT EXISTS `".$table."` (
+	CREATE TABLE `".$table."` (
 		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		`method_id` varchar(32) NOT NULL DEFAULT '',
 		`description` varchar(32) NOT NULL DEFAULT '',
