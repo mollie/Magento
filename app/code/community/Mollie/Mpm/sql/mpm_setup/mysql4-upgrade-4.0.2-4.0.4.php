@@ -53,7 +53,7 @@ $installer->run("
 );
 // update sales_flat_order_payment
 $table = $installer->getTable('sales_flat_order_payment');
-$sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mollie', 'mpm_void_0');";
+$sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mpm_void_0');";
 for ($i = 1; $i < 10; $i++)
 {
 	$sql .= "UPDATE `".$table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';";
