@@ -2,7 +2,9 @@
 
 # Changelog #
 
-## Wijzigingen in versie 4.0.4 $$
+## Wijzigingen in versie 4.0.4 ##
++ Probleem met dubbele betaalmethoden opgelost
++ Mogelijkheid om de bankenlijst in de checkout weer te geven toegevoegd
 + Probleemoplosser in het installatiescript toegevoegd
 + Webhookverificatie toegevoegd
 

@@ -246,7 +246,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		{
 			$method = $this->_api->getMethodByCode($data->_data['method']);
 			Mage::register('method_id', $method['method_id']);
-			Mage::register('issuer', Mage::app()->getRequest()->getParam('issuer'));
+			Mage::register('issuer', Mage::app()->getRequest()->getParam($this->_code . '_issuer'));
 		}
 
 		return $this;

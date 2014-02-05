@@ -41,16 +41,11 @@ $installer = $this;
  */
 $table = $installer->getTable('mollie_methods');
 $installer->run("
-	DROP TABLE IF EXISTS `".$table."`;
-	CREATE TABLE `".$table."` (
-		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-		`method_id` varchar(32) NOT NULL DEFAULT '',
-		`description` varchar(32) NOT NULL DEFAULT '',
-		PRIMARY KEY (`id`),
-		UNIQUE KEY `method_id` (`method_id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-	INSERT INTO `".$table."` SET `method_id` = 'ideal', `description` = 'iDEAL';"
-);
+	DELETE FROM `".$table."`;
+	ALTER TABLE `".$table."` ADD UNIQUE INDEX (`method_id`);
+	INSERT INTO `".$table."` (`method_id`, `description`) VALUES ('ideal', 'iDEAL')
+");
+
 // update sales_flat_order_payment
 $table = $installer->getTable('sales_flat_order_payment');
 $sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mpm_void_0');";

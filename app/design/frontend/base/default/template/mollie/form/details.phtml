@@ -3,7 +3,7 @@ $code		= $this->getMethodCode();
 $helper		= Mage::Helper('mpm/api');
 $data		= Mage::Helper('mpm/data');
 $method		= $helper->getMethodByCode($code);
-$api		= $helper->_getMollieAPi();
+$api		= $helper->_getMollieAPI();
 $issuers	= array();
 foreach ($api->issuers->all() as $issuer)
 {
@@ -39,7 +39,7 @@ foreach ($api->issuers->all() as $issuer)
 			if (element = document.findElementByAttribute('label', 'for', 'p_method_<?php echo $this->escapeHtml($code) ?>'))
 			{
 				element.innerHTML =
-					'<img src="<?php echo $this->escapeHtml($method['image']->normal) ?>" alt="" height="20" margin="0" /> ' +
+					'<img src="<?php echo $this->escapeHtml($method['image']->normal) ?>" alt="" height="20" margin="0" style="margin-top:-2px"  /> ' +
 					element.innerHTML
 				;
 			}
@@ -58,7 +58,7 @@ foreach ($api->issuers->all() as $issuer)
 	<?php if ($data->getConfig('mollie', 'show_bank_list')):
 		if (array_key_exists($method['method_id'], $issuers))
 		{
-			echo '<li><select name="issuer">';
+			echo '<li><select name="'.$code.'_issuer">';
 				echo '<option value="">'.Mage::helper('core')->__('Select a bank:').'</option>';
 				foreach ($issuers[$method['method_id']] as $issuer)
 				{

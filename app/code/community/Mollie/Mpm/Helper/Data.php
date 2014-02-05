@@ -126,7 +126,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		foreach ($methods as $method)
 		{
 			$connection->query(sprintf(
-				"INSERT INTO `%s` (`method_id`, `description`) VALUES (%s, %s) ON DUPLICATE KEY UPDATE `id`=`id`",
+				"REPLACE INTO `%s` (`method_id`, `description`) VALUES (%s, %s)",
 				Mage::getSingleton('core/resource')->getTableName('mollie_methods'),
 				$connection->quote($method['method_id']),
 				$connection->quote($method['description'])

@@ -84,7 +84,7 @@ class Mollie_Mpm_Helper_Api
 		$this->setDescription($description);
 
 		try {
-			$api = $this->_getMollieAPi();
+			$api = $this->_getMollieAPI();
 		} catch (Mollie_API_Exception $e) {
 			$this->error_message = $e->getMessage();
 			return false;
@@ -137,7 +137,7 @@ class Mollie_Mpm_Helper_Api
 		}
 
 		try {
-			$api = $this->_getMollieAPi();
+			$api = $this->_getMollieAPI();
 		} catch (Mollie_API_Exception $e) {
 			$this->error_message = $e->getMessage();
 			return false;
@@ -157,7 +157,7 @@ class Mollie_Mpm_Helper_Api
 	 * @return Mollie_API_Client
 	 * @throws Mollie_API_Exception
 	 */
-	public function _getMollieAPi($key = null)
+	public function _getMollieAPI($key = null)
 	{
 		$this->_setAutoLoader();
 		$key = ($key === null) ? $this->getApiKey() : $key;
@@ -297,7 +297,7 @@ class Mollie_Mpm_Helper_Api
 	{
 		try
 		{
-			$api = $this->_getMollieAPi();
+			$api = $this->_getMollieAPI();
 			$api_methods = $api->methods->all();
 			$all_methods = Mage::Helper('mpm/data')->getStoredMethods();
 
