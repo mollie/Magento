@@ -81,9 +81,4 @@ for ($i = 1; $i < 10; $i++)
 }
 $installer->run($sql);
 
-// Clear cache
-//Mage::app()->cleanCache();
-//Mage::app()->getCache()->clean();
-//Mage::app()->getCacheInstance()->flush();
-
 $installer->endSetup();

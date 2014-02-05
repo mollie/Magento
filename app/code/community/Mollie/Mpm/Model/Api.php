@@ -120,6 +120,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function getConfigData($field, $storeId = null)
 	{
+
 		if ($this->isValidIndex())
 		{
 			if ($field == "min_order_total")
@@ -132,11 +133,12 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			}
 			if ($field == "title")
 			{
-				return $this->_api->methods[$this->_index]['description'];
+				return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
 			}
 		}
 		return parent::getConfigData($field, $storeId);
 	}
+
 
 	/**
 	 * Override parent getTitle in order to translate the config.xml title (thank you magento)
@@ -196,7 +198,6 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		{
 			return FALSE;
 		}
-
 		return parent::isAvailable($quote);
 	}
 
@@ -245,6 +246,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		{
 			$method = $this->_api->getMethodByCode($data->_data['method']);
 			Mage::register('method_id', $method['method_id']);
+			Mage::register('issuer', Mage::app()->getRequest()->getParam('issuer'));
 		}
 
 		return $this;
@@ -262,7 +264,8 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			array(
 				'_secure' => TRUE,
 				'_query' => array(
-					'method_id' => Mage::registry('method_id')
+					'method_id' => Mage::registry('method_id'),
+					'issuer' => Mage::registry('issuer'),
 				)
 			)
 		);

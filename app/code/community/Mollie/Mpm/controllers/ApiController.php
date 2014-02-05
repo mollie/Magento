@@ -152,8 +152,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 			$description = str_replace('%', $order->getIncrementId(), Mage::Helper('mpm/data')->getConfig('mollie', 'description'));
 			$redirect_url  = Mage::getUrl('mpm/api/return') . '?order_id=' . intval($order_id);
 			$method = $this->getRequest()->getParam('method_id', null);
+			$issuer = $this->getRequest()->getParam('issuer', null);
 
-			if ($this->_api->createPayment($amount, $description, $order, $redirect_url, $method))
+			if ($this->_api->createPayment($amount, $description, $order, $redirect_url, $method, $issuer))
 			{
 				if (!$order->getId()) {
 					Mage::log('Geen order voor verwerking gevonden');

@@ -23,6 +23,7 @@
 "Description","Description"
 "Manual invoicing","Manual invoicing"
 "Show Images","Show Images"
+"Show Bank List","Show Bank List"
 
 "Webhook","Webhook"
 "Payment methods","Payment methods"
@@ -46,7 +47,10 @@
 "<b>Description:</b> <br/> Enter a description here. Use '%' for the order id. Payment methods may have a character limit: best keep the description under 29 characters.","<b>Description:</b> <br/> Enter a description here. Use '%' for the order id. Payment methods may have a character limit: best keep the description under 29 characters."
 "<b>Manual invoices:</b> <br/> Enable this option to skip auto-invoicing.","<b>Manual invoices:</b> <br/> Enable this option to skip auto-invoicing."
 "<b>Show Images:</b> <br/> Enable or disable payment method logos.","<b>Show Images:</b> <br/> Enable or disable payment method logos."
+"<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.","<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen."
 
 "Settings","Settings"
 "Mollie Profiles [&rarr;]","Mollie Profiles [&rarr;]"
 "Mollie Dashboard [&rarr;]","Mollie Dashboard [&rarr;]"
+
+"Select a bank:","Select a bank:"

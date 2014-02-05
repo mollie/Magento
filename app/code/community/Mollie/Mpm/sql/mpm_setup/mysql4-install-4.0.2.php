@@ -70,9 +70,4 @@ $installer->run(
 	)
 );
 
-// Clear cache
-// Mage::app()->cleanCache();
-// Mage::app()->getCache()->clean();
-// Mage::app()->getCacheInstance()->flush();
-
 $installer->endSetup();

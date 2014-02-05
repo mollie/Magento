@@ -67,7 +67,7 @@ class Mollie_Mpm_Helper_Api
 	 *
 	 * @return boolean
 	 */
-	public function createPayment($amount, $description, $order, $redirect_url, $method)
+	public function createPayment($amount, $description, $order, $redirect_url, $method, $issuer)
 	{
 		if (!$this->setAmount($amount))
 		{
@@ -91,26 +91,31 @@ class Mollie_Mpm_Helper_Api
 		}
 
 		$billing = $order->getBillingAddress();
-		$shipping = $order->getShippingAddress();
 
 		$params = array(
-			"amount"			=> $this->getAmount(),
-			"description"		=> $this->getDescription(),
-			"redirectUrl"		=> $this->getRedirectURL(),
-			"method"			=> $method,
-			"metadata"			=> array(
-				"order_id"		=> $order->getId(),
+			"amount" => $this->getAmount(),
+			"description" => $this->getDescription(),
+			"redirectUrl" => $this->getRedirectURL(),
+			"method" => $method,
+			"metadata" => array(
+				"order_id" => $order->getId(),
 			),
-			"billingCity"		=> $billing->getCity(),
-			"billingRegion"		=> $billing->getRegion(),
-			"billingPostal"		=> $billing->getPostcode(),
-			"billingCountry"	=> $billing->getCountryId(),
-			"shippingAddress"	=> $shipping->getStreetFull(),
-			"shippingCity"		=> $shipping->getCity(),
-			"shippingRegion"	=> $shipping->getRegion(),
-			"shippingPostal"	=> $shipping->getPostcode(),
-			"shippingCountry"	=> $shipping->getCountry(),
+			"billingCity" => $billing->getCity(),
+			"billingRegion" => $billing->getRegion(),
+			"billingPostal" => $billing->getPostcode(),
+			"billingCountry" => $billing->getCountryId(),
 		);
+
+		if ($shipping = $order->getShippingAddress())
+		{
+			$params += array(
+				"shippingAddress" => $shipping->getStreetFull(),
+				"shippingCity"    => $shipping->getCity(),
+				"shippingRegion"  => $shipping->getRegion(),
+				"shippingPostal"  => $shipping->getPostcode(),
+				"shippingCountry" => $shipping->getCountry(),
+			);
+		}
 
 		$payment = $api->payments->create($params);
 
@@ -146,15 +151,12 @@ class Mollie_Mpm_Helper_Api
 		return true;
 	}
 
-	/*
-	  PROTECTED FUNCTIONS
-	 */
 	/**
-	 * @param null $key
+	 * @param null|string $key
 	 * @return Mollie_API_Client
 	 * @throws Mollie_API_Exception
 	 */
-	protected function _getMollieAPi($key = null)
+	public function _getMollieAPi($key = null)
 	{
 		$this->_setAutoLoader();
 		$key = ($key === null) ? $this->getApiKey() : $key;
@@ -165,7 +167,11 @@ class Mollie_Mpm_Helper_Api
 		return $api;
 	}
 
-	protected function _setAutoLoader()
+	/**
+	 * Inserts the Mollie autoloader as first choice
+	 * @return void
+	 */
+	public function _setAutoLoader()
 	{
 		if (!file_exists(Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php"))
 		{
@@ -334,7 +340,6 @@ class Mollie_Mpm_Helper_Api
 			}
 
 			Mage::Helper('mpm/data')->setStoredMethods($all_methods);
-
 			return $all_methods;
 		}
 		catch (Mollie_API_Exception $e)

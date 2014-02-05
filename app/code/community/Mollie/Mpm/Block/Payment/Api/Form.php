@@ -39,10 +39,7 @@ class Mollie_Mpm_Block_Payment_Api_Form extends Mage_Payment_Block_Form {
 	public function _construct()
 	{
 		parent::_construct();
-		if (Mage::Helper('mpm/data')->getConfig('mollie', 'show_images'))
-		{
-			$this->setTemplate('mollie/form/image.phtml');
-		}
+		$this->setTemplate('mollie/form/details.phtml');
 	}
 
 }

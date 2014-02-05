@@ -156,7 +156,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images', 'webhook_tested');
+		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images', 'show_bank_list', 'webhook_tested');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
@@ -185,14 +185,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Data.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Api.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Api.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Void00.php',
 
 			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/image.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/details.phtml',
 
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php",
@@ -259,6 +258,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Info.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/IdlController.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Idl.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/idl.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/api.phtml',
 		);
