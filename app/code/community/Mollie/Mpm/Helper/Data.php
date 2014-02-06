@@ -175,24 +175,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		// check missing files
 		$needFiles = array();
 		$modFiles  = array(
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Adminhtml/System/Config/Status.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Form.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Info.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/ApiController.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/adminhtml.xml',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/config.xml',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/system.xml',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Data.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Api.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Api.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Void00.php',
-
-			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/details.phtml',
-
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Exception.php",
@@ -204,7 +186,30 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Issuers.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Methods.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Payments.php",
+
+			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/details.phtml',
+
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Adminhtml/System/Config/Status.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Form.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Info.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/ApiController.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/adminhtml.xml',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/config.xml',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/etc/system.xml',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Data.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Api.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Api.php',
+			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
 		);
+		for ($i = 0; $i < $method_limit; $i++)
+		{
+			$I = ($i < 10 ? '0'.$i : $i);
+			$modFiles[] = Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Void'.$I.'.php';
+		}
 
 		foreach ($modFiles as $file)
 		{
@@ -258,7 +263,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Info.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/IdlController.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Idl.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/idl.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/api.phtml',
 		);
