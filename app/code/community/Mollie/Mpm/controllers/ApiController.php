@@ -190,6 +190,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 		catch (Exception $e)
 		{
+			$this->_restoreCart();
 			Mage::log($e);
 			$this->_showException($e->getMessage(), $order_id);
 		}
@@ -356,15 +357,8 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				}
 				else
 				{
-					// Put items back in shopping cart
-					$session = $this->_getCheckout();
-					if ($quoteId = $session->getMollieQuoteId()) {
-						$quote = Mage::getModel('sales/quote')->load($quoteId);
-						if ($quote->getId()) {
-							$quote->setIsActive(true)->save();
-							$session->setQuoteId($quoteId);
-						}
-					}
+					$this->_restoreCart();
+
 					// Redirect to cart
 					$this->_redirect('checkout/onepage/failure', array('_secure' => TRUE));
 					return;
@@ -373,11 +367,25 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 		catch (Exception $e)
 		{
+			$this->_restoreCart();
 			Mage::log($e);
 			$this->_showException($e->getMessage(), $orderId);
 			return;
 		}
 
 		$this->_redirectUrl(Mage::getBaseUrl());
+	}
+
+	protected function _restoreCart()
+	{
+		// Put items back in shopping cart
+		$session = $this->_getCheckout();
+		if ($quoteId = $session->getMollieQuoteId()) {
+			$quote = Mage::getModel('sales/quote')->load($quoteId);
+			if ($quote->getId()) {
+				$quote->setIsActive(true)->save();
+				$session->setQuoteId($quoteId);
+			}
+		}
 	}
 }
