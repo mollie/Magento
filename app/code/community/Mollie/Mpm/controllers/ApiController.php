@@ -144,9 +144,13 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 
 		$order_id = $order->getId();
+		$session = $this->_getCheckout();
 
 		try
 		{
+			// Magento is so awesome, we need to manually remember the quote
+			$session->setMollieQuoteId($session->getQuoteId());
+
 			// Assign required value's
 			$amount      = $this->getAmount($order);
 			$description = str_replace('%', $order->getIncrementId(), Mage::Helper('mpm/data')->getConfig('mollie', 'description'));
@@ -235,12 +239,11 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				if ($this->_api->getPaidStatus())
 				{
 					/*
-					 * Update the total amount paid, keep that in the order. We do not care if this is the correct
-					 * amount or not at this moment.
+					 * Update the total amount paid
 					 */
 					$order->setTotalPaid($this->_api->getAmount());
 
-					// Als de vorige betaling was mislukt dan zijn de producten 'Canceled' die un-canceled worden
+					// Als de vorige betaling was mislukt, zijn de producten 'Canceled'... Undo that
 					foreach ($order->getAllItems() as $item) {
 						/** @var $item Mage_Sales_Model_Order_Item */
 						$item->setQtyCanceled(0);
@@ -339,8 +342,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				{
 					if ($this->_getCheckout()->getQuote()->items_count > 0)
 					{
-						// Maak winkelwagen leeg
-						foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item) {
+						// Empty the shopping cart if it didn't clear itself
+						foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item)
+						{
 							Mage::getSingleton('checkout/cart')->removeItem($item->getId());
 						}
 						Mage::getSingleton('checkout/cart')->save();
@@ -352,7 +356,16 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				}
 				else
 				{
-					// Redirect to failure page
+					// Put items back in shopping cart
+					$session = $this->_getCheckout();
+					if ($quoteId = $session->getMollieQuoteId()) {
+						$quote = Mage::getModel('sales/quote')->load($quoteId);
+						if ($quote->getId()) {
+							$quote->setIsActive(true)->save();
+							$session->setQuoteId($quoteId);
+						}
+					}
+					// Redirect to cart
 					$this->_redirect('checkout/onepage/failure', array('_secure' => TRUE));
 					return;
 				}

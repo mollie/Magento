@@ -131,6 +131,10 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			{
 				return $this->_api->methods[$this->_index]['amount']->maximum;
 			}
+			if ($field == "sort_order")
+			{
+				return $this->_api->methods[$this->_index]['sort_order'];
+			}
 			if ($field == "title")
 			{
 				return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);

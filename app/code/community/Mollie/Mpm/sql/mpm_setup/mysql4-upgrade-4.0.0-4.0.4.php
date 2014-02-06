@@ -33,30 +33,30 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
  **/
-
 $installer = $this;
+$method_table = $installer->getTable('mollie_methods');
+$order_table = $installer->getTable('sales_flat_order_payment');
 
-/*
- * Tabel Betaalmethodes
- */
-$table = $installer->getTable('mollie_methods');
-$installer->run("
-	CREATE TABLE IF NOT EXISTS `".$table."` (
-		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-		`method_id` varchar(32) NOT NULL DEFAULT '',
-		`description` varchar(32) NOT NULL DEFAULT '',
-		PRIMARY KEY (`id`),
-		UNIQUE KEY `method_id` (`method_id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-	DELETE FROM `".$table."`;
-	ALTER TABLE `".$table."` ADD UNIQUE INDEX (`method_id`);
-	INSERT INTO `".$table."` (`method_id`, `description`) VALUES ('ideal', 'iDEAL')
-");
-// update sales_flat_order_payment
-$table = $installer->getTable('sales_flat_order_payment');
-$sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mpm_void_0');";
-for ($i = 1; $i < 10; $i++)
+if (!$installer->tableExists($method_table))
 {
-	$sql .= "UPDATE `".$table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';";
+	$installer->run("
+		CREATE TABLE IF NOT EXISTS `".$method_table."` (
+			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+			`method_id` varchar(32) NOT NULL DEFAULT '',
+			`description` varchar(32) NOT NULL DEFAULT '',
+			PRIMARY KEY (`id`),
+			UNIQUE KEY `method_id` (`method_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	");
 }
-$installer->run($sql);
+else
+{
+	$installer->run("
+		DELETE n1 FROM `".$method_table."` n1, `".$method_table."` n2 WHERE n1.id > n2.id AND n1.method_id = n2.method_id;
+		ALTER TABLE `".$method_table."` ADD UNIQUE INDEX (`method_id`);
+	");
+}
+for ($i = 0; $i < 10; $i++)
+{
+	$installer->run("UPDATE `".$order_table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';");
+}

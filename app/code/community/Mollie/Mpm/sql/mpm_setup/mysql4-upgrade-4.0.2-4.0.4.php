@@ -35,22 +35,14 @@
  **/
 
 $installer = $this;
+$method_table = $installer->getTable('mollie_methods');
+$order_table = $installer->getTable('sales_flat_order_payment');
 
-/*
- * Tabel Betaalmethodes
- */
-$table = $installer->getTable('mollie_methods');
 $installer->run("
-	DELETE FROM `".$table."`;
-	ALTER TABLE `".$table."` ADD UNIQUE INDEX (`method_id`);
-	INSERT INTO `".$table."` (`method_id`, `description`) VALUES ('ideal', 'iDEAL')
+	DELETE n1 FROM `".$method_table."` n1, `".$method_table."` n2 WHERE n1.id > n2.id AND n1.method_id = n2.method_id;
+	ALTER TABLE `".$method_table."` ADD UNIQUE INDEX (`method_id`);
 ");
-
-// update sales_flat_order_payment
-$table = $installer->getTable('sales_flat_order_payment');
-$sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mpm_void_0');";
-for ($i = 1; $i < 10; $i++)
+for ($i = 0; $i < 10; $i++)
 {
-	$sql .= "UPDATE `".$table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';";
+	$installer->run("UPDATE `".$order_table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';");
 }
-$installer->run($sql);

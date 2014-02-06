@@ -315,6 +315,7 @@ class Mollie_Mpm_Helper_Api
 				}
 			}
 
+			$sort_order = -32;
 			foreach ($api_methods as $api_method)
 			{
 				$api_method->available = FALSE;
@@ -326,6 +327,7 @@ class Mollie_Mpm_Helper_Api
 						// recognised method, put in correct order
 						$api_method->available = TRUE;
 						$api_method->method_id = $api_method->id;
+						$api_method->sort_order = $sort_order;
 						$all_methods[$i] = (array) $api_method;
 						break;
 					}
@@ -336,8 +338,10 @@ class Mollie_Mpm_Helper_Api
 					// newly added method, add to end of array
 					$api_method->available = TRUE;
 					$api_method->method_id = $api_method->id;
+					$api_method->sort_order = $sort_order;
 					$all_methods[] = (array) $api_method;
 				}
+				$sort_order++;
 			}
 
 			Mage::Helper('mpm/data')->setStoredMethods($all_methods);
