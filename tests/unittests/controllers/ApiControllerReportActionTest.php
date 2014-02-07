@@ -82,7 +82,7 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 		/*
 		 * Models.
 		 */
-		$this->payment_model = $this->getMock("Mage_Sales_Model_Order_Payment", array("setMethod", "setTransactionId", "setIsTransactionClosed", "addTransaction"));
+		$this->payment_model = $this->getMock("Mage_Sales_Model_Order_Payment", array("setMethod", "setTransactionId", "setIsTransactionClosed", "addTransaction", "getTransaction"));
 		$this->api_model   = $this->getMock("Mollie_Mpm_Model_Api", array("updatePayment"), array(), "", FALSE);
 		$this->order_model   = $this->getMock("stdClass", array("load"));
 
