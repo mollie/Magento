@@ -123,22 +123,30 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
 		if ($this->isValidIndex())
 		{
-			if ($field == "min_order_total")
+			if ($field === "min_order_total")
 			{
 				return $this->_api->methods[$this->_index]['amount']->minimum;
 			}
-			if ($field == "max_order_total")
+			if ($field === "max_order_total")
 			{
 				return $this->_api->methods[$this->_index]['amount']->maximum;
 			}
-			if ($field == "sort_order")
+			if ($field === "sort_order")
 			{
 				return $this->_api->methods[$this->_index]['sort_order'];
 			}
-			if ($field == "title")
+			if ($field === "title")
 			{
 				return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
 			}
+		}
+		if ($field === "active")
+		{
+			return $this->isAvailable();
+		}
+		if ($field === "title")
+		{
+			return Mage::helper('core')->__('{Reserved}');
 		}
 		return parent::getConfigData($field, $storeId);
 	}
