@@ -1,15 +1,19 @@
 <?php // Use this script in cli mode to generate config.xml default->payment section and mpm/model files
 
-if ($argc !== 3)
+if ($argc < 2)
 {
-	die ("Usage: generate-mage-payment-slots.php [amount] [directory]");
+	die ("Usage: generate_payment_slots.php [amount] [directory] or generate_payment_slots.php [amount]");
 }
 $result = '';
+$mkfiles = false;
+
 $amount = (int) $argv[1];
-$directory = $argv[2];
-if (!is_dir($directory))
-{
-	die ("Directory $directory is not valid.");
+if ($argc >= 3) {
+	$directory = $argv[2];
+	if (is_dir($directory))
+	{
+		$mkfiles = true;
+	}
 }
 
 for ($i = 0; $i < $amount; $i++)
@@ -32,6 +36,9 @@ class Mollie_Mpm_Model_Void'.$I.' extends Mollie_Mpm_Model_Api
 	protected $_index = '.$i.';
 }
 ';
-	file_put_contents($directory.'/Void'.$I.'.php', $file_content);
+	if ($mkfiles)
+	{
+		file_put_contents($directory.'/Void'.$I.'.php', $file_content);
+	}
 }
 echo $result;

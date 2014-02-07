@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.2
+ * @version     v4.0.4
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -108,7 +108,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	public function getStoredMethods()
 	{
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
-		//$connection->setFetchMode(Zend_Db::FETCH_OBJ);
+
 		$methods = $connection->fetchAll(
 			sprintf(
 				"SELECT * FROM `%s`",
@@ -123,26 +123,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
 		$table_name = Mage::getSingleton('core/resource')->getTableName('mollie_methods');
 
-		$connection->query("DELETE FROM `{$table_name}` WHERE 1");
-
-		$inserted_methods = array();
-
 		foreach ($methods as $method)
 		{
-			if (isset($inserted_methods[$method['method_id']]))
-			{
-				continue;
-			}
-
-			$inserted_methods[$method['method_id']] = TRUE;
-
-			$connection->insert(
+			$connection->query(sprintf(
+				"INSERT INTO `%s` (`method_id`, `description`) VALUES (%s, %s) ON DUPLICATE KEY UPDATE `id`=`id`",
 				$table_name,
-				array(
-					'method_id'   => $method['method_id'],
-					'description' => $method['description'],
-				)
-			);
+				$connection->quote($method['method_id']),
+				$connection->quote($method['description'])
+			));
 		}
 
 		return $this;
@@ -168,7 +156,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images', 'webhook_tested');
+		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images', 'show_bank_list', 'webhook_tested');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
@@ -187,6 +175,24 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		// check missing files
 		$needFiles = array();
 		$modFiles  = array(
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Exception.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Issuer.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/List.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Method.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Payment.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Base.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Issuers.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Methods.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Payments.php",
+
+			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
+			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/details.phtml',
+
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Adminhtml/System/Config/Status.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Form.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Api/Info.php',
@@ -198,14 +204,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Api.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Api.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Void00.php',
-
-			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/exception.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/page/fail.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/image.phtml',
 		);
+		for ($i = 0; $i < $method_limit; $i++)
+		{
+			$I = ($i < 10 ? '0'.$i : $i);
+			$modFiles[] = Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Void'.$I.'.php';
+		}
 
 		foreach ($modFiles as $file)
 		{

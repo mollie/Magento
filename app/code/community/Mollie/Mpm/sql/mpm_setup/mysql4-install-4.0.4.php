@@ -30,28 +30,54 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @version     v4.0.4
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
- * @license     http://www.opensource.org/licenses/bsd-license.php  Open Software License (OSL 3.0)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
  **/
 
 $installer = $this;
-
 $installer->startSetup();
 
+/*
+ * Tabel Betalingen
+ */
 $installer->run(
-	sprintf("DROP TABLE IF EXISTS `%s`",
+	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
+		`order_id` int(11) NOT NULL,
+		`method` varchar(3) NOT NULL,
+		`transaction_id` varchar(32) NOT NULL,
+		`bank_account` varchar(15) NOT NULL,
+		`bank_status` varchar(20) NOT NULL,
+		`created_at` datetime NOT NULL,
+		`updated_at` datetime DEFAULT NULL,
+		 UNIQUE KEY `transaction_id` (`transaction_id`),
+		 KEY `order_id` (`order_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 		$installer->getTable('mollie_payments')
-	)
-);
-$installer->run(
-	sprintf("DROP TABLE IF EXISTS `%s`",
-		$installer->getTable('mollie_methods')
-	)
+	) . "REPLACE INTO `{$installer->getTable('core_config_data')}` SET `path` = 'payment/mollie/description', `value` = 'Order %';"
 );
 
+/*
+ * Tabel Betaalmethodes
+ */
+
+$table = $installer->getTable('mollie_methods');
 $installer->run("
-	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` LIKE 'payment/mollie/%';
-	DELETE FROM `{$installer->getTable('core_resource')}` where `code` = 'mpm_setup';"
+	CREATE TABLE `".$table."` (
+		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		`method_id` varchar(32) NOT NULL DEFAULT '',
+		`description` varchar(32) NOT NULL DEFAULT '',
+		PRIMARY KEY (`id`),
+		UNIQUE KEY `method_id` (`method_id`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	INSERT INTO `".$table."` SET `method_id` = 'ideal', `description` = 'iDEAL';"
 );
+// update sales_flat_order_payment
+$table = $installer->getTable('sales_flat_order_payment');
+$sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mpm_void_0');";
+for ($i = 1; $i < 10; $i++)
+{
+	$sql .= "UPDATE `".$table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';";
+}
+$installer->run($sql);
 
 $installer->endSetup();

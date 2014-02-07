@@ -1,0 +1,71 @@
+<?php
+$code		= $this->getMethodCode();
+$helper		= Mage::Helper('mpm/api');
+$data		= Mage::Helper('mpm/data');
+$method		= $helper->getMethodByCode($code);
+$api		= $helper->_getMollieAPI();
+$issuers	= array();
+foreach ($api->issuers->all() as $issuer)
+{
+	if (!array_key_exists($issuer->method, $issuers))
+	{
+		$issuers[$issuer->method] = array();
+	}
+	$issuers[$issuer->method][] = $issuer;
+}
+?>
+
+<ul class="form-list" id="payment_form_<?php echo $this->escapeHtml($code) ?>" style="display:none">
+	<?php if ($data->getConfig('mollie', 'show_images') && !empty($method['image'])): ?>
+	<li style="display:none">
+		<script type="text/javascript">
+			// Add a logo to the method title
+			if (!document.findElementByAttribute)
+			{
+				document.findElementByAttribute = function (tagname, attribute, value)
+				{
+					var allElements = document.getElementsByTagName(tagname);
+					for (var i = 0; i < allElements.length; i++)
+					{
+						if (allElements[i].getAttribute(attribute) == value)
+						{
+							return allElements[i];
+						}
+					}
+					return null;
+				}
+			}
+
+			if (element = document.findElementByAttribute('label', 'for', 'p_method_<?php echo $this->escapeHtml($code) ?>'))
+			{
+				element.innerHTML =
+					'<img src="<?php echo $this->escapeHtml($method['image']->normal) ?>" alt="" height="20" margin="0" style="margin-top:-2px"  /> ' +
+					element.innerHTML
+				;
+			}
+
+			// Make the first method the selected one
+			var element = document.findElementByAttribute('input', 'name', 'payment[method]');
+			if (element && !element.checked) {
+				element.focus();
+				element.checked = true;
+				payment.switchMethod(element.value);
+			}
+		</script>
+	</li>
+	<?php endif; ?>
+
+	<?php if ($data->getConfig('mollie', 'show_bank_list')):
+		if (array_key_exists($method['method_id'], $issuers))
+		{
+			echo '<li><select name="'.$code.'_issuer">';
+				echo '<option value="">'.Mage::helper('core')->__('Select a bank:').'</option>';
+				foreach ($issuers[$method['method_id']] as $issuer)
+				{
+					echo '<option value="' . htmlspecialchars($issuer->id) . '">' . htmlspecialchars($issuer->name) . '</option>';
+				}
+			echo '</select></li>';
+		}
+		?>
+	<?php endif; ?>
+</ul>

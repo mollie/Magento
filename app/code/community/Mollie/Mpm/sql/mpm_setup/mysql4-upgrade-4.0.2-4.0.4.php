@@ -1,7 +1,6 @@
-<?xml version="1.0"?>
+<?php
 
-<!--
- *
+/**
  * Copyright (c) 2012-2014, Mollie B.V.
  * All rights reserved.
  *
@@ -27,37 +26,23 @@
  * DAMAGE.
  *
  * @category    Mollie
- * @package     Mollie_Payment_Module
+ * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
  * @version     v4.0.4
- * @copyright   Copyright (c) 2012-2014 Mollie B.V. (http://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
--->
+ **/
 
+$installer = $this;
+$method_table = $installer->getTable('mollie_methods');
+$order_table = $installer->getTable('sales_flat_order_payment');
 
-<config>
-    <menu>
-        <mollie module="mpm">
-            <title>Mollie</title>
-            <sort_order>100</sort_order>
-            <children>
-                <settings translate="title" module="mpm">
-                    <title>Settings</title>
-                    <sort_order>10</sort_order>
-                    <action>adminhtml/system_config/edit/section/payment</action>
-                </settings>
-                <profiles translate="title" module="mpm">
-                    <title>Mollie Profiles <![CDATA[[&rarr;]]]></title>
-                    <sort_order>20</sort_order>
-                    <action>mpm/api/profiles</action>
-                </profiles>
-                <molliebv translate="title" module="mpm">
-                    <title>Mollie Dashboard <![CDATA[[&rarr;]]]></title>
-                    <sort_order>30</sort_order>
-                    <action>mpm/api/dashboard</action>
-                </molliebv>
-            </children>
-        </mollie>
-    </menu>
-</config>
+$installer->run("
+	DELETE n1 FROM `".$method_table."` n1, `".$method_table."` n2 WHERE n1.id > n2.id AND n1.method_id = n2.method_id;
+	ALTER TABLE `".$method_table."` ADD UNIQUE INDEX (`method_id`);
+");
+for ($i = 0; $i < 10; $i++)
+{
+	$installer->run("UPDATE `".$order_table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';");
+}

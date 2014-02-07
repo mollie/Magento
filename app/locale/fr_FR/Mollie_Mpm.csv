@@ -1,3 +1,4 @@
+"There was an error:","Il y avait un erreur:"
 "The payment service is currently unavailable.","Le service de paiement est indisponible."
 "The module is configured incorrectly.","Le module n'est pas configuré correctement."
 "Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>.","Votre compte Mollie est accessible à partir de la boutique Magento, mais <a href=""http://mollie.dev/beheer/diensten/"">semble manquer de méthodes de paiement</a>."
@@ -22,6 +23,7 @@
 "Description","Description"
 "Manual invoicing","Facturation manuelle"
 "Show Images","Afficher les images"
+"Show Bank List","Afficher la liste des banques"
 
 "Webhook","Webhook"
 "Payment methods","Méthodes de paiement"
@@ -45,9 +47,13 @@
 "<b>Description:</b> <br/> Enter a description here. Use '%' for the order id. Payment methods may have a character limit: best keep the description under 29 characters.","<b>Description:</b> <br/> Entrez une description ici. Utilisez '%' pour l'ordre id. Modes de paiement peuvent avoir une limite de caractères: mieux garder la description de moins de 29 caractères."
 "<b>Manual invoices:</b> <br/> Enable this option to skip auto-invoicing.","<b>Facturation manuelle:</b> <br/> Activer cette option pour ignorer l'auto-facturation."
 "<b>Show Images:</b> <br/> Enable or disable payment method logos.","<b>Afficher les images:</b> <br/> Activer ou désactiver les logos des méthodes de paiement."
+"<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.","<b>Afficher la liste des banques:</b> <br/> Activer pour montrer la liste des banques dans la boutique. Si cette option n'est pas active, la liste est montrée dans l'ecran de paiement."
 
 "Settings","Réglage"
 "Mollie Profiles [&rarr;]","Profiles Mollie [&rarr;]"
 "Mollie Dashboard [&rarr;]","Tableau de bord [&rarr;]"
 
 "Creditcard","Carte de crédit"
+
+"{Reserved}","{Reservé}"
+"Select a bank:","Selectionnez une banque:"

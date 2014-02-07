@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.2
+ * @version     v4.0.4
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -120,19 +120,37 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function getConfigData($field, $storeId = null)
 	{
-		if (is_array($this->_api->methods))
+
+		if ($this->isValidIndex())
 		{
-			if ($field == "min_order_total")
+			if ($field === "min_order_total")
 			{
 				return $this->_api->methods[$this->_index]['amount']->minimum;
 			}
-			if ($field == "max_order_total")
+			if ($field === "max_order_total")
 			{
 				return $this->_api->methods[$this->_index]['amount']->maximum;
 			}
+			if ($field === "sort_order")
+			{
+				return $this->_api->methods[$this->_index]['sort_order'];
+			}
+			if ($field === "title")
+			{
+				return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
+			}
+		}
+		if ($field === "active")
+		{
+			return $this->isAvailable();
+		}
+		if ($field === "title")
+		{
+			return Mage::helper('core')->__('{Reserved}');
 		}
 		return parent::getConfigData($field, $storeId);
 	}
+
 
 	/**
 	 * Override parent getTitle in order to translate the config.xml title (thank you magento)
@@ -192,7 +210,6 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		{
 			return FALSE;
 		}
-
 		return parent::isAvailable($quote);
 	}
 
@@ -241,6 +258,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		{
 			$method = $this->_api->getMethodByCode($data->_data['method']);
 			Mage::register('method_id', $method['method_id']);
+			Mage::register('issuer', Mage::app()->getRequest()->getParam($this->_code . '_issuer'));
 		}
 
 		return $this;
@@ -258,7 +276,8 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			array(
 				'_secure' => TRUE,
 				'_query' => array(
-					'method_id' => Mage::registry('method_id')
+					'method_id' => Mage::registry('method_id'),
+					'issuer' => Mage::registry('issuer'),
 				)
 			)
 		);
@@ -322,6 +341,10 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
 	public function isValidIndex ()
 	{
+		if (!is_array($this->_api->methods))
+		{
+			return FALSE;
+		}
 		return isset($this->_index) && $this->_index >= 0 && $this->_index < sizeof($this->_api->methods);
 	}
 }

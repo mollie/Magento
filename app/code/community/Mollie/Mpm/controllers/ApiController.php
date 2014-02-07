@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.2
+ * @version     v4.0.4
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -144,16 +144,21 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 
 		$order_id = $order->getId();
+		$session = $this->_getCheckout();
 
 		try
 		{
+			// Magento is so awesome, we need to manually remember the quote
+			$session->setMollieQuoteId($session->getQuoteId());
+
 			// Assign required value's
 			$amount      = $this->getAmount($order);
 			$description = str_replace('%', $order->getIncrementId(), Mage::Helper('mpm/data')->getConfig('mollie', 'description'));
 			$redirect_url  = Mage::getUrl('mpm/api/return') . '?order_id=' . intval($order_id);
 			$method = $this->getRequest()->getParam('method_id', null);
+			$issuer = $this->getRequest()->getParam('issuer', null);
 
-			if ($this->_api->createPayment($amount, $description, $order, $redirect_url, $method))
+			if ($this->_api->createPayment($amount, $description, $order, $redirect_url, $method, $issuer))
 			{
 				if (!$order->getId()) {
 					Mage::log('Geen order voor verwerking gevonden');
@@ -185,6 +190,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 		catch (Exception $e)
 		{
+			$this->_restoreCart();
 			Mage::log($e);
 			$this->_showException($e->getMessage(), $order_id);
 		}
@@ -199,6 +205,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		if ($this->getRequest()->getParam('testByMollie'))
 		{
 			Mage::getConfig()->saveConfig('payment/mollie/webhook_tested', '1');
+			return;
 		}
 		// Get transaction_id from post parameter
 		$transactionId = $this->getRequest()->getParam('id');
@@ -233,12 +240,11 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				if ($this->_api->getPaidStatus())
 				{
 					/*
-					 * Update the total amount paid, keep that in the order. We do not care if this is the correct
-					 * amount or not at this moment.
+					 * Update the total amount paid
 					 */
 					$order->setTotalPaid($this->_api->getAmount());
 
-					// Als de vorige betaling was mislukt dan zijn de producten 'Canceled' die un-canceled worden
+					// Als de vorige betaling was mislukt, zijn de producten 'Canceled'... Undo that
 					foreach ($order->getAllItems() as $item) {
 						/** @var $item Mage_Sales_Model_Order_Item */
 						$item->setQtyCanceled(0);
@@ -257,6 +263,17 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 					if (!Mage::Helper('mpm/data')->getConfig('mollie', 'skip_invoice'))
 					{
 						$this->_savePaidInvoice($order);
+					}
+
+					if ($transaction = $payment->getTransaction($transactionId))
+					{
+						$transaction->setTxnType(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
+						$transaction->setIsClosed(TRUE);
+						$transaction->save();
+					}
+					else
+					{
+						Mage::log(__CLASS__ . '::' . __METHOD__ . ' said: Could not find a transaction with id ' . $transactionId . ' for order ' . $orderId);
 					}
 				}
 				else
@@ -326,8 +343,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				{
 					if ($this->_getCheckout()->getQuote()->items_count > 0)
 					{
-						// Maak winkelwagen leeg
-						foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item) {
+						// Empty the shopping cart if it didn't clear itself
+						foreach ($this->_getCheckout()->getQuote()->getItemsCollection() as $item)
+						{
 							Mage::getSingleton('checkout/cart')->removeItem($item->getId());
 						}
 						Mage::getSingleton('checkout/cart')->save();
@@ -339,7 +357,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				}
 				else
 				{
-					// Redirect to failure page
+					$this->_restoreCart();
+
+					// Redirect to cart
 					$this->_redirect('checkout/onepage/failure', array('_secure' => TRUE));
 					return;
 				}
@@ -347,11 +367,25 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 		catch (Exception $e)
 		{
+			$this->_restoreCart();
 			Mage::log($e);
 			$this->_showException($e->getMessage(), $orderId);
 			return;
 		}
 
 		$this->_redirectUrl(Mage::getBaseUrl());
+	}
+
+	protected function _restoreCart()
+	{
+		// Put items back in shopping cart
+		$session = $this->_getCheckout();
+		if ($quoteId = $session->getMollieQuoteId()) {
+			$quote = Mage::getModel('sales/quote')->load($quoteId);
+			if ($quote->getId()) {
+				$quote->setIsActive(true)->save();
+				$session->setQuoteId($quoteId);
+			}
+		}
 	}
 }

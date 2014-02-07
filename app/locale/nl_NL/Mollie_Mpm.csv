@@ -1,3 +1,4 @@
+"There was an error:","Er is een fout opgetreden:"
 "The payment service is currently unavailable.","De betaalservice is momenteel niet beschikbaar."
 "The module is configured incorrectly.","De module is niet correct geconfigureerd."
 "Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>.","Uw Mollie Account is bereikbaar vanuit Magento, maar <a href=""http://mollie.dev/beheer/diensten/"">heeft geen ingeschakelde betaalmethoden</a>."
@@ -22,6 +23,7 @@
 "Description","Omschrijving"
 "Manual invoicing","Handmatig factureren"
 "Show Images","Afbeeldingen weergeven"
+"Show Bank List","Bankenlijst weergeven"
 
 "Webhook","Webhook"
 "Payment methods","Betaalmethoden"
@@ -45,7 +47,11 @@
 "<b>Description:</b> <br/> Enter a description here. Use '%' for the order id. Payment methods may have a character limit: best keep the description under 29 characters.","<b>Omschrijving:</b> <br/> Vul hier een omschrijving in. Gebruik '%' voor het order id. Sommige betaalmethoden hebben een limiet: het beste is om 29 of minder karakters te gebruiken."
 "<b>Manual invoices:</b> <br/> Enable this option to skip auto-invoicing.","<b>Handmatig factureren:</b> <br/> Activeer deze optie om automatisch factureren over te slaan."
 "<b>Show Images:</b> <br/> Enable or disable payment method logos.","<b>Afbeeldingen weergeven:</b> <br/> Activeer of deactiveer de logo's van de betaalmethoden."
+"<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.","<b>Bankenlijst weergevenL</b> <br/> Activeer deze optie om de bankenlijst in de webshop weer te geven. Wanneer de optie uit staat, wordt de lijst in het betaalscherm getoond."
 
 "Settings","Instellingen"
 "Mollie Profiles [&rarr;]","Mollie Profielen [&rarr;]"
 "Mollie Dashboard [&rarr;]","Mollie Dashboard [&rarr;]"
+
+"{Reserved}","{Gereserveerd}"
+"Select a bank:","Selecteer een bank:"

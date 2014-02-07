@@ -30,7 +30,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.2
+ * @version     v4.0.4
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -40,7 +40,7 @@
 
 class Mollie_Mpm_Helper_Api
 {
-	const PLUGIN_VERSION = 'v4.0.2';
+	const PLUGIN_VERSION = 'v4.0.4';
 
 	protected $api_key = null;
 	protected $amount = 0;
@@ -67,7 +67,7 @@ class Mollie_Mpm_Helper_Api
 	 *
 	 * @return boolean
 	 */
-	public function createPayment($amount, $description, $order, $redirect_url, $method)
+	public function createPayment($amount, $description, $order, $redirect_url, $method, $issuer)
 	{
 		if (!$this->setAmount($amount))
 		{
@@ -84,33 +84,39 @@ class Mollie_Mpm_Helper_Api
 		$this->setDescription($description);
 
 		try {
-			$api = $this->_getMollieAPi();
+			$api = $this->_getMollieAPI();
 		} catch (Mollie_API_Exception $e) {
 			$this->error_message = $e->getMessage();
 			return false;
 		}
 
 		$billing = $order->getBillingAddress();
-		$shipping = $order->getShippingAddress();
 
 		$params = array(
-			"amount"			=> $this->getAmount(),
-			"description"		=> $this->getDescription(),
-			"redirectUrl"		=> $this->getRedirectURL(),
-			"method"			=> $method,
-			"metadata"			=> array(
-				"order_id"		=> $order->getId(),
+			"amount"				=> $this->getAmount(),
+			"description"			=> $this->getDescription(),
+			"redirectUrl"			=> $this->getRedirectURL(),
+			"method"				=> $method,
+			"issuer"				=> (empty($issuer) ? null : $issuer),
+			"metadata"				=> array(
+				"order_id"			=> $order->getId(),
 			),
-			"billingCity"		=> $billing->getCity(),
-			"billingRegion"		=> $billing->getRegion(),
-			"billingPostal"		=> $billing->getPostcode(),
-			"billingCountry"	=> $billing->getCountryId(),
-			"shippingAddress"	=> $shipping->getStreetFull(),
-			"shippingCity"		=> $shipping->getCity(),
-			"shippingRegion"	=> $shipping->getRegion(),
-			"shippingPostal"	=> $shipping->getPostcode(),
-			"shippingCountry"	=> $shipping->getCountry(),
+			"billingCity"			=> $billing->getCity(),
+			"billingRegion"			=> $billing->getRegion(),
+			"billingPostal"			=> $billing->getPostcode(),
+			"billingCountry"		=> $billing->getCountryId(),
 		);
+
+		if ($shipping = $order->getShippingAddress())
+		{
+			$params += array(
+				"shippingAddress"	=> $shipping->getStreetFull(),
+				"shippingCity"		=> $shipping->getCity(),
+				"shippingRegion"	=> $shipping->getRegion(),
+				"shippingPostal"	=> $shipping->getPostcode(),
+				"shippingCountry"	=> $shipping->getCountry(),
+			);
+		}
 
 		$payment = $api->payments->create($params);
 
@@ -131,7 +137,7 @@ class Mollie_Mpm_Helper_Api
 		}
 
 		try {
-			$api = $this->_getMollieAPi();
+			$api = $this->_getMollieAPI();
 		} catch (Mollie_API_Exception $e) {
 			$this->error_message = $e->getMessage();
 			return false;
@@ -146,15 +152,12 @@ class Mollie_Mpm_Helper_Api
 		return true;
 	}
 
-	/*
-	  PROTECTED FUNCTIONS
-	 */
 	/**
-	 * @param null $key
+	 * @param null|string $key
 	 * @return Mollie_API_Client
 	 * @throws Mollie_API_Exception
 	 */
-	protected function _getMollieAPi($key = null)
+	public function _getMollieAPI($key = null)
 	{
 		$this->_setAutoLoader();
 		$key = ($key === null) ? $this->getApiKey() : $key;
@@ -165,8 +168,16 @@ class Mollie_Mpm_Helper_Api
 		return $api;
 	}
 
-	protected function _setAutoLoader()
+	/**
+	 * Inserts the Mollie autoloader as first choice
+	 * @return void
+	 */
+	public function _setAutoLoader()
 	{
+		if (!file_exists(Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php"))
+		{
+			return;
+		}
 		$autoloader_callbacks = spl_autoload_functions();
 		$original_autoload = null;
 		foreach($autoloader_callbacks as $callback)
@@ -286,7 +297,7 @@ class Mollie_Mpm_Helper_Api
 	{
 		try
 		{
-			$api = $this->_getMollieAPi();
+			$api = $this->_getMollieAPI();
 			$api_methods = $api->methods->all();
 			$all_methods = Mage::Helper('mpm/data')->getStoredMethods();
 
@@ -304,6 +315,7 @@ class Mollie_Mpm_Helper_Api
 				}
 			}
 
+			$sort_order = -32;
 			foreach ($api_methods as $api_method)
 			{
 				$api_method->available = FALSE;
@@ -315,6 +327,7 @@ class Mollie_Mpm_Helper_Api
 						// recognised method, put in correct order
 						$api_method->available = TRUE;
 						$api_method->method_id = $api_method->id;
+						$api_method->sort_order = $sort_order;
 						$all_methods[$i] = (array) $api_method;
 						break;
 					}
@@ -325,12 +338,13 @@ class Mollie_Mpm_Helper_Api
 					// newly added method, add to end of array
 					$api_method->available = TRUE;
 					$api_method->method_id = $api_method->id;
+					$api_method->sort_order = $sort_order;
 					$all_methods[] = (array) $api_method;
 				}
+				$sort_order++;
 			}
 
 			Mage::Helper('mpm/data')->setStoredMethods($all_methods);
-
 			return $all_methods;
 		}
 		catch (Mollie_API_Exception $e)
@@ -345,6 +359,11 @@ class Mollie_Mpm_Helper_Api
 			{
 				return Mage::helper('core')->__('The module is configured incorrectly.');
 			}
+		}
+		catch (Exception $e)
+		{
+			Mage::log($e);
+			return Mage::helper('core')->__('There was an error:') . '<br />' . $e->getFile() . ':' . $e->getLine() . ' - ' . $e->getMessage();
 		}
 	}
 

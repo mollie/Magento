@@ -44,10 +44,10 @@ class Mollie_Mpm_Helper_ApiTest extends MagentoPlugin_TestCase
 			->method("get")
 			->will($this->returnValue($this->payment));
 
-		$this->api = $this->getMock("Test_Mollie_Mpm_Helper_Api", array("_getMollieApi", "__construct"), array(), '', false);
+		$this->api = $this->getMock("Test_Mollie_Mpm_Helper_Api", array("_getMollieAPI", "__construct"), array(), '', false);
 
 		$this->api->expects($this->any())
-			->method("_getMollieApi")
+			->method("_getMollieAPI")
 			->will($this->returnValue($this->api_client));
 	}
 

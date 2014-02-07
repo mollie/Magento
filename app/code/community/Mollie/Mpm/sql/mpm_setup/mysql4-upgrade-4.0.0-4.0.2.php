@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.2
+ * @version     v4.0.4
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -40,7 +40,7 @@ $installer = $this;
  * Tabel Betaalmethodes
  */
 $installer->run(
-	sprintf("CREATE TABLE `%s` (
+	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `method_id` varchar(32) NOT NULL DEFAULT '',
 		  `description` varchar(32) NOT NULL DEFAULT '',
