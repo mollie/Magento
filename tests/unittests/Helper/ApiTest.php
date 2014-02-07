@@ -60,7 +60,8 @@ class Mollie_Mpm_Helper_ApiTest extends MagentoPlugin_TestCase
 			'description' => 'Description',
 			'order_id' => 1,
 			'redirect_url' => 'http://customer.local/redirect.php',
-			'method' => 'Method'
+			'method' => 'Method',
+			'issuer' => '',
 		);
 
 		foreach (array('amount', 'redirect_url') as $parameter)
@@ -83,7 +84,8 @@ class Mollie_Mpm_Helper_ApiTest extends MagentoPlugin_TestCase
 			'Description',
 			1,
 			'incorrect.url/redirect.php',
-			'Method'
+			'Method',
+			''
 		);
 
 		$this->assertFalse($result);

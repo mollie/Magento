@@ -86,7 +86,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 			array("sales/order", $this->order_model),
 		)));
 
-		$this->session = $this->getMock("stdClass", array("getQuote"));
+		$this->session = $this->getMock("stdClass", array("getQuote", "getMollieQuoteId"));
 		$this->quote = $this->getMock("stdClass");
 
 		$this->session->expects($this->any())

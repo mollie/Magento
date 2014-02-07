@@ -144,12 +144,15 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 
 		$order_id = $order->getId();
-		$session = $this->_getCheckout();
 
 		try
 		{
 			// Magento is so awesome, we need to manually remember the quote
-			$session->setMollieQuoteId($session->getQuoteId());
+			$session = $this->_getCheckout();
+			if (is_object($session))
+			{
+				$session->setMollieQuoteId($session->getQuoteId());
+			}
 
 			// Assign required value's
 			$amount      = $this->getAmount($order);
@@ -380,7 +383,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 	{
 		// Put items back in shopping cart
 		$session = $this->_getCheckout();
-		if ($quoteId = $session->getMollieQuoteId()) {
+		if (is_object($session) && $quoteId = $session->getMollieQuoteId()) {
 			$quote = Mage::getModel('sales/quote')->load($quoteId);
 			if ($quote->getId()) {
 				$quote->setIsActive(true)->save();
