@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.4
+ * @version     v4.0.5
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  * 
@@ -68,16 +68,14 @@ $installer->run("
 		`description` varchar(32) NOT NULL DEFAULT '',
 		PRIMARY KEY (`id`),
 		UNIQUE KEY `method_id` (`method_id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-	INSERT INTO `".$table."` SET `method_id` = 'ideal', `description` = 'iDEAL';"
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );
 // update sales_flat_order_payment
-$table = $installer->getTable('sales_flat_order_payment');
-$sql = "UPDATE `".$table."` SET `method` = 'mpm_void_00' WHERE `method` IN('mpm_idl', 'mpm_void_0');";
-for ($i = 1; $i < 10; $i++)
+$order_table = $installer->getTable('sales_flat_order_payment');
+
+for ($i = 0; $i < 10; $i++)
 {
-	$sql .= "UPDATE `".$table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';";
+	$installer->run("UPDATE `".$order_table."` SET `method` = 'mpm_void_0".$i."' WHERE `method` = 'mpm_void_".$i."';");
 }
-$installer->run($sql);
 
 $installer->endSetup();

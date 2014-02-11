@@ -28,7 +28,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.4
+ * @version     v4.0.5
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -142,7 +142,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		}
 		if ($field === "active")
 		{
-			return $this->isAvailable();
+			return $this->_isAvailable();
 		}
 		if ($field === "title")
 		{
@@ -196,8 +196,21 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function isAvailable($quote = NULL)
 	{
-		$enabled = (bool) Mage::Helper('mpm/data')->getConfig('mollie', 'active');
+		if (!$this->_isAvailable())
+		{
+			return FALSE;
+		}
+		return parent::isAvailable($quote);
+	}
 
+	/**
+	 * Really check whether payment method can be used
+	 *
+	 * @return bool
+	 */
+	public function _isAvailable()
+	{
+		$enabled = (bool) Mage::Helper('mpm/data')->getConfig('mollie', 'active');
 		if (!$enabled)
 		{
 			return FALSE;
@@ -210,7 +223,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		{
 			return FALSE;
 		}
-		return parent::isAvailable($quote);
+		return TRUE;
 	}
 
 	/**

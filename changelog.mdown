@@ -2,6 +2,9 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.0.5 ##
++ Lost een probleem met recursieve diepte op
+
 ## Wijzigingen in versie 4.0.4 ##
 + Rectificeert de volgorde van de betaalmethoden
 + Lost een probleem met dubbele betaalmethoden op
