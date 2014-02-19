@@ -28,7 +28,6 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.5
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -46,13 +45,30 @@ $installer->run("
 /*
  * Tabel Betaalmethodes
  */
+$table = $installer->getTable('mollie_methods');
 $installer->run(
-	sprintf("CREATE TABLE `%s` (
+	sprintf("
+		CREATE TABLE IF NOT EXISTS `%s` (
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `method_id` varchar(32) NOT NULL DEFAULT '',
 		  `description` varchar(32) NOT NULL DEFAULT '',
 		  PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-		$installer->getTable('mollie_methods')
+		$table
 	)
 );
+if (!$installer->tableExists($table))
+{
+	echo("
+		<div style='background:white;border:3px solid red;padding:10px;'><b style='color:red;'>Insufficient SQL rights to create the $table table! Please make sure you have sufficient access rights to install modules and/or run this query manually:</b><br /><pre>" .
+		sprintf("
+			CREATE TABLE IF NOT EXISTS `%s` (
+			  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+			  `method_id` varchar(32) NOT NULL DEFAULT '',
+			  `description` varchar(32) NOT NULL DEFAULT '',
+			  PRIMARY KEY (`id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+			$table
+		) .
+		"</pre><br/>(If you do not know how to run SQL queries, please contact your hosting provider)</div>");
+}

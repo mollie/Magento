@@ -28,7 +28,6 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @version     v4.0.5
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  *
@@ -93,7 +92,19 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 	 */
 	protected function getAmount (Mage_Sales_Model_Order $order)
 	{
-		$grand_total = $order->getGrandTotal();
+		if ($order->getBaseCurrencyCode() === 'EUR')
+		{
+			$grand_total = $order->getBaseGrandTotal();
+		}
+		elseif ($order->getOrderCurrencyCode() === 'EUR')
+		{
+			$grand_total = $order->getGrandTotal();
+		}
+		else
+		{
+			Mage::log(__CLASS__ . '::' . __METHOD__ . ' said: Neither Base nor Order currency is in Euros.');
+			Mage::throwException(__CLASS__ . '::' . __METHOD__ . ' said: Neither Base nor Order currency is in Euros.');
+		}
 
 		if (is_string($grand_total))
 		{

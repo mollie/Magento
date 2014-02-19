@@ -2,6 +2,10 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.0.6 ##
++ Lost een probleem met valutaconversie op
++ Geeft een duidelijke waarschuwing wanneer een upgrade mislukt
+
 ## Wijzigingen in versie 4.0.5 ##
 + Lost een probleem met recursieve diepte op
 

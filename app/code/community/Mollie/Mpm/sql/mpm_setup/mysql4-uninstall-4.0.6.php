@@ -53,4 +53,18 @@ $installer->run("
 	DELETE FROM `{$installer->getTable('core_resource')}` where `code` = 'mpm_setup';"
 );
 
+
+if ($installer->tableExists($installer->getTable('mollie_payments')) || $installer->tableExists($installer->getTable('mollie_methods')))
+{
+	echo "<div style='background:white;border:3px solid red;padding:10px;'><b style='color:red;'>Insufficient SQL rights to uninstall correctly! Please make sure you have sufficient access rights to (un)install modules and/or run these queries manually:</b><br /><pre>" .
+		sprintf("DROP TABLE IF EXISTS `%s`",
+			$installer->getTable('mollie_payments')
+		) .
+		"</pre><br/><b style='color:red;'>And:<b/></br><pre>" .
+		sprintf("DROP TABLE IF EXISTS `%s`",
+			$installer->getTable('mollie_methods')
+		) .
+		"</pre></div>";
+}
+
 $installer->endSetup();
