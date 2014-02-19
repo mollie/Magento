@@ -88,7 +88,7 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 
 		$this->api_model   = $this->getMock("Mollie_Mpm_Model_Api", array("setPayment"), array(), "", FALSE);
 
-		$this->order_model   = $this->getMock("Mage_Sales_Model_Order", array("load", "loadByIncrementId", "save", "setState", "getId", "getIncrementId", "getGrandTotal", "setPayment"));
+		$this->order_model   = $this->getMock("Mage_Sales_Model_Order", array("load", "loadByIncrementId", "save", "setState", "getId", "getIncrementId", "setPayment", "getBaseGrandTotal", "getGrandTotal", "getBaseCurrencyCode", "getOrderCurrencyCode"));
 
 		$this->order_model->expects($this->any())
 			->method("getId")
@@ -97,6 +97,10 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 		$this->order_model->expects($this->any())
 			->method("getIncrementId")
 			->will($this->returnValue(self::ORDER_INCREMENT_ID));
+
+		$this->order_model->expects($this->any())
+			->method("getOrderCurrencyCode")
+			->will($this->returnValue('EUR'));
 
 		/*
 		 * Mage::getModel() method
