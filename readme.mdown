@@ -9,7 +9,8 @@
 * Klik dan in het menu onder _Systeem_ op _Configuratie_ aan de linkerkant klikt u op _Betaalmethodes_.
 * Klik op het Mollie logo om de betaalmethodes in te stellen.
 * Mocht u een 404 (pagina niet gevonden) melding zien, log dan uit en weer in.
-* Vul uw accountgegevens in en sla de gegevens vervolgens op.
+* Vul uw _API-key_ in en sla de gegevens vervolgens op.
+* Kopieer de _webhook_ zoals weergegeven in de Magento admin naar de [profielpagina](https://www.mollie.nl/beheer/account/profielen/) in de Mollie-beheeromgeving.
 
 # Ondersteunde betaalmethodes #
 ### iDEAL ###
