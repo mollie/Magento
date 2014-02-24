@@ -90,7 +90,8 @@ $installer->run(
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `method_id` varchar(32) NOT NULL DEFAULT '',
 		  `description` varchar(32) NOT NULL DEFAULT '',
-		  PRIMARY KEY (`id`)
+		  PRIMARY KEY (`id`),
+		  UNIQUE KEY `method_id` (`method_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 		$method_table
 	)
@@ -105,7 +106,8 @@ if (!$installer->tableExists($method_table))
 			  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			  `method_id` varchar(32) NOT NULL DEFAULT '',
 			  `description` varchar(32) NOT NULL DEFAULT '',
-			  PRIMARY KEY (`id`)
+			  PRIMARY KEY (`id`),
+			  UNIQUE KEY `method_id` (`method_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 			$method_table
 		) .
