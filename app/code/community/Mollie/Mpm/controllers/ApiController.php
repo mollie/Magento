@@ -272,7 +272,10 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 					/*
 					 * Send an email to the customer.
 					 */
-					$order->sendNewOrderEmail()->setEmailSent(TRUE);
+					if (!Mage::Helper('mpm/data')->getConfig('mollie', 'skip_order_mails'))
+					{
+						$order->sendNewOrderEmail()->setEmailSent(TRUE);
+					}
 
 					if (!Mage::Helper('mpm/data')->getConfig('mollie', 'skip_invoice'))
 					{
@@ -330,7 +333,10 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 			->addObject($invoice->getOrder())
 			->save();
 
-		$invoice->sendEmail();
+		if (!Mage::Helper('mpm/data')->getConfig('mollie', 'skip_invoice_mails'))
+		{
+			$invoice->sendEmail();
+		}
 
 		return TRUE;
 	}

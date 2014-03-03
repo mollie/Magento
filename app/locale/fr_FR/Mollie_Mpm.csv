@@ -22,6 +22,8 @@
 "Enabled","Activé"
 "Description","Description"
 "Manual invoicing","Facturation manuelle"
+"Skip order confirmation mails","Ignorer les confirmations des commandes"
+"Skip invoice confirmation mails","Ignorer les confirmations des factures"
 "Show Images","Afficher les images"
 "Show Bank List","Afficher la liste des banques"
 
@@ -45,7 +47,9 @@
 "<b>Mollie Api Key:</b> <br/> Your Mollie Api Key. The payment is added to this account.","<b>Clé Api:</b> <br/> Votre Clé Api de chez Mollie. Le paiement est ajouté a ce compte."
 "<b>Status:</b> <br/> Enable or disable the Mollie plugin.","<b>Activé:</b> <br/> Activer ou désactiver le plugin."
 "<b>Description:</b> <br/> Enter a description here. Use '%' for the order id. Payment methods may have a character limit: best keep the description under 29 characters.","<b>Description:</b> <br/> Entrez une description ici. Utilisez '%' pour l'ordre id. Modes de paiement peuvent avoir une limite de caractères: mieux garder la description de moins de 29 caractères."
-"<b>Manual invoices:</b> <br/> Enable this option to skip auto-invoicing.","<b>Facturation manuelle:</b> <br/> Activer cette option pour ignorer l'auto-facturation."
+"<b>Manual invoices:</b> <br/> Enable this option to skip auto-invoicing.","<b>Facturation manuelle:</b> <br/> Activez cette option pour ignorer l'auto-facturation."
+"<b>Skip order confirmation mails:</b> <br/> Enable this option to skip sending order confirmation mails to the customer.","<b>Ignorer les confirmations des commandes:</b> <br/> Activez cette option pour ne pas envoyer les e-mails confirmant les commandes."
+"<b>Skip invoice confirmation mails:</b> <br/> Enable this option to skip sending invoice confirmation mails to the customer. This option only applies when manual invoicing is disabled.","<b>Ignorer les confirmations des factures:</b> <br/> Activez cette option pour ne pas envoyer les e-mails confirmant les factures. Cette option ne s'applique que lorsque la facturation manuelle est désactivée."
 "<b>Show Images:</b> <br/> Enable or disable payment method logos.","<b>Afficher les images:</b> <br/> Activer ou désactiver les logos des méthodes de paiement."
 "<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.","<b>Afficher la liste des banques:</b> <br/> Activer pour montrer la liste des banques dans la boutique. Si cette option n'est pas active, la liste est montrée dans l'ecran de paiement."
 

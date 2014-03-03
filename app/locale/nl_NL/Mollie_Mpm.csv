@@ -22,6 +22,8 @@
 "Enabled","Ingeschakeld"
 "Description","Omschrijving"
 "Manual invoicing","Handmatig factureren"
+"Skip order confirmation mails","Bestelling mails uitzetten"
+"Skip invoice confirmation mails","Factuur mails uitzetten"
 "Show Images","Afbeeldingen weergeven"
 "Show Bank List","Bankenlijst weergeven"
 
@@ -46,6 +48,8 @@
 "<b>Status:</b> <br/> Enable or disable the Mollie plugin.","<b>Status:</b> <br/> Activeer of deactiveer de Mollie plugin"
 "<b>Description:</b> <br/> Enter a description here. Use '%' for the order id. Payment methods may have a character limit: best keep the description under 29 characters.","<b>Omschrijving:</b> <br/> Vul hier een omschrijving in. Gebruik '%' voor het order id. Sommige betaalmethoden hebben een limiet: het beste is om 29 of minder karakters te gebruiken."
 "<b>Manual invoices:</b> <br/> Enable this option to skip auto-invoicing.","<b>Handmatig factureren:</b> <br/> Activeer deze optie om automatisch factureren over te slaan."
+"<b>Skip order confirmation mails:</b> <br/> Enable this option to skip sending order confirmation mails to the customer.","<b>Bestelling-mails uitzetten:</b> <br/> Activeer deze optie om confirmatiemails bij bestellingen uit te zetten."
+"<b>Skip invoice confirmation mails:</b> <br/> Enable this option to skip sending invoice confirmation mails to the customer. This option only applies when manual invoicing is disabled.","<b>Factuur-mails uitzetten:</b> <br/> Activeer deze optie om confirmatiemails bij facturen uit te zetten. Deze optie is alleen actief wanneer Handmatig Factureren uit staat."
 "<b>Show Images:</b> <br/> Enable or disable payment method logos.","<b>Afbeeldingen weergeven:</b> <br/> Activeer of deactiveer de logo's van de betaalmethoden."
 "<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.","<b>Bankenlijst weergevenL</b> <br/> Activeer deze optie om de bankenlijst in de webshop weer te geven. Wanneer de optie uit staat, wordt de lijst in het betaalscherm getoond."
 

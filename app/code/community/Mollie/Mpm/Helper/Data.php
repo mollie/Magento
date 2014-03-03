@@ -155,7 +155,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'show_images', 'show_bank_list', 'webhook_tested');
+		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list', 'webhook_tested');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))

@@ -91,11 +91,33 @@
                             <tooltip><![CDATA[<b>Manual invoices:</b> <br/>]]> Enable this option to skip auto-invoicing.</tooltip>
                         </skip_invoice>
 
+                        <skip_order_mails translate="label tooltip">
+                            <label>Skip order confirmation mails</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Skip order confirmation mails:</b> <br/>]]> Enable this option to skip sending order confirmation mails to the customer.</tooltip>
+                        </skip_order_mails>
+
+                        <skip_invoice_mails translate="label tooltip">
+                            <label>Skip invoice confirmation mails</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Skip invoice confirmation mails:</b> <br/>]]> Enable this option to skip sending invoice confirmation mails to the customer. This option only applies when manual invoicing is disabled.</tooltip>
+                        </skip_invoice_mails>
+
                         <show_images translate="label tooltip">
                             <label>Show Images</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>5</sort_order>
+                            <sort_order>7</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -106,7 +128,7 @@
                             <label>Show Bank List</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>6</sort_order>
+                            <sort_order>8</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
