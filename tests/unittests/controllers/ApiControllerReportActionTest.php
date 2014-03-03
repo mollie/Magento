@@ -222,12 +222,12 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 		$this->expectOrderSaved();
 
 		/*
-		 * We must send an email is everything is successfull
+		 * We may send an email is everything is successfull
 		 */
-		$this->order->expects($this->once())
+		$this->order->expects($this->any())
 			->method("sendNewOrderEmail")
 			->will($this->returnValue($this->order));
-		$this->order->expects($this->once())
+		$this->order->expects($this->any())
 			->method("setEmailSent")
 			->with(TRUE);
 
