@@ -2,6 +2,11 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.0.8 ##
++ Maakt betaalmethoden zichtbaar bij intern aangemaakte orders
++ Lost een probleem met valutaconversie en creditmemos op
++ Geeft gecorrigeerde webhook weer bij URL's met store code
+
 ## Wijzigingen in versie 4.0.7 ##
 + Voegt een optie toe om automatisch mailen na een order uit te zetten
 + Voegt een probleemoplossend upgrade script toe

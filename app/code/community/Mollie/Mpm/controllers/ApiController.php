@@ -65,10 +65,10 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		$this->loadLayout();
 
 		$block = $this->getLayout()
-				->createBlock('Mage_Core_Block_Template')
-				->setTemplate('mollie/page/exception.phtml')
-				->setData('exception', $e)
-				->setData('orderId', $order_id);
+			->createBlock('Mage_Core_Block_Template')
+			->setTemplate('mollie/page/exception.phtml')
+			->setData('exception', $e)
+			->setData('orderId', $order_id);
 
 		$this->getLayout()->getBlock('content')->append($block);
 		$this->renderLayout();
@@ -102,8 +102,8 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		}
 		else
 		{
-			Mage::log(__CLASS__ . '::' . __METHOD__ . ' said: Neither Base nor Order currency is in Euros.');
-			Mage::throwException(__CLASS__ . '::' . __METHOD__ . ' said: Neither Base nor Order currency is in Euros.');
+			Mage::log(__METHOD__ . ' said: Neither Base nor Order currency is in Euros.');
+			Mage::throwException(__METHOD__ . ' said: Neither Base nor Order currency is in Euros.');
 		}
 
 		if (is_string($grand_total))
@@ -184,9 +184,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				// Creates transaction
 				/** @var $payment Mage_Sales_Model_Order_Payment */
 				$payment = Mage::getModel('sales/order_payment')
-									->setMethod('Mollie')
-									->setTransactionId($this->_api->getTransactionId())
-									->setIsTransactionClosed(false);
+					->setMethod('Mollie')
+					->setTransactionId($this->_api->getTransactionId())
+					->setIsTransactionClosed(false);
 
 
 				$order->setPayment($payment);
@@ -245,19 +245,14 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				// Maakt een Order transactie aan
 				/** @var $payment Mage_Sales_Model_Order_Payment */
 				$payment = Mage::getModel('sales/order_payment')
-						->setMethod('Mollie')
-						->setTransactionId($transactionId)
-						->setIsTransactionClosed(TRUE);
+					->setMethod('Mollie')
+					->setTransactionId($transactionId)
+					->setIsTransactionClosed(TRUE);
 
 				$order->setPayment($payment);
 
 				if ($this->_api->getPaidStatus())
 				{
-					/*
-					 * Update the total amount paid
-					 */
-					$order->setTotalPaid($this->_api->getAmount());
-
 					// Als de vorige betaling was mislukt, zijn de producten 'Canceled'... Undo that
 					foreach ($order->getAllItems() as $item) {
 						/** @var $item Mage_Sales_Model_Order_Item */
@@ -267,8 +262,6 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 
 					$this->_model->updatePayment($transactionId, $this->_api->getBankStatus(), $customer);
 
-					$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, $this->__(Mollie_Mpm_Model_Api::PAYMENT_FLAG_PROCESSED), TRUE)->save();
-
 					/*
 					 * Send an email to the customer.
 					 */
@@ -277,10 +270,32 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 						$order->sendNewOrderEmail()->setEmailSent(TRUE);
 					}
 
-					if (!Mage::Helper('mpm/data')->getConfig('mollie', 'skip_invoice'))
+					if (Mage::Helper('mpm/data')->getConfig('mollie', 'skip_invoice'))
+					{
+						/*
+						 * Update the total amount paid
+						 */
+						try {
+							$amount = $this->_api->getAmount(); // Amount in EUROs
+
+							$curr_base = Mage::app()->getStore()->getBaseCurrencyCode();
+							$curr_store = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+							$amount_base = Mage::helper('directory')->currencyConvert($amount, 'EUR', $curr_base);
+							$amount_store = Mage::helper('directory')->currencyConvert($amount, 'EUR', $curr_store);
+
+							$order->setBaseTotalPaid($amount_base);
+							$order->setTotalPaid($amount_store);
+						} catch (Exception $e) {
+							Mage::log(__METHOD__ . '() said: Could not convert currencies. Details: ' . $e->getMessage());
+						}
+					}
+					else
 					{
 						$this->_savePaidInvoice($order);
 					}
+
+					$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, $this->__(Mollie_Mpm_Model_Api::PAYMENT_FLAG_PROCESSED), TRUE);
 
 					if ($transaction = $payment->getTransaction($transactionId))
 					{
@@ -290,8 +305,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 					}
 					else
 					{
-						Mage::log(__CLASS__ . '::' . __METHOD__ . ' said: Could not find a transaction with id ' . $transactionId . ' for order ' . $orderId);
+						Mage::log(__METHOD__ . ' said: Could not find a transaction with id ' . $transactionId . ' for order ' . $orderId);
 					}
+					$order->save();
 				}
 				else
 				{
@@ -324,9 +340,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 			return FALSE;
 		}
 
-		$invoice = $order->prepareInvoice();
-		$invoice->register();
-		$invoice->setState(Mage_Sales_Model_Order_Invoice::STATE_PAID);
+		$invoice = $order->prepareInvoice()
+			->register()
+			->pay();
 
 		Mage::getModel('core/resource_transaction')
 			->addObject($invoice)

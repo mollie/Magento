@@ -39,7 +39,7 @@
 
 class Mollie_Mpm_Helper_Api
 {
-	const PLUGIN_VERSION = '4.0.7';
+	const PLUGIN_VERSION = '4.0.8';
 
 	protected $api_key = null;
 	protected $amount = 0;
@@ -292,6 +292,13 @@ class Mollie_Mpm_Helper_Api
 		return $this->error_message;
 	}
 
+	public function getWebhookURL()
+	{
+		$store_code = Mage::app()->getRequest()->getParam('store');
+		$store_url_part = empty($store_code) ? '/' : '/' . $store_code . '/';
+		return str_replace('/admin/', $store_url_part, Mage::getUrl('mpm/api/webhook'));
+	}
+
 	public function getPaymentMethods()
 	{
 		try
@@ -348,7 +355,7 @@ class Mollie_Mpm_Helper_Api
 		}
 		catch (Mollie_API_Exception $e)
 		{
-			Mage::log(__CLASS__ . '::' . __FUNCTION__ . '() failed to fetch available payment methods. API said: ' . $e->getMessage() . ' (' . $e->getCode() . ') ' );
+			Mage::log(__METHOD__ . '() failed to fetch available payment methods. API said: ' . $e->getMessage() . ' (' . $e->getCode() . ') ' );
 
 			if (strpos($e->getMessage(), "Unable to communicate with Mollie") === 0)
 			{

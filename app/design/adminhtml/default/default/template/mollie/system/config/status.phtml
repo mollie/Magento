@@ -22,7 +22,7 @@ foreach ($methods as $method)
 
 		<b><?php echo $core->__('Webhook'); ?></b><br />
 		<?php echo $core->__('Your webhook URL is:'); ?><br />
-		<input id="webhook" value="<?php echo $this->escapeHtml(Mage::getUrl('mpm/api/webhook')); ?>" readonly onclick="this.select();" /><br />
+		<input id="webhook" value="<?php echo $this->escapeHtml(Mage::helper('mpm/api')->getWebhookURL()); ?>" readonly onclick="this.select();" /><br />
 		<script type="text/javascript">
 			var el = document.getElementById('webhook');
 			el.size = el.value.length + 20;

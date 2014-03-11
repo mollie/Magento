@@ -75,7 +75,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	protected $_isGateway				= TRUE;
 	protected $_canAuthorize			= TRUE;
 	protected $_canUseCheckout			= TRUE;
-	protected $_canUseInternal			= FALSE;
+	protected $_canUseInternal			= TRUE;
 	protected $_canUseForMultishipping	= FALSE; // wouldn't work without event capturing anyway
 	protected $_canRefund				= FALSE;
 	protected $_canCapture				= FALSE;
