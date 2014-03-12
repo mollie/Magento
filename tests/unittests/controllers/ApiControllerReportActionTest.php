@@ -42,6 +42,11 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject
 	 */
+	protected $store;
+
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
 	protected $order;
 
 	const TRANSACTION_ID = "1bba1d8fdbd8103b46151634bdbe0a60";
@@ -66,8 +71,10 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 			->method("getRequest")
 			->will($this->returnValue($this->request));
 
-		$this->api_helper = $this->getMock("Mollie_Mpm_Helper_Api", array("getErrorMessage", "checkPayment", "getPaidStatus", "getAmount", "getBankStatus"), array(), "", FALSE);
-		$this->data_helper  = $this->getMock("stdClass", array("getOrderIdByTransactionId", "getConfig"));
+		$this->api_helper  = $this->getMock("Mollie_Mpm_Helper_Api", array("getErrorMessage", "checkPayment", "getPaidStatus", "getAmount", "getBankStatus"), array(), "", FALSE);
+		$this->data_helper = $this->getMock("stdClass", array("getOrderIdByTransactionId", "getConfig"));
+		$this->directory   = $this->getMock("stdClass", array("currencyConvert"));
+		$this->store       = $this->getMock("stdClass", array("getBaseCurrencyCode", "getCurrentCurrencyCode"));
 
 		/*
 		 * Mage::Helper() method
@@ -77,7 +84,25 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 			->will($this->returnValueMap(array(
 			array("mpm/data", $this->data_helper),
 			array("mpm/api", $this->api_helper),
+			array("directory", $this->directory),
 		)));
+
+		/*
+		 * Mage::getStore()
+		 */
+		$this->mage->expects($this->any())
+			->method("app")
+			->will($this->returnValue($this->mage));
+		$this->mage->expects($this->any())
+			->method("getStore")
+			->will($this->returnValue($this->store));
+
+		$this->store->expects($this->any())
+			->method('getBaseCurrencyCode')
+			->will($this->returnValue('EUR'));
+		$this->store->expects($this->any())
+			->method('getCurrentCurrencyCode')
+			->will($this->returnValue('EUR'));
 
 		/*
 		 * Models.
@@ -97,7 +122,7 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 			array("sales/order_payment", $this->payment_model),
 		)));
 
-		$this->order = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "setTotalPaid", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save"));
+		$this->order = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "setTotalPaid", "setBaseTotalPaid", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save"));
 		$this->order->expects($this->any())
 			->method("setState")
 			->will($this->returnValue($this->order));
@@ -195,6 +220,13 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 			->will($this->returnValue($amount));
 	}
 
+	protected function expectsConversionAmount($amount)
+	{
+		$this->directory->expects($this->atLeastOnce())
+			->method("currencyConvert")
+			->will($this->returnValue($amount));
+	}
+
 	public function testEverythingGoesGreat()
 	{
 		$this->data_helper->expects($this->any())
@@ -217,7 +249,12 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 			->method("setTotalPaid")
 			->with(500.15);
 
+		$this->order->expects($this->once())
+			->method("setBaseTotalPaid")
+			->with(500.15);
+
 		$this->expectsMollieAmount(500.15);
+		$this->expectsConversionAmount(500.15);
 
 		$this->expectOrderSaved();
 

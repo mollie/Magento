@@ -60,7 +60,7 @@ abstract class MagentoPlugin_TestCase extends PHPUnit_Framework_TestCase
 
 	protected function setUp()
 	{
-		$this->mage = $this->getMock("stdClass", array("Helper", "getModel", "log", "throwException", "getSingleton", "getStoreConfig", "getUrl", "getConfig", "getBaseUrl"));
+		$this->mage = $this->getMock("stdClass", array("Helper", "app", "getModel", "log", "throwException", "getSingleton", "getStore", "getStoreConfig", "getUrl", "getConfig", "getBaseUrl"));
 		Mage::setImplementation($this->mage);
 	}
 }
