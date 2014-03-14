@@ -35,6 +35,7 @@
 
 class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 {
+	public $should_update = 'maybe';
 
 	/**
 	 * Get payment bank status by order_id
@@ -278,12 +279,71 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			return '<b>'.$core->__('Outdated file(s) found!').'</b><br />' . implode('<br />', $deprFiles) . '<br />'.$core->__('These aren&lsquo;t needed any longer; you might as well delete them.');
 		}
 
+		if ($this->should_update === 'yes')
+		{
+			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Outdated!').'</span>';
+		}
+
 		return '<b>'.$core->__('Status').'</b><br /><span style="color:green">'.$core->__('Module status: OK!').'</span>';
 	}
 
 	public function getModuleVersion()
 	{
 		return Mage::getConfig()->getNode('modules')->children()->Mollie_Mpm->version;
+	}
+
+	/**
+	 * @param $url
+	 * @return string
+	 */
+	public function _getUpdateMessage($url)
+	{
+		$core = Mage::helper('core');
+		$update_message = '';
+		$update_xml = $this->_getUpdateXML($url);
+		if ($update_xml === FALSE)
+		{
+			$this->should_update = 'maybe';
+			$update_message = $core->__('Warning: Could not retrieve update xml file from github.', 'mollie');
+		}
+		else
+		{
+			/** @var SimpleXMLElement $tags */
+			$tags = new SimpleXMLElement($update_xml);
+			if (!empty($tags) && isset($tags->entry, $tags->entry[0], $tags->entry[0]->title))
+			{
+				$title = $tags->entry[0]->title;
+				$latest_version = preg_replace("/[^0-9,.]/", "", $title);
+				$this_version = $this->getModuleVersion();
+				if (!version_compare($this_version, $latest_version, '>='))
+				{
+					$update_message = sprintf(
+						$core->__('<a href=%s/releases>You are currently using version %s. We strongly recommend you to upgrade to the new version %s!</a>', 'mollie'),
+						$url, $this_version, $latest_version
+					);
+					$this->should_update = 'yes';
+				}
+				else
+				{
+					$this->should_update = 'no';
+				}
+			}
+			else
+			{
+				$this->should_update = 'maybe';
+				$update_message = $core->__('Warning: Update xml file from github follows an unexpected format.', 'mollie');
+			}
+		}
+		return $update_message;
+	}
+
+	/**
+	 * @param $url
+	 * @return string
+	 */
+	protected function _getUpdateXML($url)
+	{
+		return @file_get_contents($url . '/tags.atom');
 	}
 
 }
