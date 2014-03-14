@@ -174,7 +174,7 @@
                 <group>mollie</group>
                 <active>0</active>
                 <model>mpm/idl</model>
-                <title>iDeal</title>
+                <title>{{Deprecated}}</title>
                 <currency>EUR</currency>
             </mpm_idl>
 

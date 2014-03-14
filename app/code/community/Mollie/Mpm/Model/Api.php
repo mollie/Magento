@@ -77,7 +77,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	protected $_canUseCheckout			= TRUE;
 	protected $_canUseInternal			= TRUE;
 	protected $_canUseForMultishipping	= FALSE; // wouldn't work without event capturing anyway
-	protected $_canRefund				= FALSE;
+	protected $_canRefund				= TRUE;
 	protected $_canCapture				= FALSE;
 
 	// Payment statusses
@@ -358,5 +358,31 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			return FALSE;
 		}
 		return isset($this->_index) && $this->_index >= 0 && $this->_index < sizeof($this->_api->methods);
+	}
+
+	public function refund(Varien_Object $payment, $amount)
+	{
+		$order = $payment->getOrder();
+		$row = $this->_mysqlr->fetchRow(
+			'SELECT * FROM `' . $this->_table . '` WHERE `order_id` = ' . intval($order->entity_id),
+			array(),
+			Zend_Db::FETCH_ASSOC
+		);
+		$transaction_id = $row['transaction_id'];
+
+		$mollie = $this->_api->_getMollieAPI();
+
+		$mollie_payment = $mollie->payments->get($transaction_id);
+
+		try
+		{
+			$mollie->payments->refund($mollie_payment);
+		}
+		catch (Exception $e)
+		{
+			Mage::throwException('Impossible to create a refund for this transaction. Details: ' . $e->getMessage() . '<br />');
+		}
+
+		return $this;
 	}
 }

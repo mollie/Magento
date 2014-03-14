@@ -68,6 +68,7 @@ foreach ($methods as $method)
 
 		<b><?php echo $core->__('Version'); ?></b><br />
 		<?php echo sprintf($core->__('This is version &quot;v%s&quot; of Mollie&lsquo;s Magento module.'), $this->escapeHtml(Mage::Helper('mpm/data')->getModuleVersion())); ?><br />
+		<?php echo Mage::Helper('mpm/data'); ?>
 		<br />
 		<?php echo Mage::Helper('mpm/data')->getModuleStatus($method_count, 32); ?><br />
 		<br />
