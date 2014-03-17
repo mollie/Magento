@@ -375,7 +375,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		// only complete refunds are allowed
 		if (round($order->getBaseGrandTotal(), 2) !== round($amount, 2))
 		{
-			Mage::throwException('Impossible to create a refund for this transaction. Details: The amount to refund must equal the amount payed.<br />');
+			Mage::throwException('Impossible to create a refund for this transaction. Details: The amount to refund must equal the amount paid.<br />');
 		}
 
 		// fetch payment info
