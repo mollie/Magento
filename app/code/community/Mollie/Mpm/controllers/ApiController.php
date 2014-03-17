@@ -60,7 +60,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 	 * @param string $e Exceptiom message
 	 * @param null $order_id An OrderID
 	 */
-	public function _showException ($e = '', $order_id = NULL)
+	protected function _showException ($e = '', $order_id = NULL)
 	{
 		$this->loadLayout();
 
