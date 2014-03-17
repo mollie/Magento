@@ -156,7 +156,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list', 'webhook_tested');
+		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
@@ -245,13 +245,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 				<br />
 				If no newer version is available, please <a href="https://www.mollie.nl/bedrijf/contact" title="Mollie Support">contact Mollie BV</a>.
 			';
-		}
-
-
-		// Check if webhook is set
-		if (!Mage::Helper('mpm/data')->getConfig('mollie', 'webhook_tested'))
-		{
-			return '<b>'.$core->__('Webhook not set!').'</b><br /><span style="color:red;">'.$core->__('Warning: It seems you have not set a webhook in your Mollie profile.').'</span><br />';
 		}
 
 
