@@ -35,6 +35,7 @@
 
 class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 {
+	public $update_url = 'https://github.com/mollie/Magento';
 	public $should_update = 'maybe';
 
 	/**
@@ -286,14 +287,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * @param $url
 	 * @return string
 	 */
-	public function _getUpdateMessage($url)
+	public function _getUpdateMessage()
 	{
 		$core = Mage::helper('core');
 		$update_message = '';
-		$update_xml = $this->_getUpdateXML($url);
+		$update_xml = $this->_getUpdateXML();
 		if ($update_xml === FALSE)
 		{
 			$this->should_update = 'maybe';
@@ -312,7 +312,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 				{
 					$update_message = sprintf(
 						$core->__('<a href=%s/releases>You are currently using version %s. We strongly recommend you to upgrade to the new version %s!</a>', 'mollie'),
-						$url, $this_version, $latest_version
+						$this->update_url, $this_version, $latest_version
 					);
 					$this->should_update = 'yes';
 				}
@@ -331,12 +331,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * @param $url
 	 * @return string
 	 */
-	protected function _getUpdateXML($url)
+	protected function _getUpdateXML()
 	{
-		return @file_get_contents($url . '/releases.atom');
+		return @file_get_contents($this->update_url . '/releases.atom');
 	}
 
 }
