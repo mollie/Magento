@@ -303,10 +303,10 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			/** @var SimpleXMLElement $tags */
 			$tags = new SimpleXMLElement($update_xml);
-			if (!empty($tags) && isset($tags->entry, $tags->entry[0], $tags->entry[0]->title))
+			if (!empty($tags) && isset($tags->entry, $tags->entry[0], $tags->entry[0]->id))
 			{
-				$title = $tags->entry[0]->title;
-				$latest_version = preg_replace("/[^0-9,.]/", "", $title);
+				$title = $tags->entry[0]->id;
+				$latest_version = preg_replace("/[^0-9,.]/", "", substr($title, strrpos($title, '/')));
 				$this_version = $this->getModuleVersion();
 				if (!version_compare($this_version, $latest_version, '>='))
 				{
@@ -336,7 +336,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	protected function _getUpdateXML($url)
 	{
-		return @file_get_contents($url . '/tags.atom');
+		return @file_get_contents($url . '/releases.atom');
 	}
 
 }
