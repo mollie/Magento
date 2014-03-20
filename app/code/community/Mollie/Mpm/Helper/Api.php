@@ -39,7 +39,7 @@
 
 class Mollie_Mpm_Helper_Api
 {
-	const PLUGIN_VERSION = '4.0.8';
+	const PLUGIN_VERSION = '4.1.0';
 
 	protected $api_key = null;
 	protected $amount = 0;
