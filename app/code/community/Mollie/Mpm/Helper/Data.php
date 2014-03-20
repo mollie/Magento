@@ -172,8 +172,19 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getModuleStatus($method_count, $method_limit)
 	{
+		/* Precedence:
+		 * 1) Missing files
+		 * 2) Magento version
+		 * 3) New version on github
+		 * 4) Method limit
+		 * 5) Disabled check
+		 * 6) Deprecated files
+		 */
+
 		$core = Mage::helper('core');
-		// check missing files
+
+
+		// 1) Check missing files
 		$needFiles = array();
 		$modFiles  = array(
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
@@ -225,7 +236,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 
-		// check version
+		// 2) Check magento version
 		if ( version_compare(Mage::getVersion(), '1.4.1.0', '<'))
 		{
 			return '<b>'.$core->__('Version incompatible!').'</b><br />
@@ -237,7 +248,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 
-		// check method count
+		// 3) Check github version
+		if ($this->should_update === 'yes')
+		{
+			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Outdated!').'</span>';
+		}
+
+
+		// 4) Check method limit
 		if ($method_count > $method_limit)
 		{
 			return '<b>'.$core->__('Module outdated!').'</b><br />
@@ -249,7 +267,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 
-		// check deprecated files
+		// 5) Check if disabled
+		if (!Mage::Helper('mpm/data')->getConfig('mollie', 'active'))
+		{
+			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Disabled!').'</span>';
+		}
+
+
+		// 6) Check deprecated files
 		$deprFiles = array();
 		$oldFiles = array(
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Fail.php',
@@ -268,16 +293,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 		}
 
+
 		if (count($deprFiles) > 0)
 		{
 			return '<b>'.$core->__('Outdated file(s) found!').'</b><br />' . implode('<br />', $deprFiles) . '<br />'.$core->__('These aren&lsquo;t needed any longer; you might as well delete them.');
 		}
 
-		if ($this->should_update === 'yes')
-		{
-			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Outdated!').'</span>';
-		}
-
+		// All is fine
 		return '<b>'.$core->__('Status').'</b><br /><span style="color:green">'.$core->__('Module status: OK!').'</span>';
 	}
 
