@@ -49,6 +49,11 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 	 */
 	protected $order;
 
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $transaction;
+
 	const TRANSACTION_ID = "1bba1d8fdbd8103b46151634bdbe0a60";
 
 	const ORDER_ID = 1337;
@@ -75,6 +80,7 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 		$this->data_helper = $this->getMock("stdClass", array("getOrderIdByTransactionId", "getConfig"));
 		$this->directory   = $this->getMock("stdClass", array("currencyConvert"));
 		$this->store       = $this->getMock("stdClass", array("getBaseCurrencyCode", "getCurrentCurrencyCode"));
+		$this->transaction = $this->getMock("stdClass", array("setTxnType", "setIsClosed", "save"));
 
 		/*
 		 * Mage::Helper() method
@@ -227,6 +233,13 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 			->will($this->returnValue($amount));
 	}
 
+	protected function expectsTransaction($transaction)
+	{
+		$this->payment_model->expects($this->once())
+			->method("getTransaction")
+			->will($this->returnValue($transaction));
+	}
+
 	public function testEverythingGoesGreat()
 	{
 		$this->data_helper->expects($this->any())
@@ -255,6 +268,8 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 
 		$this->expectsMollieAmount(500.15);
 		$this->expectsConversionAmount(500.15);
+
+		$this->expectsTransaction($this->transaction);
 
 		$this->expectOrderSaved();
 
