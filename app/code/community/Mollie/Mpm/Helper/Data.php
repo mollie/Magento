@@ -333,7 +333,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 				if (!version_compare($this_version, $latest_version, '>='))
 				{
 					$update_message = sprintf(
-						$core->__('<a href=%s/releases>You are currently using version %s. We strongly recommend you to upgrade to the new version %s!</a>', 'mollie'),
+						'<a href=%s/releases>' .
+						$core->__('You are currently using version %s. We strongly recommend you to upgrade to the new version %s!', 'mollie') .
+						'</a><br /><span style="font-size: small;">' .
+						$core->__('Note: version information is accurate only when the cache is cleared.', 'mollie') .
+						'</span>',
 						$this->update_url, $this_version, $latest_version
 					);
 					$this->should_update = 'yes';
