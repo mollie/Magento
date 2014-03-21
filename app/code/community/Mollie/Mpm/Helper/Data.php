@@ -35,6 +35,8 @@
 
 class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 {
+	public $update_url = 'https://github.com/mollie/Magento';
+	public $should_update = 'maybe';
 
 	/**
 	 * Get payment bank status by order_id
@@ -155,7 +157,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list', 'webhook_tested');
+		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
@@ -170,8 +172,19 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getModuleStatus($method_count, $method_limit)
 	{
+		/* Precedence:
+		 * 1) Missing files
+		 * 2) Magento version
+		 * 3) New version on github
+		 * 4) Method limit
+		 * 5) Disabled check
+		 * 6) Deprecated files
+		 */
+
 		$core = Mage::helper('core');
-		// check missing files
+
+
+		// 1) Check missing files
 		$needFiles = array();
 		$modFiles  = array(
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
@@ -223,7 +236,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 
-		// check version
+		// 2) Check magento version
 		if ( version_compare(Mage::getVersion(), '1.4.1.0', '<'))
 		{
 			return '<b>'.$core->__('Version incompatible!').'</b><br />
@@ -235,7 +248,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 
-		// check method count
+		// 3) Check github version
+		if ($this->should_update === 'yes')
+		{
+			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Outdated!').'</span>';
+		}
+
+
+		// 4) Check method limit
 		if ($method_count > $method_limit)
 		{
 			return '<b>'.$core->__('Module outdated!').'</b><br />
@@ -247,14 +267,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 
 
-		// Check if webhook is set
-		if (!Mage::Helper('mpm/data')->getConfig('mollie', 'webhook_tested'))
+		// 5) Check if disabled
+		if (!Mage::Helper('mpm/data')->getConfig('mollie', 'active'))
 		{
-			return '<b>'.$core->__('Webhook not set!').'</b><br /><span style="color:red;">'.$core->__('Warning: It seems you have not set a webhook in your Mollie profile.').'</span><br />';
+			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Disabled!').'</span>';
 		}
 
 
-		// check deprecated files
+		// 6) Check deprecated files
 		$deprFiles = array();
 		$oldFiles = array(
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Fail.php',
@@ -273,17 +293,71 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 		}
 
+
 		if (count($deprFiles) > 0)
 		{
 			return '<b>'.$core->__('Outdated file(s) found!').'</b><br />' . implode('<br />', $deprFiles) . '<br />'.$core->__('These aren&lsquo;t needed any longer; you might as well delete them.');
 		}
 
+		// All is fine
 		return '<b>'.$core->__('Status').'</b><br /><span style="color:green">'.$core->__('Module status: OK!').'</span>';
 	}
 
 	public function getModuleVersion()
 	{
 		return Mage::getConfig()->getNode('modules')->children()->Mollie_Mpm->version;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function _getUpdateMessage()
+	{
+		$core = Mage::helper('core');
+		$update_message = '';
+		$update_xml = $this->_getUpdateXML();
+		if ($update_xml === FALSE)
+		{
+			$this->should_update = 'maybe';
+			$update_message = $core->__('Warning: Could not retrieve update xml file from github.', 'mollie');
+		}
+		else
+		{
+			/** @var SimpleXMLElement $tags */
+			$tags = new SimpleXMLElement($update_xml);
+			if (!empty($tags) && isset($tags->entry, $tags->entry[0], $tags->entry[0]->id))
+			{
+				$title = $tags->entry[0]->id;
+				$latest_version = preg_replace("/[^0-9,.]/", "", substr($title, strrpos($title, '/')));
+				$this_version = $this->getModuleVersion();
+				if (!version_compare($this_version, $latest_version, '>='))
+				{
+					$update_message = sprintf(
+						$core->__('<a href=%s/releases>You are currently using version %s. We strongly recommend you to upgrade to the new version %s!</a>', 'mollie'),
+						$this->update_url, $this_version, $latest_version
+					);
+					$this->should_update = 'yes';
+				}
+				else
+				{
+					$this->should_update = 'no';
+				}
+			}
+			else
+			{
+				$this->should_update = 'maybe';
+				$update_message = $core->__('Warning: Update xml file from github follows an unexpected format.', 'mollie');
+			}
+		}
+		return $update_message;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function _getUpdateXML()
+	{
+		return @file_get_contents($this->update_url . '/releases.atom');
 	}
 
 }

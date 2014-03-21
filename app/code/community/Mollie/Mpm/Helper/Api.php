@@ -39,7 +39,7 @@
 
 class Mollie_Mpm_Helper_Api
 {
-	const PLUGIN_VERSION = '4.0.8';
+	const PLUGIN_VERSION = '4.1.0';
 
 	protected $api_key = null;
 	protected $amount = 0;
@@ -89,7 +89,6 @@ class Mollie_Mpm_Helper_Api
 			return false;
 		}
 
-		$billing = $order->getBillingAddress();
 
 		$params = array(
 			"amount"				=> $this->getAmount(),
@@ -100,11 +99,19 @@ class Mollie_Mpm_Helper_Api
 			"metadata"				=> array(
 				"order_id"			=> $order->getId(),
 			),
-			"billingCity"			=> $billing->getCity(),
-			"billingRegion"			=> $billing->getRegion(),
-			"billingPostal"			=> $billing->getPostcode(),
-			"billingCountry"		=> $billing->getCountryId(),
+			"webhookUrl"				=> $this->getWebhookURL(),
 		);
+
+
+		if ($billing = $order->getBillingAddress())
+		{
+			$params += array(
+				"billingCity"			=> $billing->getCity(),
+				"billingRegion"			=> $billing->getRegion(),
+				"billingPostal"			=> $billing->getPostcode(),
+				"billingCountry"		=> $billing->getCountryId(),
+			);
+		}
 
 		if ($shipping = $order->getShippingAddress())
 		{
@@ -117,7 +124,31 @@ class Mollie_Mpm_Helper_Api
 			);
 		}
 
-		$payment = $api->payments->create($params);
+		try
+		{
+			$payment = $api->payments->create($params);
+		}
+		catch (Mollie_API_Exception $e)
+		{
+			try
+			{
+				if ($e->getField() == "webhookUrl")
+				{
+					unset($params["webhookUrl"]);
+					$payment = $api->payments->create($params);
+				}
+				else
+				{
+					throw $e;
+				}
+			}
+			catch (Mollie_API_Exception $e)
+			{
+				$this->error_message = __METHOD__ . ' said: Unable to set up payment. Reason: ' . $e->getMessage();
+				Mage::log($this->error_message);
+				return false;
+			}
+		}
 
 
 		$this->setTransactionId($payment->id);
@@ -369,7 +400,7 @@ class Mollie_Mpm_Helper_Api
 		catch (Exception $e)
 		{
 			Mage::log($e);
-			return Mage::helper('core')->__('There was an error:') . '<br />' . $e->getFile() . ':' . $e->getLine() . ' - ' . $e->getMessage();
+			return Mage::helper('core')->__('There was an error:') . '<br />' . $e->getMessage();
 		}
 	}
 

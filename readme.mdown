@@ -43,8 +43,7 @@ Controleert u alstublieft of de module ingeschakeld is, én of uw bestelling in 
 
 **Moet ik ook een return- en / of webhook-URL instellen?**
 
-In het instellingenscherm ziet u een veld met uw webhook-URL er in; als u die URL in uw Mollie websiteprofiel plakt, kan de API met uw webshop communiceren.
-Het is niet nodig een return-URL in te stellen, de module stelt dit automatisch in.
+Het is niet nodig een return- en / of webhook-URL in te stellen, de module stelt dit automatisch in.
 
 **De module is niet zichtbaar in de admin van Magento**
 

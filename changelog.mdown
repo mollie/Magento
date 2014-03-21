@@ -2,6 +2,11 @@
 
 # Changelog #
 
+## Wijzigingen in versie 4.1.0 ##
++ Voegt online refund mogelijkheid toe
++ Stuurt automatisch de webhook mee
++ Zoekt naar nieuwe releases op github
+
 ## Wijzigingen in versie 4.0.8 ##
 + Maakt betaalmethoden zichtbaar bij intern aangemaakte orders
 + Lost een probleem met valutaconversie en creditmemos op

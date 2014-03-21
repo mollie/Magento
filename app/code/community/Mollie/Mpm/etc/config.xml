@@ -37,7 +37,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>4.0.8</version>
+            <version>4.1.0</version>
         </Mollie_Mpm>
     </modules>
 
@@ -174,7 +174,7 @@
                 <group>mollie</group>
                 <active>0</active>
                 <model>mpm/idl</model>
-                <title>iDeal</title>
+                <title>{{Deprecated}}</title>
                 <currency>EUR</currency>
             </mpm_idl>
 

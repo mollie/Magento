@@ -20,15 +20,6 @@ foreach ($methods as $method)
 		<?php echo $core->__('You can find your <i>Api Key</i> in your <a href="https://www.mollie.nl/beheer/account/profielen/" title="Mollie Profiles">Mollie Profile</a>.');?><br />
 		<br />
 
-		<b><?php echo $core->__('Webhook'); ?></b><br />
-		<?php echo $core->__('Your webhook URL is:'); ?><br />
-		<input id="webhook" value="<?php echo $this->escapeHtml(Mage::helper('mpm/api')->getWebhookURL()); ?>" readonly onclick="this.select();" /><br />
-		<script type="text/javascript">
-			var el = document.getElementById('webhook');
-			el.size = el.value.length + 20;
-		</script>
-		<br />
-
 		<b><?php echo $core->__('Payment methods'); ?></b><br />
 		<?php if ($method_count > 0): ?>
 			<?php
@@ -68,6 +59,7 @@ foreach ($methods as $method)
 
 		<b><?php echo $core->__('Version'); ?></b><br />
 		<?php echo sprintf($core->__('This is version &quot;v%s&quot; of Mollie&lsquo;s Magento module.'), $this->escapeHtml(Mage::Helper('mpm/data')->getModuleVersion())); ?><br />
+		<?php echo Mage::Helper('mpm/data')->_getUpdateMessage(); ?><br />
 		<br />
 		<?php echo Mage::Helper('mpm/data')->getModuleStatus($method_count, 32); ?><br />
 		<br />

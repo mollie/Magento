@@ -218,7 +218,6 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 		// Determine if this is a connection test
 		if ($this->getRequest()->getParam('testByMollie'))
 		{
-			Mage::getConfig()->saveConfig('payment/mollie/webhook_tested', '1');
 			return;
 		}
 		// Get transaction_id from post parameter
@@ -270,7 +269,19 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 						$order->sendNewOrderEmail()->setEmailSent(TRUE);
 					}
 
-					if (Mage::Helper('mpm/data')->getConfig('mollie', 'skip_invoice'))
+					if ($transaction = $payment->getTransaction($transactionId))
+					{
+						$transaction->setTxnType(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
+						$transaction->setIsClosed(TRUE);
+						$transaction->save();
+					}
+					else
+					{
+						Mage::log(__METHOD__ . ' said: Could not find a transaction with id ' . $transactionId . ' for order ' . $orderId);
+						return;
+					}
+
+					if (Mage::Helper('mpm/data')->getConfig('mollie', 'skip_invoice') || !$order->canInvoice())
 					{
 						/*
 						 * Update the total amount paid
@@ -292,21 +303,11 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 					}
 					else
 					{
-						$this->_savePaidInvoice($order);
+						$this->_savePaidInvoice($order, $transaction->getId());
 					}
 
 					$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PROCESSING, $this->__(Mollie_Mpm_Model_Api::PAYMENT_FLAG_PROCESSED), TRUE);
 
-					if ($transaction = $payment->getTransaction($transactionId))
-					{
-						$transaction->setTxnType(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
-						$transaction->setIsClosed(TRUE);
-						$transaction->save();
-					}
-					else
-					{
-						Mage::log(__METHOD__ . ' said: Could not find a transaction with id ' . $transactionId . ' for order ' . $orderId);
-					}
 					$order->save();
 				}
 				else
@@ -333,15 +334,11 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 	 *
 	 * @return bool
 	 */
-	protected function _savePaidInvoice(Mage_Sales_Model_Order $order)
+	protected function _savePaidInvoice(Mage_Sales_Model_Order $order, $transaction_id = null)
 	{
-		if (!$order->canInvoice())
-		{
-			return FALSE;
-		}
-
 		$invoice = $order->prepareInvoice()
 			->register()
+			->setTransactionId($transaction_id)
 			->pay();
 
 		Mage::getModel('core/resource_transaction')
