@@ -43,7 +43,7 @@
                     <sort_order>-100</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
 
                     <fields>
@@ -52,8 +52,8 @@
                             <frontend_type>text</frontend_type>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <tooltip><![CDATA[<b>Mollie Api Key:</b> <br/>]]> Your Mollie Api Key. The payment is added to this account.</tooltip>
                             <validate>required-entry</validate>
                         </apikey>
@@ -142,7 +142,7 @@
                     <sort_order>-90</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
                         <hint>
