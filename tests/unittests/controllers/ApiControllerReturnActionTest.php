@@ -47,7 +47,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 	{
 		parent::setUp();
 
-		$this->controller = $this->getMock("Mollie_Mpm_ApiController", array("getRequest", "_redirect", "loadLayout", "_showException"), array());
+		$this->controller = $this->getMock("Mollie_Mpm_ApiController", array("getRequest", "_redirect", "_restoreCart", "loadLayout", "_showException"), array());
 
 		/**
 		 * transaction_id is passed in from Mollie, must be checked in this code.
@@ -152,9 +152,38 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 			->with(self::TRANSACTION_ID)
 			->will($this->returnValue(array(
 			'bank_status' => Mollie_Mpm_Model_Api::STATUS_PAID,
+			'updated_at' => '2014-04-26',
 		)));
 
 		$this->quote->items_count = 0;
+
+		$this->controller->expects($this->never())
+			->method("_restoreCart");
+
+		$this->controller->expects($this->once())
+			->method("_redirect")
+			->with('checkout/onepage/success', array('_secure' => true));
+
+		$this->controller->_construct();
+		$this->controller->returnAction();
+	}
+
+	public function testPaymentPending()
+	{
+		$this->expectsOrderModelCanBeloaded();
+
+		$this->datahelper->expects($this->once())
+			->method("getStatusById")
+			->with(self::TRANSACTION_ID)
+			->will($this->returnValue(array(
+						'bank_status' => Mollie_Mpm_Model_Api::STATUS_PENDING,
+						'updated_at' => '2014-04-26',
+					)));
+
+		$this->quote->items_count = 0;
+
+		$this->controller->expects($this->never())
+			->method("_restoreCart");
 
 		$this->controller->expects($this->once())
 			->method("_redirect")
@@ -172,8 +201,12 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 			->method("getStatusById")
 			->with(self::TRANSACTION_ID)
 			->will($this->returnValue(array(
-			'bank_status' => Mollie_Mpm_Model_Api::STATUS_CANCELLED,
-		)));
+						'bank_status' => Mollie_Mpm_Model_Api::STATUS_CANCELLED,
+						'updated_at' => '2014-04-26',
+					)));
+
+		$this->controller->expects($this->once())
+			->method("_restoreCart");
 
 		$this->controller->expects($this->once())
 			->method("_redirect")

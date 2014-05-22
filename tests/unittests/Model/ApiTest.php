@@ -89,11 +89,14 @@ class Mollie_Mpm_Model_ApiTest extends MagentoPlugin_TestCase
 		$this->assertFalse($model->isAvailable());
 	}
 
-	public function testCannotUseForOtherCurrencyThanEUR()
+	/**
+	 * Regression test: it was NOT allowed before. Now it is.
+	 */
+	public function testCanUseForOtherCurrencyThanEUR()
 	{
 		$model = new Mollie_Mpm_Model_Api();
 		$this->assertTrue($model->canUseForCurrency("EUR"));
-		$this->assertFalse($model->canUseForCurrency("USD"));
+		$this->assertTrue($model->canUseForCurrency("USD"));
 	}
 
 	public function testSetPaymentDoesNotAcceptNull()
