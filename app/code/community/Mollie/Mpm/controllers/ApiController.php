@@ -372,7 +372,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				// Get payment status from database ( `mollie_payments` )
 				$oStatus  = Mage::Helper('mpm/data')->getStatusById($transactionId);
 
-				if ($oStatus['bank_status'] === Mollie_Mpm_Model_Api::STATUS_PAID)
+				if (empty($oStatus['updated_at']) ||
+					$oStatus['bank_status'] === Mollie_Mpm_Model_Api::STATUS_PAID ||
+					$oStatus['bank_status'] === Mollie_Mpm_Model_Api::STATUS_PENDING)
 				{
 					if ($this->_getCheckout()->getQuote()->items_count > 0)
 					{

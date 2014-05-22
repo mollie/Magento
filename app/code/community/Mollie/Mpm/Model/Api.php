@@ -82,10 +82,11 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	protected $_canCapture				= FALSE;
 
 	// Payment statusses
-	const STATUS_OPEN					= "open";
-	const STATUS_CANCELLED				= "cancelled";
-	const STATUS_EXPIRED				= "expired";
-	const STATUS_PAID					= "paid";
+	const STATUS_OPEN      = "open";
+	const STATUS_PENDING   = "pending";
+	const STATUS_CANCELLED = "cancelled";
+	const STATUS_EXPIRED   = "expired";
+	const STATUS_PAID      = "paid";
 
 	// Payment flags
 	const PAYMENT_FLAG_PROCESSED		= "De betaling is ontvangen en verwerkt";
@@ -248,9 +249,14 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 			return FALSE;
 		}
 
-		if ($currencyCode !== 'EUR') {
-			return FALSE;
-		}
+		/**
+		 * Skip the check here. The order amount is converted to EUR automatically.
+		 *
+		 * @see Mollie_Mpm_ApiController
+		 */
+//		if ($currencyCode !== 'EUR') {
+//			return FALSE;
+//		}
 
 		return TRUE;
 	}
