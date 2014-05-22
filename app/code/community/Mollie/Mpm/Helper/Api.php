@@ -51,14 +51,28 @@ class Mollie_Mpm_Helper_Api
 	protected $status= '';
 	protected $consumer_info = array();
 	protected $error_message = '';
-	public $methods = null;
+	protected $_cached_methods = NULL;
 
 	public function __construct()
 	{
 		// Set Api Key
 		$this->setApiKey(Mage::Helper('mpm/data')->getApiKey());
-		// Fetch Payment Methods
-		$this->methods = $this->getPaymentMethods();
+	}
+
+	public function __get ($property)
+	{
+		if ($property === 'methods')
+		{
+			// Fetch Payment Methods
+			if (empty($this->_cached_methods))
+			{
+				$this->_cached_methods = $this->getPaymentMethods();
+			}
+
+			return $this->_cached_methods;
+		}
+
+		return $this->$property;
 	}
 
 	/**
