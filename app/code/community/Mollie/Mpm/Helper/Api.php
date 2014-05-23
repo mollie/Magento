@@ -72,7 +72,7 @@ class Mollie_Mpm_Helper_Api
 			return $this->_cached_methods;
 		}
 
-		return $this->$property;
+		return NULL;
 	}
 
 	/**
