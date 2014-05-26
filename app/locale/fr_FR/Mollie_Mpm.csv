@@ -1,7 +1,7 @@
 "There was an error:","Il y avait un erreur:"
 "The payment service is currently unavailable.","Le service de paiement est indisponible."
 "The module is configured incorrectly.","Le module n'est pas configuré correctement."
-"Your Mollie Account is reachable from the Magento store, but <a href=""http://mollie.dev/beheer/diensten/"">seems to lack payment methods</a>.","Votre compte Mollie est accessible à partir de la boutique Magento, mais <a href=""http://mollie.dev/beheer/diensten/"">semble manquer de méthodes de paiement</a>."
+"Your Mollie Account is reachable from the Magento store, but <a href=""https://www.mollie.nl/beheer/diensten/"">seems to lack payment methods</a>.","Votre compte Mollie est accessible à partir de la boutique Magento, mais <a href=""https://www.mollie.nl/beheer/diensten/"">semble manquer de méthodes de paiement</a>."
 "Warning: It seems you have not set a webhook in your Mollie profile.", "Attention: Il semble que vous n'avez pas défini un webhook dans votre profil Mollie. Sans webhook connu à Mollie, vos paiements ne peuvent pas réussir!"
 
 "Webhook not set!", "Webhook indéfini!"
