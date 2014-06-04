@@ -2,6 +2,10 @@
 
 # Changelog #
 
+## Changes in release 4.1.1 ##
++ Better handling of Bank transfer and Bitcoin return pages.
++ Small bug fixes.
+
 ## Wijzigingen in versie 4.1.0 ##
 + Voegt online refund mogelijkheid toe
 + Stuurt automatisch de webhook mee
