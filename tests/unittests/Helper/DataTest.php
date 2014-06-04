@@ -111,7 +111,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 	{
 		$this->readconn->expects($this->once())
 			->method("fetchAll")
-			->with("SELECT `bank_status` FROM `mollie_payments` WHERE `transaction_id` = '1bba1d8fdbd8103b46151634bdbe0a60'")
+			->with("SELECT `bank_status`, `updated_at` FROM `mollie_payments` WHERE `transaction_id` = '1bba1d8fdbd8103b46151634bdbe0a60'")
 			->will($this->returnValue(array(array("bank_status" => Mollie_Mpm_Model_Api::STATUS_PAID))))
 		;
 

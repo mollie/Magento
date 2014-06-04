@@ -49,7 +49,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
 		$status = $connection->fetchAll(
 			sprintf(
-				"SELECT `bank_status` FROM `%s` WHERE `transaction_id` = %s",
+				"SELECT `bank_status`, `updated_at` FROM `%s` WHERE `transaction_id` = %s",
 				Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
 				$connection->quote($transaction_id)
 			)
