@@ -62,3 +62,10 @@
 
 "You are currently using version %s. We strongly recommend you to upgrade to the new version %s!", "U gebruikt momenteel versie %s. We raden u nadrukkelijk aan te upgraden naar de nieuwe versie %s!"
 "Note: version information is accurate only when the cache is cleared.", "Let op: versie informatie is alleen accuraat wanneer de cache is geleegd."
+"iDEAL", "iDEAL"
+"Mister Cash", "Mister Cash"
+"Creditcard", "Creditcard"
+"Bank transfer", "Overboeking"
+"PayPal", "PayPal"
+"paysafecard", "paysafecard"
+"Bitcoin", "Bitcoin"

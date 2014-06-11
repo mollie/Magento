@@ -64,3 +64,10 @@
 
 "You are currently using version %s. We strongly recommend you to upgrade to the new version %s!", "Vous utilisez actuellement la version %s. Nous vous recommandons fortement de mettre à niveau vers la nouvelle version %s!"
 "Note: version information is accurate only when the cache is cleared.", "Remarque: les informations sur les versions n'est précise que lorsque le cache est vidé."
+"iDEAL", "iDEAL"
+"Mister Cash", "Mister Cash"
+"Creditcard", "Carte de crédit"
+"Bank transfer", "Virement girale"
+"PayPal", "PayPal"
+"paysafecard", "paysafecard"
+"Bitcoin", "Bitcoin"

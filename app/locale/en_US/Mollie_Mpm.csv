@@ -62,3 +62,10 @@
 
 "You are currently using version %s. We strongly recommend you to upgrade to the new version %s!", "You are currently using version %s. We strongly recommend you to upgrade to the new version %s!"
 "Note: version information is accurate only when the cache is cleared.", "Note: version information is accurate only when the cache is cleared."
+"iDEAL", "iDEAL"
+"Mister Cash", "Mister Cash"
+"Creditcard", "Credit card"
+"Bank transfer", "Bank transfer"
+"PayPal", "PayPal"
+"paysafecard", "paysafecard"
+"Bitcoin", "Bitcoin"
