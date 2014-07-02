@@ -78,7 +78,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	protected $_canUseInternal			= TRUE;
 	protected $_canUseForMultishipping	= FALSE; // wouldn't work without event capturing anyway
 	protected $_canRefund				= TRUE;
-	protected $_canRefundInvoicePartial = FALSE;
+	protected $_canRefundInvoicePartial = TRUE;
 	protected $_canCapture				= FALSE;
 
 	// Payment statusses
