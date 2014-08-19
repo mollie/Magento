@@ -7,4 +7,9 @@
 			</action>
 		</reference>
 	</mpm_api_return>
+	<checkout_onepage_success>
+        <reference name="root">
+            <block type="checkout/onepage_success" name="checkout.success" template="mollie/checkout/success.phtml"/>
+        </reference>
+    </checkout_onepage_success>
 </layout>
