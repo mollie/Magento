@@ -316,18 +316,17 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	/**
 	 * Gets status from order_id
 	 *
-	 * @return string
+	 * @param int $order_id
+	 * @return string|NULL
 	 */
 	public function getWaitingPayment($order_id)
 	{
-			$order = Mage::getModel('sales/order')->loadByIncrementId($order_id);
-			if ($order['status'] == "pending_payment"){
-				return '<span class="mpm_waiting_msg">'. Mage::helper('core')->__($this->__('Your order is awaiting payment before being released for processing and shipment.')) .'</span>';
-			}
-			else
-			{
-				return NULL;
-			}
+		$order = Mage::getModel('sales/order')->loadByIncrementId($order_id);
+		if ($order['status'] == Mage_Sales_Model_Order::STATE_PENDING_PAYMENT)
+		{
+			return '<span class="mpm_waiting_msg">'. Mage::helper('core')->__($this->__('Your order is awaiting payment before being released for processing and shipment.')) .'</span>';
+		}
+		return NULL;
 	}
 	
 	
