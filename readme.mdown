@@ -43,11 +43,11 @@ Via [Mollie](https://www.mollie.nl/) is iDEAL gemakkelijk aan te sluiten zonder 
 
 Dat is mogelijk. Ga naar de instellingenpagina van de plugin, en kies linksboven in bij ’Current Configuration Scope’ de _store view_ waarvoor u andere instellingen wilt gebruiken.
 
-Maak de instelling die u wilt en schakel het _Use Website_ vakje uit. U kunt per _Store View_ bijvoorbeeld een ander websiteprofiel kiezen.
+Maak de instelling die u wilt en schakel het _Use Website_ vakje uit. U kunt per _Store View_ bijvoorbeeld een andere API-key gebruiken.
 
 **Ik heb alles ingesteld, maar de module verschijnt niet bij het afrekenen.**
 
-Controleert u alstublieft of de module ingeschakeld is, én of uw bestelling in Euro's. Via iDEAL kunnen alleen orders in Euro's afgerekend worden. De standaardinstelling van Magento is USD ($). U kunt dit aanpassen via de admin.
+Controleert u alstublieft of de module ingeschakeld is, én of uw bestelling in Euro's. Via Mollie kunnen alleen orders in Euro's afgerekend worden. De standaardinstelling van Magento is USD ($). U kunt dit aanpassen via de admin.
 
 **Moet ik ook een return- en / of webhook-URL instellen?**
 
@@ -56,6 +56,22 @@ Het is niet nodig een return- en / of webhook-URL in te stellen, de module stelt
 **De module is niet zichtbaar in de admin van Magento**
 
 Verwijdert u eerst alle caches van Magento via het knopje _Verwijder Magento cache_ op _Systeem_, _Beheer cache_. Wanneer u vervolgens opnieuw inlogt ziet u bij _Systeem_, _Configuratie_, _Betaalmethoden_ een tab _Mollie Betalingen_.
+
+**Ik wil dat de betaalmethodes anders heten op mijn website**
+
+Maak een translate.csv bestand aan in de map van de huidige template(s) bijvoorbeeld `/app/design/frontend/default/<template_naam>/locale/nl_NL/translate.csv`
+
+In dit bestand voegt u de volgende regels in met daarbij de bijhorende vertaling. Het deel na de komma is de vertaling.
+
+````
+"iDEAL","iDEAL"
+"Creditcard","Creditcard"
+"Bancontact/Mister Cash","Bancontact/Mister Cash"
+"SOFORT Banking","SOFORT Banking"
+"Bank transfer","Bank transfer"
+"Bitcoin","Bitcoin"
+"PayPal","PayPal"
+````
 
 **Ik heb een probleem met deze module.**
 

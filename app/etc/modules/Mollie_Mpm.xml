@@ -7,7 +7,7 @@
 			<depends>
 				<Mage_Payment />
 			</depends>
-			<version>4.1.1</version>
+			<version>4.1.2</version>
 		</Mollie_Mpm>
 	</modules>
 </config>
