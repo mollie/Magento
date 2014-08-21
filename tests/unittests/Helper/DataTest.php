@@ -5,7 +5,7 @@
 class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 {
 	/**
-	 * @var PHPUnit_Framework_MockObject_MockObject|Mollie_Mpm_Helper_Data
+	 * @var Mollie_Mpm_Helper_Data
 	 */
 	protected $HelperData;
 
@@ -34,10 +34,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 	{
 		parent::setUp();
 
-		$this->HelperData = $this->getMock("Mollie_Mpm_Helper_Data", array("getCurrentStore"));
-		$this->HelperData->expects($this->any())
-			->method("getCurrentStore")
-			->will($this->returnValue(self::STORE_ID));
+		$this->HelperData = new Mollie_Mpm_Helper_Data();
 
 		$this->mage->expects($this->any())
 			->method("Helper")
@@ -158,7 +155,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 	{
 		$this->mage->expects($this->once())
 			->method("getStoreConfig")
-			->with("payment/mollie/apikey", self::STORE_ID)
+			->with("payment/mollie/apikey")
 			->will($this->returnValue("decafbad"));
 
 		$this->assertEquals("decafbad", $this->HelperData->getApiKey());

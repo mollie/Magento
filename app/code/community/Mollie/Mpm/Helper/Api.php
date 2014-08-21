@@ -337,11 +337,17 @@ class Mollie_Mpm_Helper_Api
 		return $this->error_message;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getWebhookURL()
 	{
-		$store_code = Mage::app()->getRequest()->getParam('store');
+		$store_code = Mage::app()->getStore()->getCode();
 		$store_url_part = empty($store_code) ? '/' : '/' . $store_code . '/';
-		return str_replace('/admin/', $store_url_part, Mage::getUrl('mpm/api/webhook'));
+
+		$webhook_url = str_replace('/admin/', $store_url_part, Mage::getUrl('mpm/api/webhook'));
+
+		return $webhook_url . '?___store=' . $store_code;
 	}
 
 	public function getPaymentMethods()

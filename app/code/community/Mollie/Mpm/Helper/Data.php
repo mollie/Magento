@@ -144,7 +144,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getApiKey()
 	{
-		return trim(Mage::getStoreConfig("payment/mollie/apikey",$this->getCurrentStore()));
+		return trim(Mage::getStoreConfig("payment/mollie/apikey"));
 	}
 
 	/**
@@ -161,7 +161,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
-			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}",$this->getCurrentStore());
+			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}");
 
 		return NULL;
 	}
@@ -301,16 +301,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
 		// All is fine
 		return '<b>'.$core->__('Status').'</b><br /><span style="color:green">'.$core->__('Module status: OK!').'</span>';
-	}
-	
-	/**
-	 * Gets selected store
-	 *
-	 * @return string
-	 */
-	public function getCurrentStore()
-	{
-		return Mage::app()->getRequest()->getParam('store');
 	}
 
 	/**
