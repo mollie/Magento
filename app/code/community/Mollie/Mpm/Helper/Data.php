@@ -144,7 +144,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getApiKey()
 	{
-		return trim(Mage::getStoreConfig("payment/mollie/apikey"));
+		return trim(Mage::getStoreConfig("payment/mollie/apikey", $this->getCurrentStore()));
 	}
 
 	/**
@@ -161,9 +161,19 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
-			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}");
+			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}", $this->getCurrentStore());
 
 		return NULL;
+	}
+
+	/**
+	 * Gets selected store in admin
+	 *
+	 * @return string
+	 */
+	public function getCurrentStore()
+	{
+		return Mage::app()->getRequest()->getParam('store');
 	}
 
 	/**
