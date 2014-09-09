@@ -376,6 +376,20 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 					$oStatus['bank_status'] === Mollie_Mpm_Model_Api::STATUS_PAID ||
 					$oStatus['bank_status'] === Mollie_Mpm_Model_Api::STATUS_PENDING)
 				{
+					if (empty($oStatus['updated_at']))
+					{
+						/*
+						 * Send an email to the customer.
+						 */
+						if (!Mage::Helper('mpm/data')->getConfig('mollie', 'skip_order_mails'))
+						{
+							// Load order by id ($orderId)
+							/** @var $order Mage_Sales_Model_Order */
+							$order = Mage::getModel('sales/order')->load($orderId);
+							$order->sendNewOrderEmail()->setEmailSent(TRUE);
+						}
+					}
+
 					if ($this->_getCheckout()->getQuote()->items_count > 0)
 					{
 						// Empty the shopping cart if it didn't clear itself
