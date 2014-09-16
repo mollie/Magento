@@ -19,8 +19,8 @@ Via [Mollie](https://www.mollie.nl/) is iDEAL gemakkelijk aan te sluiten zonder 
 ### Creditcard ###
 [Creditcard](https://www.mollie.nl/betaaldiensten/creditcard/) is vrijwel de bekendste methode voor het ontvangen van betalingen met wereldwijde dekking. Doordat we onder andere de bekende merken Mastercard en Visa ondersteunen, zorgt dit direct voor veel potentiële kopers.
 
-### Mister Cash ###
-[Mister Cash](https://www.mollie.nl/betaaldiensten/mistercash/) maakt gebruik van een fysieke kaart die gekoppeld is aan tegoed op een Belgische bankrekening. Betalingen via Mister Cash zijn gegarandeerd en lijkt daarmee sterk op iDEAL in Nederland. Daarom is het uitermate geschikt voor uw webwinkel.
+### Bancontact/Mister Cash ###
+[Bancontact/Mister Cash](https://www.mollie.nl/betaaldiensten/mistercash/) maakt gebruik van een fysieke kaart die gekoppeld is aan tegoed op een Belgische bankrekening. Betalingen via Bancontact/Mister Cash zijn gegarandeerd en lijken daarmee sterk op iDEAL in Nederland. Daarom is het uitermate geschikt voor uw webwinkel.
 
 ### SOFORT Banking ###
 [SOFORT Banking](https://www.mollie.nl/betaaldiensten/sofort/) is een in Duitsland zeer populaire betaalmethode. Betalingen zijn direct en niet storneerbaar, waarmee het sterk op het Nederlandse iDEAL lijkt. Daarom is het uitermate geschikt voor uw webwinkel.
@@ -75,18 +75,18 @@ In dit bestand voegt u de volgende regels in met daarbij de bijhorende vertaling
 
 **Ik heb een probleem met deze module.**
 
-Neemt u alstublieft contact op met info@mollie.nl voor ondersteuning.
+Heeft u problemen met de installatie of bevat de module volgens u een bug? Stuurt u dan een email 
+naar magentosupport@mollie.com met een zo precies mogelijke omschrijving van het probleem. U wordt 
+dan direct geholpen door onze Magento-expert. Heeft u andere vragen? Neemt u dan contact met ons 
+op via info@mollie.com.
 
 # Licentie #
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
-Copyright (c) 2013, Mollie B.V.
-
-# Ondersteuning #
-Contact: [www.mollie.nl](https://www.mollie.nl) — info@mollie.nl — +31 20-612 88 55
+Copyright (c) 2011-2014, Mollie B.V.
 
 + [Meer informatie over iDEAL via Mollie](https://www.mollie.nl/betaaldiensten/ideal/)
 + [Meer informatie over Creditcard via Mollie](https://www.mollie.nl/betaaldiensten/creditcard/)
-+ [Meer informatie over Mister Cash via Mollie](https://www.mollie.nl/betaaldiensten/mistercash/)
++ [Meer informatie over Bancontact/Mister Cash via Mollie](https://www.mollie.nl/betaaldiensten/mistercash/)
 + [Meer informatie over Overboeking via Mollie](https://www.mollie.nl/betaaldiensten/overboeking/)
 + [Meer informatie over Bitcoin via Mollie](https://www.mollie.nl/betaaldiensten/Bitcoin/)
 + [Meer informatie over PayPal via Mollie](https://www.mollie.nl/betaaldiensten/paypal/)
