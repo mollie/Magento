@@ -378,12 +378,6 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		);
 		$transaction_id = $row['transaction_id'];
 
-		// only complete refunds are allowed
-		if (round($order->getBaseGrandTotal(), 2) !== round($amount, 2))
-		{
-			Mage::throwException('Impossible to create a refund for this transaction. Details: The amount to refund must equal the amount paid.<br />');
-		}
-
 		// fetch payment info
 		$mollie = $this->_api->_getMollieAPI();
 		$mollie_payment = $mollie->payments->get($transaction_id);
@@ -391,7 +385,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		// attempt a refund
 		try
 		{
-			$mollie->payments->refund($mollie_payment);
+			$mollie->payments->refund($mollie_payment, $amount);
 		}
 		catch (Exception $e)
 		{
