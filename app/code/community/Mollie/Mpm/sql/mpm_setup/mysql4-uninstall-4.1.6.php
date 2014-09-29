@@ -34,39 +34,37 @@
  **/
 
 $installer = $this;
+
 $installer->startSetup();
 
-/*
- * Tabel Betalingen
- */
 $installer->run(
-	sprintf("CREATE TABLE IF NOT EXISTS `%s` (
-		`order_id` int(11) NOT NULL,
-		`method` varchar(3) NOT NULL,
-		`transaction_id` varchar(32) NOT NULL,
-		`bank_account` varchar(15) NOT NULL,
-		`bank_status` varchar(20) NOT NULL,
-		`created_at` datetime NOT NULL,
-		`updated_at` datetime DEFAULT NULL,
-		 UNIQUE KEY `transaction_id` (`transaction_id`),
-		 KEY `order_id` (`order_id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	sprintf("DROP TABLE IF EXISTS `%s`",
 		$installer->getTable('mollie_payments')
-	) . "REPLACE INTO `{$installer->getTable('core_config_data')}` SET `path` = 'payment/mollie/description', `value` = 'Order %';"
+	)
 );
-
-/*
- * Tabel Betaalmethodes
- */
 $installer->run(
-	sprintf("CREATE TABLE `%s` (
-		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-		  `method_id` varchar(32) NOT NULL DEFAULT '',
-		  `description` varchar(32) NOT NULL DEFAULT '',
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	sprintf("DROP TABLE IF EXISTS `%s`",
 		$installer->getTable('mollie_methods')
 	)
 );
+
+$installer->run("
+	DELETE FROM `{$installer->getTable('core_config_data')}` where `path` LIKE 'payment/mollie/%';
+	DELETE FROM `{$installer->getTable('core_resource')}` where `code` = 'mpm_setup';"
+);
+
+
+if ($installer->tableExists($installer->getTable('mollie_payments')) || $installer->tableExists($installer->getTable('mollie_methods')))
+{
+	echo "<div style='background:white;border:3px solid red;padding:10px;'><b style='color:red;'>Insufficient SQL rights to uninstall correctly! Please make sure you have sufficient access rights to (un)install modules and/or run these queries manually:</b><br /><pre>" .
+		sprintf("DROP TABLE IF EXISTS `%s`",
+			$installer->getTable('mollie_payments')
+		) .
+		"</pre><br/><b style='color:red;'>And:<b/></br><pre>" .
+		sprintf("DROP TABLE IF EXISTS `%s`",
+			$installer->getTable('mollie_methods')
+		) .
+		"</pre><br />(If you do not know how to run SQL queries, please contact your hosting provider)</div>";
+}
 
 $installer->endSetup();
