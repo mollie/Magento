@@ -2,6 +2,9 @@
 
 # Changelog #
 
+## Changes in release 4.1.7. ##
++ Resolve bug with full online refunds.
+
 ## Changes in release 4.1.6. ##
 + Support partial online refunds.
 
