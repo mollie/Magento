@@ -165,7 +165,7 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 
 		$this->api_helper->expects($this->once())
 			->method("createPayment")
-			->with(13.37, 'Bankafschrift order ' . self::ORDER_INCREMENT_ID . ' deluxe', $this->order_model, Mage::getUrl('mpm/api/return') . '?order_id=' . self::ORDER_ID, null)
+			->with(13.37, 'Bankafschrift order ' . self::ORDER_INCREMENT_ID . ' deluxe', $this->order_model, Mage::getUrl('mpm/api/return') . '?order_id=' . self::ORDER_ID . '&utm_nooverride=1', null)
 			->will($this->returnValue(TRUE));
 
 		$this->api_helper->expects($this->atLeastOnce())
