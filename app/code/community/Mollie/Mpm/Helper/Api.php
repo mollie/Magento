@@ -247,7 +247,9 @@ class Mollie_Mpm_Helper_Api
 	public function setApiKey($api_key)
 	{
 		if (is_null($api_key))
+		{
 			return false;
+		}
 
 		return ($this->api_key = $api_key);
 	}
@@ -287,8 +289,10 @@ class Mollie_Mpm_Helper_Api
 
 	public function setRedirectURL($redirect_url)
 	{
-		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?(.*)|', $redirect_url))
+		if (empty($redirect_url))
+		{
 			return false;
+		}
 
 		return ($this->redirect_url = $redirect_url);
 	}
@@ -301,7 +305,9 @@ class Mollie_Mpm_Helper_Api
 	public function setTransactionId($transaction_id)
 	{
 		if (empty($transaction_id))
+		{
 			return false;
+		}
 
 		return ($this->transaction_id = $transaction_id);
 	}

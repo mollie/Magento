@@ -76,23 +76,6 @@ class Mollie_Mpm_Helper_ApiTest extends MagentoPlugin_TestCase
 		}
 	}
 
-
-	public function testCreatePaymentActionFailureSetsErrorVariables()
-	{
-		$result = $this->api->createPayment(
-			1000,
-			'Description',
-			1,
-			'incorrect.url/redirect.php',
-			'Method',
-			''
-		);
-
-		$this->assertFalse($result);
-		$this->assertEquals($this->api->getErrorMessage(), "De opgegeven redirect URL \"incorrect.url/redirect.php\" is onjuist");
-
-	}
-
 	public function testCheckPaymentActionChecksTransactionId()
 	{
 		$result = $this->api->checkPayment(NULL);
