@@ -2,6 +2,9 @@
 
 # Changelog #
 
+## Changes in release 4.1.9 ##
++ Don't validate the redirect url locally.
+
 ## Changes in release 4.1.8 ##
 + Stop Google Analytics from listing payment provider as referrer.
 
