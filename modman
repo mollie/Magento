@@ -1,0 +1,10 @@
+app/code/community/Mollie                              app/code/community/Mollie
+app/design/adminhtml/default/default/template/mollie   app/design/adminhtml/default/default/template/mollie
+app/design/frontend/base/default/layout/mpm.xml        app/design/frontend/base/default/layout/mpm.xml
+app/design/frontend/base/default/template/mollie       app/design/frontend/base/default/template/mollie
+app/etc/modules/Mollie_Mpm.xml                         app/etc/modules/Mollie_Mpm.xml
+app/locale/nl_NL/Mollie_Mpm.csv                        app/locale/nl_NL/Mollie_Mpm.csv
+app/locale/en_GB/Mollie_Mpm.csv                        app/locale/en_GB/Mollie_Mpm.csv
+app/locale/en_US/Mollie_Mpm.csv                        app/locale/en_US/Mollie_Mpm.csv
+app/locale/fr_FR/Mollie_Mpm.csv                        app/locale/fr_FR/Mollie_Mpm.csv
+lib/Mollie                                             lib/Mollie
