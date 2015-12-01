@@ -278,7 +278,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
 
 		// 5) Check if disabled
-		if (!Mage::Helper('mpm/data')->getConfig('mollie', 'active'))
+		if (!Mage::helper('mpm')->getConfig('mollie', 'active'))
 		{
 			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Disabled!').'</span>';
 		}

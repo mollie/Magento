@@ -83,7 +83,7 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 		$this->transaction = $this->getMock("stdClass", array("setTxnType", "setIsClosed", "save"));
 
 		/*
-		 * Mage::Helper() method
+		 * Mage::helper() method
 		 */
 		$this->mage->expects($this->any())
 			->method("Helper")
