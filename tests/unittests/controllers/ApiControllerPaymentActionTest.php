@@ -57,7 +57,7 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 		$this->api_helper = $this->getMock("Mollie_Mpm_Helper_Api", array("createPayment", "getTransactionId", "getPaymentURL"), array(), "", FALSE);
 
 		/*
-		 * Mage::Helper() method
+		 * Mage::helper() method
 		 */
 		$this->mage->expects($this->any())
 			->method("Helper")

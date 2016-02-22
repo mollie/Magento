@@ -1,7 +1,7 @@
 <?php
 $code		= $this->getMethodCode();
-$helper		= Mage::Helper('mpm/api');
-$data		= Mage::Helper('mpm/data');
+$helper		= Mage::helper('mpm/api');
+$data		= Mage::helper('mpm');
 $method		= $helper->getMethodByCode($code);
 $api		= $helper->_getMollieAPI();
 $issuers	= array();

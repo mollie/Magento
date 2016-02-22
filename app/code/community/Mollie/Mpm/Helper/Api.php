@@ -55,7 +55,7 @@ class Mollie_Mpm_Helper_Api
 	public function __construct()
 	{
 		// Set Api Key
-		$this->setApiKey(Mage::Helper('mpm/data')->getApiKey());
+		$this->setApiKey(Mage::helper('mpm')->getApiKey());
 	}
 
 	public function __get ($property)
@@ -361,7 +361,7 @@ class Mollie_Mpm_Helper_Api
 		{
 			$api = $this->_getMollieAPI();
 			$api_methods = $api->methods->all();
-			$all_methods = Mage::Helper('mpm/data')->getStoredMethods();
+			$all_methods = Mage::helper('mpm')->getStoredMethods();
 
 			foreach ($all_methods as $index => $stored_method)
 			{
@@ -406,7 +406,7 @@ class Mollie_Mpm_Helper_Api
 				$sort_order++;
 			}
 
-			Mage::Helper('mpm/data')->setStoredMethods($all_methods);
+			Mage::helper('mpm')->setStoredMethods($all_methods);
 			return $all_methods;
 		}
 		catch (Mollie_API_Exception $e)

@@ -107,7 +107,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	{
 		parent::__construct();
 
-		$this->_api    = Mage::Helper('mpm/api');
+		$this->_api    = Mage::helper('mpm/api');
 		$resource      = Mage::getSingleton('core/resource');
 		$this->_table  = $resource->getTableName('mollie_payments');
 		$this->_mysqlr = $resource->getConnection('core_read');
@@ -211,7 +211,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function _isAvailable()
 	{
-		$enabled = (bool) Mage::Helper('mpm/data')->getConfig('mollie', 'active');
+		$enabled = (bool) Mage::helper('mpm')->getConfig('mollie', 'active');
 		if (!$enabled)
 		{
 			return FALSE;

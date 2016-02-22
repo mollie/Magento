@@ -1,6 +1,6 @@
 <?php
 $core = Mage::helper('core');
-$methods = Mage::Helper('mpm/api')->methods;
+$methods = Mage::helper('mpm/api')->methods;
 $message = $core->__('Your Mollie Account is reachable from the Magento store, but <a href="https://www.mollie.nl/beheer/diensten/">seems to lack payment methods</a>.');
 if (is_string($methods)) {
 	$message = $methods;
