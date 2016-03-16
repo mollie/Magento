@@ -112,6 +112,7 @@ class Mollie_Mpm_Helper_Api
 			"metadata"				=> array(
 				"order_id"			=> $order->getId(),
 			),
+			"locale"                => strtolower(Mage::getStoreConfig('general/country/default')),
 			"webhookUrl"				=> $this->getWebhookURL(),
 		);
 
