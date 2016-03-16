@@ -38,7 +38,7 @@
  **/
 class Mollie_Mpm_Helper_Api
 {
-	const PLUGIN_VERSION = '4.2.0';
+	const PLUGIN_VERSION = '4.2.1';
 
 	protected $api_key = null;
 	protected $amount = 0;
@@ -112,6 +112,7 @@ class Mollie_Mpm_Helper_Api
 			"metadata"				=> array(
 				"order_id"			=> $order->getId(),
 			),
+			"locale"                => strtolower(Mage::getStoreConfig('general/country/default')),
 			"webhookUrl"				=> $this->getWebhookURL(),
 		);
 
