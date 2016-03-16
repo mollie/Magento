@@ -2,6 +2,10 @@
 
 # Changelog #
 
+## Changes in release 4.2.1 ##
++ Use store locale in a payment.
++ Updated [API library](https://github.com/mollie/mollie-api-php) to `v1.4.1`.
+
 ## Changes in release 4.2.0 ##
 + Small fixes for the Helper.
 
