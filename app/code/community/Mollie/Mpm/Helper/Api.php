@@ -112,7 +112,7 @@ class Mollie_Mpm_Helper_Api
 			"metadata"				=> array(
 				"order_id"			=> $order->getId(),
 			),
-			"locale"                => strtolower(Mage::getStoreConfig('general/country/default')),
+			"locale"                => $this->getLocaleCode(),
 			"webhookUrl"				=> $this->getWebhookURL(),
 		);
 
@@ -434,5 +434,42 @@ class Mollie_Mpm_Helper_Api
 	{
 		$method_id = (int) str_replace('mpm_void_', '', $code);
 		return $this->methods[$method_id];
+	}
+
+	/**
+	 * @return mixed|string
+	 */
+	public function getLocaleCode ()
+	{
+		/**
+		 * @var string The current store locale in Magento.
+		 */
+		$storeLocale = substr(Mage::getStoreConfig('general/locale/code', Mage::app()->getStore()->getId()), 0,2);
+
+		/**
+		 * @var array Supported locales in the Mollie API.
+		 */
+		$supportedLocales = array(
+			"de",
+			"en",
+			"es",
+			"fr",
+			"be",
+			"nl",
+		);
+
+		/**
+		 * Checks if the current $storeLocale is inside the $supportedLocales array.
+		 * If not, fallback to English to avoid exceptions from our API that will
+		 * about the payment with a exception. We do not want that to happen, right?
+		 */
+		if (in_array($storeLocale, $supportedLocales))
+		{
+			return $storeLocale;
+		}
+		else
+		{
+			return 'en';
+		}
 	}
 }
