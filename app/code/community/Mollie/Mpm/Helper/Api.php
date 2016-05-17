@@ -38,26 +38,42 @@
  **/
 class Mollie_Mpm_Helper_Api
 {
-	const PLUGIN_VERSION = '4.2.2';
-
-	protected $api_key = null;
-	protected $amount = 0;
-	protected $description = null;
-	protected $redirect_url = null;
-	protected $payment_url = null;
-	protected $transaction_id = null;
-	protected $paid_status = false;
-	protected $status= '';
-	protected $consumer_info = array();
-	protected $error_message = '';
+	protected $api_key         = null;
+	protected $amount          = 0;
+	protected $description     = null;
+	protected $redirect_url    = null;
+	protected $payment_url     = null;
+	protected $transaction_id  = null;
+	protected $paid_status     = false;
+	protected $status          = '';
+	protected $consumer_info   = array();
+	protected $error_message   = '';
 	protected $_cached_methods = NULL;
 
-	public function __construct()
+	/**
+	 * Mollie_Mpm_Helper_Api constructor.
+	 */
+	public function __construct ()
 	{
 		// Set Api Key
 		$this->setApiKey(Mage::helper('mpm')->getApiKey());
 	}
 
+	/**
+	 * Get the current version of the module
+	 *
+	 * @return string
+	 */
+	public function getExtensionVersion ()
+	{
+		return (string) Mage::getConfig()->getModuleConfig('Mollie_Mpm')->version;
+	}
+
+	/**
+	 * @param $property
+	 *
+	 * @return array|null|string
+	 */
 	public function __get ($property)
 	{
 		if ($property === 'methods')
@@ -75,33 +91,43 @@ class Mollie_Mpm_Helper_Api
 	}
 
 	/**
-	 * Zet een betaling klaar bij de bank en maak de betalings URL beschikbaar
+	 * @param int                    $amount
+	 * @param string                 $description
+	 * @param Mage_Sales_Model_Order $order
+	 * @param string                 $redirect_url
+	 * @param string                 $method
+	 * @param string                 $issuer
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public function createPayment($amount, $description, $order, $redirect_url, $method, $issuer)
+	public function createPayment ($amount, $description, $order, $redirect_url, $method, $issuer)
 	{
 		if (!$this->setAmount($amount))
 		{
 			$this->error_message = "Het opgegeven bedrag \"$amount\" is ongeldig";
+
 			return false;
 		}
 
 		if (!$this->setRedirectURL($redirect_url))
 		{
 			$this->error_message = "De opgegeven redirect URL \"$redirect_url\" is onjuist";
+
 			return false;
 		}
 
 		$this->setDescription($description);
 
-		try {
+		try
+		{
 			$api = $this->_getMollieAPI();
-		} catch (Mollie_API_Exception $e) {
+		}
+		catch (Mollie_API_Exception $e)
+		{
 			$this->error_message = $e->getMessage();
+
 			return false;
 		}
-
 
 		$params = array(
 			"amount"				=> $this->getAmount(),
@@ -112,10 +138,9 @@ class Mollie_Mpm_Helper_Api
 			"metadata"				=> array(
 				"order_id"			=> $order->getId(),
 			),
-			"locale"                => $this->getLocaleCode(),
-			"webhookUrl"				=> $this->getWebhookURL(),
+			"locale"				=> $this->getLocaleCode(),
+			"webhookUrl"			=> $this->getWebhookURL(),
 		);
-
 
 		if ($billing = $order->getBillingAddress())
 		{
@@ -149,6 +174,7 @@ class Mollie_Mpm_Helper_Api
 				if ($e->getField() == "webhookUrl")
 				{
 					unset($params["webhookUrl"]);
+
 					$payment = $api->payments->create($params);
 				}
 				else
@@ -160,10 +186,10 @@ class Mollie_Mpm_Helper_Api
 			{
 				$this->error_message = __METHOD__ . ' said: Unable to set up payment. Reason: ' . $e->getMessage();
 				Mage::log($this->error_message);
+
 				return false;
 			}
 		}
-
 
 		$this->setTransactionId($payment->id);
 		$this->payment_url = (string) $payment->getPaymentUrl();
@@ -171,23 +197,34 @@ class Mollie_Mpm_Helper_Api
 		return true;
 	}
 
-	// Kijk of er daadwerkelijk betaald is
-	public function checkPayment($transaction_id)
+	/**
+	 * @param $transaction_id
+	 *
+	 * @return bool
+	 * @throws Mollie_API_Exception
+	 */
+	public function checkPayment ($transaction_id)
 	{
 		if (!$this->setTransactionId($transaction_id))
 		{
 			$this->error_message = "Er is een onjuist transactie ID opgegeven";
+
 			return false;
 		}
 
-		try {
+		try
+		{
 			$api = $this->_getMollieAPI();
-		} catch (Mollie_API_Exception $e) {
+		}
+		catch (Mollie_API_Exception $e)
+		{
 			$this->error_message = $e->getMessage();
+
 			return false;
 		}
 
 		$payment = $api->payments->get($transaction_id);
+
 		$this->paid_status = (bool) $payment->isPaid();
 		$this->status =  (string) $payment->status;
 		$this->amount = (float) $payment->amount;
@@ -198,32 +235,39 @@ class Mollie_Mpm_Helper_Api
 
 	/**
 	 * @param null|string $key
+	 *
 	 * @return Mollie_API_Client
 	 * @throws Mollie_API_Exception
 	 */
 	public function _getMollieAPI($key = null)
 	{
 		$this->_setAutoLoader();
+
 		$key = ($key === null) ? $this->getApiKey() : $key;
 		$api = new Mollie_API_Client;
+
 		$api->setApiKey($key);
 		$api->addVersionString('Magento/' . Mage::getVersion());
-		$api->addVersionString('MollieMagento/' . self::PLUGIN_VERSION);
+		$api->addVersionString('MollieMagento/' . $this->getExtensionVersion());
+
 		return $api;
 	}
 
 	/**
 	 * Inserts the Mollie autoloader as first choice
+	 *
 	 * @return void
 	 */
-	public function _setAutoLoader()
+	public function _setAutoLoader ()
 	{
 		if (!file_exists(Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php"))
 		{
 			return;
 		}
+
 		$autoloader_callbacks = spl_autoload_functions();
 		$original_autoload = null;
+
 		foreach($autoloader_callbacks as $callback)
 		{
 			if(is_array($callback) && $callback[0] instanceof Varien_Autoload)
@@ -243,9 +287,12 @@ class Mollie_Mpm_Helper_Api
 		}
 	}
 
-	/* Getters en setters */
-
-	public function setApiKey($api_key)
+	/**
+	 * @param $api_key
+	 *
+	 * @return bool
+	 */
+	public function setApiKey ($api_key)
 	{
 		if (is_null($api_key))
 		{
@@ -255,12 +302,20 @@ class Mollie_Mpm_Helper_Api
 		return ($this->api_key = $api_key);
 	}
 
-	public function getApiKey()
+	/**
+	 * @return null
+	 */
+	public function getApiKey ()
 	{
 		return $this->api_key;
 	}
 
-	public function setAmount($amount)
+	/**
+	 * @param $amount
+	 *
+	 * @return bool|float|int
+	 */
+	public function setAmount ($amount)
 	{
 		if (!is_double($amount) && !is_int($amount))
 		{
@@ -273,22 +328,38 @@ class Mollie_Mpm_Helper_Api
 		return ($this->amount = $amount);
 	}
 
-	public function getAmount()
+	/**
+	 * @return int
+	 */
+	public function getAmount ()
 	{
 		return $this->amount;
 	}
 
+	/**
+	 * @param $description
+	 *
+	 * @return string
+	 */
 	public function setDescription ($description)
 	{
 		return ($this->description = $description);
 	}
 
-	public function getDescription()
+	/**
+	 * @return string
+	 */
+	public function getDescription ()
 	{
 		return $this->description;
 	}
 
-	public function setRedirectURL($redirect_url)
+	/**
+	 * @param $redirect_url
+	 *
+	 * @return bool|string
+	 */
+	public function setRedirectURL ($redirect_url)
 	{
 		if (empty($redirect_url))
 		{
@@ -298,12 +369,20 @@ class Mollie_Mpm_Helper_Api
 		return ($this->redirect_url = $redirect_url);
 	}
 
-	public function getRedirectURL()
+	/**
+	 * @return string
+	 */
+	public function getRedirectURL ()
 	{
 		return $this->redirect_url;
 	}
 
-	public function setTransactionId($transaction_id)
+	/**
+	 * @param $transaction_id
+	 *
+	 * @return bool|string
+	 */
+	public function setTransactionId ($transaction_id)
 	{
 		if (empty($transaction_id))
 		{
@@ -313,32 +392,50 @@ class Mollie_Mpm_Helper_Api
 		return ($this->transaction_id = $transaction_id);
 	}
 
-	public function getTransactionId()
+	/**
+	 * @return string
+	 */
+	public function getTransactionId ()
 	{
 		return $this->transaction_id;
 	}
 
-	public function getPaymentURL()
+	/**
+	 * @return string
+	 */
+	public function getPaymentURL ()
 	{
 		return $this->payment_url;
 	}
 
-	public function getPaidStatus()
+	/**
+	 * @return bool|string
+	 */
+	public function getPaidStatus ()
 	{
 		return $this->paid_status;
 	}
 
-	public function getBankStatus()
+	/**
+	 * @return string
+	 */
+	public function getBankStatus ()
 	{
 		return $this->status;
 	}
 
-	public function getConsumerInfo()
+	/**
+	 * @return array
+	 */
+	public function getConsumerInfo ()
 	{
 		return $this->consumer_info;
 	}
 
-	public function getErrorMessage()
+	/**
+	 * @return string
+	 */
+	public function getErrorMessage ()
 	{
 		return $this->error_message;
 	}
@@ -346,7 +443,7 @@ class Mollie_Mpm_Helper_Api
 	/**
 	 * @return string
 	 */
-	public function getWebhookURL()
+	public function getWebhookURL ()
 	{
 		$store_code = Mage::app()->getStore()->getCode();
 		$store_url_part = empty($store_code) ? '/' : '/' . $store_code . '/';
@@ -356,7 +453,10 @@ class Mollie_Mpm_Helper_Api
 		return $webhook_url . '?___store=' . $store_code;
 	}
 
-	public function getPaymentMethods()
+	/**
+	 * @return array|string
+	 */
+	public function getPaymentMethods ()
 	{
 		try
 		{
@@ -379,6 +479,7 @@ class Mollie_Mpm_Helper_Api
 			}
 
 			$sort_order = -32;
+
 			foreach ($api_methods as $api_method)
 			{
 				$api_method->available = FALSE;
@@ -404,10 +505,12 @@ class Mollie_Mpm_Helper_Api
 					$api_method->sort_order = $sort_order;
 					$all_methods[] = (array) $api_method;
 				}
+
 				$sort_order++;
 			}
 
 			Mage::helper('mpm')->setStoredMethods($all_methods);
+
 			return $all_methods;
 		}
 		catch (Mollie_API_Exception $e)
@@ -426,13 +529,20 @@ class Mollie_Mpm_Helper_Api
 		catch (Exception $e)
 		{
 			Mage::log($e);
+
 			return Mage::helper('core')->__('There was an error:') . '<br />' . $e->getMessage();
 		}
 	}
 
-	public function getMethodByCode($code)
+	/**
+	 * @param $code
+	 *
+	 * @return mixed
+	 */
+	public function getMethodByCode ($code)
 	{
 		$method_id = (int) str_replace('mpm_void_', '', $code);
+
 		return $this->methods[$method_id];
 	}
 

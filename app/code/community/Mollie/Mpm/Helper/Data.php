@@ -173,7 +173,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getCurrentStore()
 	{
-		return Mage::app()->getRequest()->getParam('store');
+		return Mage::app()->getStore()->getId();
 	}
 
 	/**
