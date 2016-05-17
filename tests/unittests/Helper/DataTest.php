@@ -41,7 +41,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 
 		$this->mage->expects($this->any())
 			->method("Helper")
-			->with("mpm/data")
+			->with("mpm")
 			->will($this->returnValue($this->HelperData));
 
 		$this->resource = $this->getMock("stdClass", array("getConnection", "getTableName"));
@@ -95,7 +95,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 					<depends>
 						<Mage_Payment />
 					</depends>
-					<version>4.0.0</version>
+					<version>4.2.2</version>
 				</Mollie_Mpm>
 			</modules>
 		');
@@ -109,7 +109,7 @@ class Mollie_Mpm_Helper_DataTest extends MagentoPlugin_TestCase
 			->method("getConfig")
 			->will($this->returnValue($config));
 
-		$this->assertEquals("4.0.0", $this->HelperData->getModuleVersion());
+		$this->assertEquals("4.2.2", $this->HelperData->getModuleVersion());
 	}
 
 	public function testGetStatusById()

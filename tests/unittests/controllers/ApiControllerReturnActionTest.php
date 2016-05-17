@@ -70,7 +70,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->any())
 			->method("Helper")
 			->will($this->returnValueMap(array(
-			array("mpm/data", $this->datahelper),
+			array("mpm", $this->datahelper),
 		)));
 
 		$this->order = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save"));

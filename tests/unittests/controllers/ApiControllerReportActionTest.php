@@ -88,7 +88,7 @@ class Mollie_Mpm_ApiControllerReportActionTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->any())
 			->method("Helper")
 			->will($this->returnValueMap(array(
-			array("mpm/data", $this->data_helper),
+			array("mpm", $this->data_helper),
 			array("mpm/api", $this->api_helper),
 			array("directory", $this->directory),
 		)));

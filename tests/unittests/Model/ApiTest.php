@@ -42,7 +42,7 @@ class Mollie_Mpm_Model_ApiTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->any())
 			->method("Helper")
 			->will($this->returnValueMap(array(
-			array("mpm/data", $this->datahelper),
+			array("mpm", $this->datahelper),
 			array("mpm/api", $this->apihelper),
 		)));
 
@@ -82,7 +82,7 @@ class Mollie_Mpm_Model_ApiTest extends MagentoPlugin_TestCase
 	{
 		$this->datahelper->expects($this->once())
 			->method("getConfig")
-			->with("mollie","active")
+			->with("mollie", "active")
 			->will($this->returnValue(FALSE));
 
 		$model = new Mollie_Mpm_Model_Api();

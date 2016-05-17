@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
 <phpunit bootstrap="bootstrap.php" backupStaticAttributes="false" colors="true">
     <testsuites>
-        <testsuite name="mollie magento plugin tests">
+        <testsuite name="Mollie Magento 1">
             <directory>.</directory>
         </testsuite>
     </testsuites>
     <logging>
         <log type="junit" target="../build/logs/junit-unittests.xml" logIncompleteSkipped="false"/>
-        <log type="coverage-html" target="../build/coverage" charset="UTF-8"
-             yui="true" highlight="true"
-             lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-html" target="../build/coverage" charset="UTF-8" yui="true" highlight="true" lowUpperBound="35" highLowerBound="70"/>
         <log type="coverage-clover" target="../build/clover/clover-unittests.xml"/>
     </logging>
     <filter>

@@ -28,7 +28,7 @@ class Mollie_Mpm_Helper_ApiTest extends MagentoPlugin_TestCase
 			->method("Helper")
 			->will($this->returnValueMap(
 				array(
-					array('mpm/data', $this->data),
+					array('mpm', $this->data),
 					array('core', new Mage_Core_Helper_Data()),
 				)
 			));
