@@ -2,6 +2,12 @@
 
 # Changelog #
 
+## Changes in release 4.2.2 ##
++ Use real store identifier when using a multi-store.
++ Small fixes/refactors for the Helpers.
++ Fixed the [unittests](https://travis-ci.org/mollie/Magento/builds/130845863).
++ Updated [API library](https://github.com/mollie/mollie-api-php) to `v1.5.1`.
+
 ## Changes in release 4.2.1 ##
 + Use store locale in a payment.
 + Updated [API library](https://github.com/mollie/mollie-api-php) to `v1.4.1`.
