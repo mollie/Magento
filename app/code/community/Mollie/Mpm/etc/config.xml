@@ -37,7 +37,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>4.2.2</version>
+            <version>4.2.3</version>
         </Mollie_Mpm>
     </modules>
 
