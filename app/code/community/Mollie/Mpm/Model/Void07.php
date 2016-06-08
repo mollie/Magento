@@ -30,7 +30,6 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- *
  **/
 
 class Mollie_Mpm_Model_Void07 extends Mollie_Mpm_Model_Api
