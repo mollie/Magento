@@ -134,6 +134,16 @@
                             <show_in_store>1</show_in_store>
                             <tooltip><![CDATA[<b>Show Bank List:</b> <br/>]]> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.</tooltip>
                         </show_bank_list>
+
+                        <banktransfer_due_date_days translate="label tooltip">
+                            <label>Bank transfer due days</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <tooltip><![CDATA[<b>Bank transfer due days:</b> <br/>]]> Set the days for due date on bank transfer payments.</tooltip>
+                        </banktransfer_due_date_days>
                     </fields>
                 </mollie>
                 <mollie_support translate="label" module="mpm">

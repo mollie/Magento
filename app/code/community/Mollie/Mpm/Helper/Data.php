@@ -149,6 +149,16 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
+	 * Gets Bank Transfer due date days key from `config_core_data`
+	 *
+	 * @return string
+	 */
+	public function getBankTransferDueDateDays ()
+	{
+		return trim(Mage::getStoreConfig("payment/mollie/banktransfer_due_date_days"));
+	}
+
+	/**
 	 * Get store config
 	 *
 	 * @param string $paymentmethod
@@ -158,7 +168,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getConfig ($paymentmethod = NULL, $key = NULL)
 	{
-		$arr            = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list');
+		$arr            = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list', 'banktransfer_due_date_days');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))

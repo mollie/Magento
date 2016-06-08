@@ -34,25 +34,26 @@
 
 class Mollie_Mpm_Helper_Api
 {
-	protected $api_key         = null;
-	protected $amount          = 0;
-	protected $description     = null;
-	protected $redirect_url    = null;
-	protected $payment_url     = null;
-	protected $transaction_id  = null;
-	protected $paid_status     = false;
-	protected $status          = '';
-	protected $consumer_info   = array();
-	protected $error_message   = '';
-	protected $_cached_methods = NULL;
+	protected $api_key                = NULL;
+	protected $amount                 = 0;
+	protected $description            = NULL;
+	protected $redirect_url           = NULL;
+	protected $payment_url            = NULL;
+	protected $transaction_id         = NULL;
+	protected $paid_status            = FALSE;
+	protected $status                 = '';
+	protected $consumer_info          = array();
+	protected $error_message          = '';
+	protected $_cached_methods        = NULL;
+	protected $bank_transfer_due_date = NULL;
 
 	/**
 	 * Mollie_Mpm_Helper_Api constructor.
 	 */
 	public function __construct ()
 	{
-		// Set Api Key
 		$this->setApiKey(Mage::helper('mpm')->getApiKey());
+		$this->setBankTransferDueDateDays(Mage::Helper('mpm')->getBankTransferDueDateDays());
 	}
 
 	/**
@@ -68,7 +69,7 @@ class Mollie_Mpm_Helper_Api
 	/**
 	 * @param $property
 	 *
-	 * @return array|null|string
+	 * @return array|NULL|string
 	 */
 	public function __get ($property)
 	{
@@ -102,14 +103,14 @@ class Mollie_Mpm_Helper_Api
 		{
 			$this->error_message = "Het opgegeven bedrag \"$amount\" is ongeldig";
 
-			return false;
+			return FALSE;
 		}
 
 		if (!$this->setRedirectURL($redirect_url))
 		{
 			$this->error_message = "De opgegeven redirect URL \"$redirect_url\" is onjuist";
 
-			return false;
+			return FALSE;
 		}
 
 		$this->setDescription($description);
@@ -122,7 +123,7 @@ class Mollie_Mpm_Helper_Api
 		{
 			$this->error_message = $e->getMessage();
 
-			return false;
+			return FALSE;
 		}
 
 		$store = Mage::app()->getStore();
@@ -132,7 +133,7 @@ class Mollie_Mpm_Helper_Api
 			"description"  => $this->getDescription(),
 			"redirectUrl"  => $this->getRedirectURL(),
 			"method"       => $method,
-			"issuer"       => (empty($issuer) ? null : $issuer),
+			"issuer"       => (empty($issuer) ? NULL : $issuer),
 			"metadata"     => [
 				"order_id" => $order->getId(),
 				"store_id" => $store->getId(),
@@ -140,6 +141,14 @@ class Mollie_Mpm_Helper_Api
 			"locale"       => $this->getLocaleCode(),
 			"webhookUrl"   => $this->getWebhookURL(),
 		];
+
+		if($method == "banktransfer" && $this->getBankTransferDueDateDays())
+		{
+			$params += [
+				"dueDate"      => $this->getBankTransferDueDateDays(),
+				"billingEmail" => $order->getCustomerEmail(),
+			];
+		}
 
 		if ($billing = $order->getBillingAddress())
 		{
@@ -186,14 +195,14 @@ class Mollie_Mpm_Helper_Api
 				$this->error_message = __METHOD__ . ' said: Unable to set up payment. Reason: ' . $e->getMessage();
 				Mage::log($this->error_message);
 
-				return false;
+				return FALSE;
 			}
 		}
 
 		$this->setTransactionId($payment->id);
 		$this->payment_url = (string) $payment->getPaymentUrl();
 
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -208,7 +217,7 @@ class Mollie_Mpm_Helper_Api
 		{
 			$this->error_message = "Er is een onjuist transactie ID opgegeven";
 
-			return false;
+			return FALSE;
 		}
 
 		try
@@ -219,7 +228,7 @@ class Mollie_Mpm_Helper_Api
 		{
 			$this->error_message = $e->getMessage();
 
-			return false;
+			return FALSE;
 		}
 
 		$payment = $api->payments->get($transaction_id);
@@ -229,20 +238,20 @@ class Mollie_Mpm_Helper_Api
 		$this->amount = (float) $payment->amount;
 		$this->consumer_info = (array) (isset($payment->details) ? $payment->details : array());
 
-		return true;
+		return TRUE;
 	}
 
 	/**
-	 * @param null|string $key
+	 * @param NULL|string $key
 	 *
 	 * @return Mollie_API_Client
 	 * @throws Mollie_API_Exception
 	 */
-	public function _getMollieAPI($key = null)
+	public function _getMollieAPI($key = NULL)
 	{
 		$this->_setAutoLoader();
 
-		$key = ($key === null) ? $this->getApiKey() : $key;
+		$key = ($key === NULL) ? $this->getApiKey() : $key;
 		$api = new Mollie_API_Client;
 
 		$api->setApiKey($key);
@@ -265,7 +274,7 @@ class Mollie_Mpm_Helper_Api
 		}
 
 		$autoloader_callbacks = spl_autoload_functions();
-		$original_autoload    = null;
+		$original_autoload    = NULL;
 
 		foreach($autoloader_callbacks as $callback)
 		{
@@ -296,18 +305,41 @@ class Mollie_Mpm_Helper_Api
 	{
 		if (is_null($api_key))
 		{
-			return false;
+			return FALSE;
 		}
 
 		return ($this->api_key = $api_key);
 	}
 
 	/**
-	 * @return null
+	 * @return NULL
 	 */
 	public function getApiKey ()
 	{
 		return $this->api_key;
+	}
+
+	/**
+	 * @param $days
+	 *
+	 * @return bool|string
+	 */
+	public function setBankTransferDueDateDays ($days)
+	{
+		if (is_null($days) || !is_numeric($days))
+		{
+			return FALSE;
+		}
+
+		return ($this->bank_transfer_due_date = date("Y-m-d", strtotime("+" . $days . " day")));
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getBankTransferDueDateDays ()
+	{
+		return $this->bank_transfer_due_date;
 	}
 
 	/**
@@ -319,12 +351,12 @@ class Mollie_Mpm_Helper_Api
 	{
 		if (!is_double($amount) && !is_int($amount))
 		{
-			return false;
+			return FALSE;
 		}
 
 		if ($amount <= 0)
 		{
-			return false;
+			return FALSE;
 		}
 
 		return ($this->amount = $amount);
@@ -365,7 +397,7 @@ class Mollie_Mpm_Helper_Api
 	{
 		if (empty($redirect_url))
 		{
-			return false;
+			return FALSE;
 		}
 
 		return ($this->redirect_url = $redirect_url);
@@ -388,7 +420,7 @@ class Mollie_Mpm_Helper_Api
 	{
 		if (empty($transaction_id))
 		{
-			return false;
+			return FALSE;
 		}
 
 		return ($this->transaction_id = $transaction_id);

@@ -52,6 +52,7 @@
 "<b>Skip invoice confirmation mails:</b> <br/> Enable this option to skip sending invoice confirmation mails to the customer. This option only applies when manual invoicing is disabled.","<b>Ignorer les confirmations des factures:</b> <br/> Activez cette option pour ne pas envoyer les e-mails confirmant les factures. Cette option ne s'applique que lorsque la facturation manuelle est désactivée."
 "<b>Show Images:</b> <br/> Enable or disable payment method logos.","<b>Afficher les images:</b> <br/> Activer ou désactiver les logos des méthodes de paiement."
 "<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.","<b>Afficher la liste des banques:</b> <br/> Activer pour montrer la liste des banques dans la boutique. Si cette option n'est pas active, la liste est montrée dans l'ecran de paiement."
+"<b>Bank transfer due days:</b> <br/> Set the days for due date on bank transfer payments.","<b>Virement bancaire jours en raison:</b> <br/> Définissez les jours pour la date d'échéance des paiements de transfert bancaires."
 
 "Settings","Réglage"
 "Mollie Profiles [&rarr;]","Profiles Mollie [&rarr;]"

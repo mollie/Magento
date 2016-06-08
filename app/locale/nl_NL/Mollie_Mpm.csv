@@ -52,6 +52,7 @@
 "<b>Skip invoice confirmation mails:</b> <br/> Enable this option to skip sending invoice confirmation mails to the customer. This option only applies when manual invoicing is disabled.","<b>Factuur-mails uitzetten:</b> <br/> Activeer deze optie om confirmatiemails bij facturen uit te zetten. Deze optie is alleen actief wanneer Handmatig Factureren uit staat."
 "<b>Show Images:</b> <br/> Enable or disable payment method logos.","<b>Afbeeldingen weergeven:</b> <br/> Activeer of deactiveer de logo's van de betaalmethoden."
 "<b>Show Bank List:</b> <br/> Enable to show the list of available banks in the webshop. When disabled, the customer can choose a bank on the payment screen.","<b>Bankenlijst weergeven:</b> <br/> Activeer deze optie om de bankenlijst in de webshop weer te geven. Wanneer de optie uit staat, wordt de lijst in het betaalscherm getoond."
+"<b>Bank transfer due days:</b> <br/> Set the days for due date on bank transfer payments.","<b>Bankoverschrijving aantal dagen:</b> <br/> Stel de dagen voor de vervaldatum van overboekingen."
 
 "Settings","Instellingen"
 "Mollie Profiles [&rarr;]","Mollie Profielen [&rarr;]"
