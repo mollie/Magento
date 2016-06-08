@@ -30,15 +30,14 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- *
  **/
 
-class Mollie_Mpm_Block_Payment_Api_Form extends Mage_Payment_Block_Form {
-
+class Mollie_Mpm_Block_Payment_Api_Form extends Mage_Payment_Block_Form
+{
 	public function _construct()
 	{
 		parent::_construct();
+
 		$this->setTemplate('mollie/form/details.phtml');
 	}
-
 }

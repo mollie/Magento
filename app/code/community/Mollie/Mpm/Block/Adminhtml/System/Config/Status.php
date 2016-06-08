@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2012-2014, Mollie B.V.
  * All rights reserved. 
@@ -29,23 +30,26 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- * 
  */
-class Mollie_Mpm_Block_Adminhtml_System_Config_Status
-	extends Mage_Adminhtml_Block_Abstract
-	implements Varien_Data_Form_Element_Renderer_Interface
+
+class Mollie_Mpm_Block_Adminhtml_System_Config_Status extends Mage_Adminhtml_Block_Abstract implements Varien_Data_Form_Element_Renderer_Interface
 {
+	/**
+	 * Path to template file in theme.
+	 *
+	 * @var string
+	 */
 	protected $_template = 'mollie/system/config/status.phtml';
 
 	/**
-	 * Render fieldset html
+	 * Render fieldset html.
 	 *
 	 * @param Varien_Data_Form_Element_Abstract $element
+	 *
 	 * @return string
 	 */
-	public function render(Varien_Data_Form_Element_Abstract $element)
+	public function render (Varien_Data_Form_Element_Abstract $element)
 	{
 		return $this->toHtml();
 	}
 }
-

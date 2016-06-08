@@ -34,7 +34,6 @@
  *
 -->
 
-
 <config>
     <menu>
         <mollie module="mpm">

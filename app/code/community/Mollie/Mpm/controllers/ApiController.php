@@ -30,8 +30,8 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- *
  **/
+
 class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 {
 	/**
@@ -56,8 +56,8 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 	}
 
 	/**
-	 * @param string        $e        Exception message
-	 * @param string|NULL   $order_id An OrderID
+	 * @param string      $e        Exception message
+	 * @param string|NULL $order_id An OrderID
 	 */
 	protected function _showException ($e = '', $order_id = NULL)
 	{

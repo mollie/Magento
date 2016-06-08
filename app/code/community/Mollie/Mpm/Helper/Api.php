@@ -25,17 +25,13 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  *
- * ----------------------------------------------------------------------------------------------------
- *
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- *
- * ----------------------------------------------------------------------------------------------------
- *
- **/
+ */
+
 class Mollie_Mpm_Helper_Api
 {
 	protected $api_key         = null;
@@ -129,38 +125,41 @@ class Mollie_Mpm_Helper_Api
 			return false;
 		}
 
-		$params = array(
-			"amount"				=> $this->getAmount(),
-			"description"			=> $this->getDescription(),
-			"redirectUrl"			=> $this->getRedirectURL(),
-			"method"				=> $method,
-			"issuer"				=> (empty($issuer) ? null : $issuer),
-			"metadata"				=> array(
-				"order_id"			=> $order->getId(),
-			),
-			"locale"				=> $this->getLocaleCode(),
-			"webhookUrl"			=> $this->getWebhookURL(),
-		);
+		$store = Mage::app()->getStore();
+
+		$params = [
+			"amount"       => $this->getAmount(),
+			"description"  => $this->getDescription(),
+			"redirectUrl"  => $this->getRedirectURL(),
+			"method"       => $method,
+			"issuer"       => (empty($issuer) ? null : $issuer),
+			"metadata"     => [
+				"order_id" => $order->getId(),
+				"store_id" => $store->getId(),
+			],
+			"locale"       => $this->getLocaleCode(),
+			"webhookUrl"   => $this->getWebhookURL(),
+		];
 
 		if ($billing = $order->getBillingAddress())
 		{
-			$params += array(
-				"billingCity"			=> $billing->getCity(),
-				"billingRegion"			=> $billing->getRegion(),
-				"billingPostal"			=> $billing->getPostcode(),
-				"billingCountry"		=> $billing->getCountryId(),
-			);
+			$params += [
+				"billingCity"    => $billing->getCity(),
+				"billingRegion"  => $billing->getRegion(),
+				"billingPostal"  => $billing->getPostcode(),
+				"billingCountry" => $billing->getCountryId(),
+			];
 		}
 
 		if ($shipping = $order->getShippingAddress())
 		{
-			$params += array(
-				"shippingAddress"	=> $shipping->getStreetFull(),
-				"shippingCity"		=> $shipping->getCity(),
-				"shippingRegion"	=> $shipping->getRegion(),
-				"shippingPostal"	=> $shipping->getPostcode(),
-				"shippingCountry"	=> $shipping->getCountry(),
-			);
+			$params += [
+				"shippingAddress" => $shipping->getStreetFull(),
+				"shippingCity"    => $shipping->getCity(),
+				"shippingRegion"  => $shipping->getRegion(),
+				"shippingPostal"  => $shipping->getPostcode(),
+				"shippingCountry" => $shipping->getCountry(),
+			];
 		}
 
 		try
@@ -266,7 +265,7 @@ class Mollie_Mpm_Helper_Api
 		}
 
 		$autoloader_callbacks = spl_autoload_functions();
-		$original_autoload = null;
+		$original_autoload    = null;
 
 		foreach($autoloader_callbacks as $callback)
 		{
@@ -275,6 +274,7 @@ class Mollie_Mpm_Helper_Api
 				$original_autoload = $callback;
 			}
 		}
+
 		if (!is_null($original_autoload))
 		{
 			spl_autoload_unregister($original_autoload);
@@ -321,10 +321,12 @@ class Mollie_Mpm_Helper_Api
 		{
 			return false;
 		}
+
 		if ($amount <= 0)
 		{
 			return false;
 		}
+
 		return ($this->amount = $amount);
 	}
 
@@ -446,9 +448,9 @@ class Mollie_Mpm_Helper_Api
 	public function getWebhookURL ()
 	{
 		$store_code = Mage::app()->getStore()->getCode();
-		$store_url_part = empty($store_code) ? '/' : '/' . $store_code . '/';
+		$store_url  = Mage::app()->getStore($store_code)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
 
-		$webhook_url = str_replace('/admin/', $store_url_part, Mage::getUrl('mpm/api/webhook'));
+		$webhook_url = str_replace('/admin/', $store_url, Mage::getUrl('mpm/api/webhook'));
 
 		return $webhook_url . '?___store=' . $store_code;
 	}
@@ -460,7 +462,7 @@ class Mollie_Mpm_Helper_Api
 	{
 		try
 		{
-			$api = $this->_getMollieAPI();
+			$api         = $this->_getMollieAPI();
 			$api_methods = $api->methods->all();
 			$all_methods = Mage::helper('mpm')->getStoredMethods();
 
@@ -547,7 +549,7 @@ class Mollie_Mpm_Helper_Api
 	}
 
 	/**
-	 * @return mixed|string
+	 * @return string
 	 */
 	public function getLocaleCode ()
 	{
@@ -559,19 +561,19 @@ class Mollie_Mpm_Helper_Api
 		/**
 		 * @var array Supported locales in the Mollie API.
 		 */
-		$supportedLocales = array(
+		$supportedLocales = [
 			"de",
 			"en",
 			"es",
 			"fr",
 			"be",
 			"nl",
-		);
+		];
 
 		/**
 		 * Checks if the current $storeLocale is inside the $supportedLocales array.
 		 * If not, fallback to English to avoid exceptions from our API that will
-		 * about the payment with a exception. We do not want that to happen, right?
+		 * abort the payment with a exception. We do not want that to happen, right?
 		 */
 		if (in_array($storeLocale, $supportedLocales))
 		{

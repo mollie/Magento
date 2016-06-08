@@ -68,18 +68,18 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	protected $_api;
 
-	protected $_code					= "mpm_api";
-	protected $_infoBlockType			= 'mpm/payment_api_info';
-	protected $_formBlockType			= 'mpm/payment_api_form';
-	protected $_paymentMethod			= 'Mollie';
-	protected $_isGateway				= TRUE;
-	protected $_canAuthorize			= TRUE;
-	protected $_canUseCheckout			= TRUE;
-	protected $_canUseInternal			= TRUE;
-	protected $_canUseForMultishipping	= FALSE; // wouldn't work without event capturing anyway
-	protected $_canRefund				= TRUE;
+	protected $_code                    = "mpm_api";
+	protected $_infoBlockType           = 'mpm/payment_api_info';
+	protected $_formBlockType           = 'mpm/payment_api_form';
+	protected $_paymentMethod           = 'Mollie';
+	protected $_isGateway               = TRUE;
+	protected $_canAuthorize            = TRUE;
+	protected $_canUseCheckout          = TRUE;
+	protected $_canUseInternal          = TRUE;
+	protected $_canUseForMultishipping  = FALSE; // wouldn't work without event capturing anyway
+	protected $_canRefund               = TRUE;
 	protected $_canRefundInvoicePartial = TRUE;
-	protected $_canCapture				= FALSE;
+	protected $_canCapture              = FALSE;
 
 	// Payment statusses
 	const STATUS_OPEN      = "open";
@@ -89,21 +89,21 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	const STATUS_PAID      = "paid";
 
 	// Payment flags
-	const PAYMENT_FLAG_PROCESSED		= "De betaling is ontvangen en verwerkt";
-	const PAYMENT_FLAG_RETRY			= "De consument probeert het bedrag nogmaals af te rekenen";
-	const PAYMENT_FLAG_CANCELD			= "De consument heeft de betaling geannuleerd";
-	const PAYMENT_FLAG_PENDING			= "Afwachten tot de betaling binnen is";
-	const PAYMENT_FLAG_EXPIRED			= "De betaling is verlopen doordat de consument niets met de betaling heeft gedaan";
-	const PAYMENT_FLAG_INPROGRESS		= "De klant is doorverwezen naar de geselecteerde bank";
-	const PAYMENT_FLAG_FAILED			= "De betaling is niet gelukt (er is geen verdere informatie beschikbaar)";
-	const PAYMENT_FLAG_FRAUD			= "Het totale bedrag komt niet overeen met de afgerekende bedrag. (Mogelijke fraude)";
-	const PAYMENT_FLAG_DCHECKED			= "De betaalstatus is al een keer opgevraagd";
-	const PAYMENT_FLAG_UNKOWN			= "Er is een onbekende fout opgetreden";
+	const PAYMENT_FLAG_PROCESSED  = "De betaling is ontvangen en verwerkt";
+	const PAYMENT_FLAG_RETRY      = "De consument probeert het bedrag nogmaals af te rekenen";
+	const PAYMENT_FLAG_CANCELD    = "De consument heeft de betaling geannuleerd";
+	const PAYMENT_FLAG_PENDING    = "Afwachten tot de betaling binnen is";
+	const PAYMENT_FLAG_EXPIRED    = "De betaling is verlopen doordat de consument niets met de betaling heeft gedaan";
+	const PAYMENT_FLAG_INPROGRESS = "De klant is doorverwezen naar de geselecteerde bank";
+	const PAYMENT_FLAG_FAILED     = "De betaling is niet gelukt (er is geen verdere informatie beschikbaar)";
+	const PAYMENT_FLAG_FRAUD      = "Het totale bedrag komt niet overeen met de afgerekende bedrag. (Mogelijke fraude)";
+	const PAYMENT_FLAG_DCHECKED   = "De betaalstatus is al een keer opgevraagd";
+	const PAYMENT_FLAG_UNKOWN     = "Er is een onbekende fout opgetreden";
 
 	/**
 	 * Build constructor (must be a normal constructor, not a Magento _construct() method.
 	 */
-	public function __construct()
+	public function __construct ()
 	{
 		parent::__construct();
 
@@ -115,40 +115,46 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	}
 
 	/**
-	 * @param string $field
-	 * @param null $storeId
+	 * @param string          $field
+	 * @param null|int|string $storeId
+	 *
 	 * @return mixed
 	 */
-	public function getConfigData($field, $storeId = null)
+	public function getConfigData ($field, $storeId = null)
 	{
-
 		if ($this->isValidIndex())
 		{
 			if ($field === "min_order_total")
 			{
 				return $this->_api->methods[$this->_index]['amount']->minimum;
 			}
+
 			if ($field === "max_order_total")
 			{
 				return $this->_api->methods[$this->_index]['amount']->maximum;
 			}
+
 			if ($field === "sort_order")
 			{
 				return $this->_api->methods[$this->_index]['sort_order'];
 			}
+
 			if ($field === "title")
 			{
 				return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
 			}
 		}
+
 		if ($field === "active")
 		{
 			return $this->_isAvailable();
 		}
+
 		if ($field === "title")
 		{
 			return Mage::helper('core')->__('{Reserved}');
 		}
+
 		return parent::getConfigData($field, $storeId);
 	}
 
@@ -156,17 +162,20 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	/**
 	 * Override parent getTitle in order to translate the config.xml title (thank you magento)
 	 */
-	public function getTitle()
+	public function getTitle ()
 	{
 		// If there was an error, inform the user
-		if (is_string($this->_api->methods)) {
+		if (is_string($this->_api->methods))
+		{
 			return Mage::helper('core')->__($this->_api->methods);
 		}
+
 		// If this is a void field to be filled, fill it
 		if ($this->isValidIndex())
 		{
 			return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
 		}
+
 		// Otherwise, translate the title from config.xml
 		return Mage::helper('core')->__(parent::getTitle());
 	}
@@ -176,7 +185,8 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 *
 	 * @return Mage_Checkout_Model_Session
 	 */
-	protected function _getCheckout() {
+	protected function _getCheckout ()
+	{
 		return Mage::getSingleton('checkout/session');
 	}
 
@@ -185,7 +195,8 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 *
 	 * @return Mage_Sales_Model_Quote
 	 */
-	public function getQuote() {
+	public function getQuote ()
+	{
 		return $this->_getCheckout()->getQuote();
 	}
 
@@ -195,12 +206,13 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 * @param Mage_Sales_Model_Quote
 	 * @return bool
 	 */
-	public function isAvailable($quote = NULL)
+	public function isAvailable ($quote = NULL)
 	{
 		if (!$this->_isAvailable())
 		{
 			return FALSE;
 		}
+
 		return parent::isAvailable($quote);
 	}
 
@@ -209,21 +221,25 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 *
 	 * @return bool
 	 */
-	public function _isAvailable()
+	public function _isAvailable ()
 	{
 		$enabled = (bool) Mage::helper('mpm')->getConfig('mollie', 'active');
+
 		if (!$enabled)
 		{
 			return FALSE;
 		}
+
 		if (!$this->isValidIndex())
 		{
 			return FALSE;
 		}
+
 		if (!$this->_api->methods[$this->_index]['available'])
 		{
 			return FALSE;
 		}
+
 		return TRUE;
 	}
 
@@ -232,14 +248,14 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 *
 	 * @return bool
 	 */
-	public function canUseForMultishipping() {
+	public function canUseForMultishipping ()
+	{
 		return FALSE;
 	}
 
 	/**
-	 * Mollie Payment Methods are only active if 'EURO' is currency
-	 *
 	 * @param string $currencyCode
+	 *
 	 * @return bool
 	 */
 	public function canUseForCurrency($currencyCode)
@@ -248,15 +264,6 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		{
 			return FALSE;
 		}
-
-		/**
-		 * Skip the check here. The order amount is converted to EUR automatically.
-		 *
-		 * @see Mollie_Mpm_ApiController
-		 */
-//		if ($currencyCode !== 'EUR') {
-//			return FALSE;
-//		}
 
 		return TRUE;
 	}
@@ -267,15 +274,17 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 * @param mixed $data
 	 * @return self
 	 */
-	public function assignData($data)
+	public function assignData ($data)
 	{
-		if ( !($data instanceof Varien_Object) ) {
+		if (!($data instanceof Varien_Object))
+		{
 			$data = new Varien_Object($data);
 		}
 
 		if(strlen(Mage::registry('method_id')) == 0)
 		{
 			$method = $this->_api->getMethodByCode($data->_data['method']);
+
 			Mage::register('method_id', $method['method_id']);
 			Mage::register('issuer', Mage::app()->getRequest()->getParam($this->_code . '_issuer'));
 		}
@@ -288,7 +297,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 *
 	 * @return string
 	 */
-	public function getOrderPlaceRedirectUrl()
+	public function getOrderPlaceRedirectUrl ()
 	{
 		return Mage::getUrl(
 			'mpm/api/payment',
@@ -308,7 +317,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 * @codeCoverageIgnore
 	 * @return string
 	 */
-	protected function getCurrentDate()
+	protected function getCurrentDate ()
 	{
 		return date("Y-m-d H:i:s");
 	}
@@ -322,11 +331,12 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 	 */
 	public function setPayment ($order_id = NULL, $transaction_id = NULL, $method = 'api')
 	{
-		if (is_null($order_id) || is_null($transaction_id)) {
+		if (is_null($order_id) || is_null($transaction_id))
+		{
 			Mage::throwException('Ongeldig order_id of transaction_id...');
 		}
 
-		$data  = array(
+		$data = array(
 			'order_id'       => $order_id,
 			'transaction_id' => $transaction_id,
 			'bank_status'    => self::STATUS_OPEN,
@@ -337,9 +347,18 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		$this->_mysqlw->insert($this->_table, $data);
 	}
 
+	/**
+	 * @param null $transaction_id
+	 * @param null $bank_status
+	 * @param array|null $customer
+	 *
+	 * @throws Mage_Core_Exception
+	 * @throws Zend_Db_Adapter_Exception
+	 */
 	public function updatePayment ($transaction_id = NULL, $bank_status = NULL, array $customer = NULL)
 	{
-		if (is_null($transaction_id) || is_null($bank_status)) {
+		if (is_null($transaction_id) || is_null($bank_status))
+		{
 			Mage::throwException('Geen transaction_id en/of bank_status gevonden...');
 		}
 
@@ -358,24 +377,37 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		$this->_mysqlw->update($this->_table, $data, $where);
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isValidIndex ()
 	{
 		if (!is_array($this->_api->methods))
 		{
 			return FALSE;
 		}
+
 		return isset($this->_index) && $this->_index >= 0 && $this->_index < sizeof($this->_api->methods);
 	}
 
-	public function refund(Varien_Object $payment, $amount)
+	/**
+	 * @param Varien_Object $payment
+	 * @param float $amount
+	 *
+	 * @return $this
+	 * @throws Mage_Core_Exception
+	 * @throws Mollie_API_Exception
+	 */
+	public function refund (Varien_Object $payment, $amount)
 	{
 		// fetch order and transaction info
 		$order = $payment->getOrder();
-		$row = $this->_mysqlr->fetchRow(
+		$row   = $this->_mysqlr->fetchRow(
 			'SELECT * FROM `' . $this->_table . '` WHERE `order_id` = ' . intval($order->entity_id),
 			array(),
 			Zend_Db::FETCH_ASSOC
 		);
+
 		$transaction_id = $row['transaction_id'];
 
 		// fetch payment info

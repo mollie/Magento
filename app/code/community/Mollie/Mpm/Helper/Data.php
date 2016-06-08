@@ -30,12 +30,11 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- *
  **/
 
 class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 {
-	public $update_url = 'https://github.com/mollie/Magento';
+	public $update_url    = 'https://github.com/mollie/Magento';
 	public $should_update = 'maybe';
 
 	/**
@@ -43,11 +42,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @return array
 	 */
-	public function getStatusById($transaction_id)
+	public function getStatusById ($transaction_id)
 	{
 		/** @var $connection Varien_Db_Adapter_Interface */
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
-		$status = $connection->fetchAll(
+		$status     = $connection->fetchAll(
 			sprintf(
 				"SELECT `bank_status`, `updated_at` FROM `%s` WHERE `transaction_id` = %s",
 				Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
@@ -63,11 +62,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @return int|null
 	 */
-	public function getOrderIdByTransactionId($transaction_id)
+	public function getOrderIdByTransactionId ($transaction_id)
 	{
 		/** @var $connection Varien_Db_Adapter_Interface */
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
-		$id = $connection->fetchAll(
+		$id         = $connection->fetchAll(
 			sprintf(
 				"SELECT `order_id` FROM `%s` WHERE `transaction_id` = %s",
 				Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
@@ -79,6 +78,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			return $id[0]['order_id'];
 		}
+
 		return NULL;
 	}
 
@@ -87,11 +87,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @return int|null
 	 */
-	public function getTransactionIdByOrderId($order_id)
+	public function getTransactionIdByOrderId ($order_id)
 	{
 		/** @var $connection Varien_Db_Adapter_Interface */
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
-		$id = $connection->fetchAll(
+		$id         = $connection->fetchAll(
 			sprintf(
 				"SELECT `transaction_id` FROM `%s` WHERE `order_id` = %s",
 				Mage::getSingleton('core/resource')->getTableName('mollie_payments'),
@@ -103,19 +103,20 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			return $id[0]['transaction_id'];
 		}
+
 		return NULL;
 	}
 
-	public function getStoredMethods()
+	public function getStoredMethods ()
 	{
 		$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
-
-		$methods = $connection->fetchAll(
+		$methods    = $connection->fetchAll(
 			sprintf(
 				"SELECT * FROM `%s`",
 				Mage::getSingleton('core/resource')->getTableName('mollie_methods')
 			)
 		);
+
 		return $methods;
 	}
 
@@ -142,7 +143,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @return string
 	 */
-	public function getApiKey()
+	public function getApiKey ()
 	{
 		return trim(Mage::getStoreConfig("payment/mollie/apikey", $this->getCurrentStore()));
 	}
@@ -155,13 +156,15 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @return string
 	 */
-	public function getConfig($paymentmethod = NULL, $key = NULL)
+	public function getConfig ($paymentmethod = NULL, $key = NULL)
 	{
-		$arr = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list');
+		$arr            = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list');
 		$paymentmethods = array('mollie');
 
 		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
+		{
 			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}", $this->getCurrentStore());
+		}
 
 		return NULL;
 	}
@@ -171,7 +174,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @return string
 	 */
-	public function getCurrentStore()
+	public function getCurrentStore ()
 	{
 		return Mage::app()->getStore()->getId();
 	}
@@ -180,7 +183,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @return string
 	 * @codeCoverageIgnore
 	 */
-	public function getModuleStatus($method_count, $method_limit)
+	public function getModuleStatus ($method_count, $method_limit)
 	{
 		/* Precedence:
 		 * 1) Missing files
@@ -188,26 +191,43 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		 * 3) New version on github
 		 * 4) Method limit
 		 * 5) Disabled check
-		 * 6) Deprecated files
 		 */
 
 		$core = Mage::helper('core');
 
-
 		// 1) Check missing files
 		$needFiles = array();
 		$modFiles  = array(
-			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
-			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php",
-			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Exception.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Exception/IncompatiblePlatform.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Customer/Mandate.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Payment/Refund.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Customer.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Issuer.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/List.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Method.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Organization.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Payment.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Permission.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Profile.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Object/Settlement.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Customers/Mandates.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Customers/Payments.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Payments/Refunds.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Base.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Customers.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Issuers.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Methods.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Organizations.php",
 			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Payments.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Permissions.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Profiles.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Settlements.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Resource/Undefined.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Autoloader.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/cacert.pem",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Client.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/CompatibilityChecker.php",
+			Mage::getBaseDir('lib') . "/Mollie/src/Mollie/API/Exception.php",
 
 			Mage::getRoot() .'/design/adminhtml/default/default/template/mollie/system/config/status.phtml',
 			Mage::getRoot() .'/design/frontend/base/default/layout/mpm.xml',
@@ -225,8 +245,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Data.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Api.php',
 			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Api.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Model/Idl.php',
 		);
+
 		for ($i = 0; $i < $method_limit; $i++)
 		{
 			$I = ($i < 10 ? '0'.$i : $i);
@@ -235,7 +255,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
 		foreach ($modFiles as $file)
 		{
-			if(!file_exists($file)) {
+			if(!file_exists($file))
+			{
 				$needFiles[] = '<span style="color:red">'.$file.'</span>';
 			}
 		}
@@ -244,7 +265,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			return '<b>'.$core->__('Missing file(s) detected!').'</b><br />' . implode('<br />', $needFiles);
 		}
-
 
 		// 2) Check magento version
 		if ( version_compare(Mage::getVersion(), '1.4.1.0', '<'))
@@ -257,13 +277,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			';
 		}
 
-
 		// 3) Check github version
 		if ($this->should_update === 'yes')
 		{
 			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Outdated!').'</span>';
 		}
-
 
 		// 4) Check method limit
 		if ($method_count > $method_limit)
@@ -276,37 +294,10 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 			';
 		}
 
-
 		// 5) Check if disabled
 		if (!Mage::helper('mpm')->getConfig('mollie', 'active'))
 		{
 			return '<b>'.$core->__('Status').'</b><br /><span style="color:#EB5E00">'.$core->__('Module status: Disabled!').'</span>';
-		}
-
-
-		// 6) Check deprecated files
-		$deprFiles = array();
-		$oldFiles = array(
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Fail.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Form.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Block/Payment/Idl/Info.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/controllers/IdlController.php',
-			Mage::getRoot() .'/code/community/Mollie/Mpm/Helper/Idl.php',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/idl.phtml',
-			Mage::getRoot() .'/design/frontend/base/default/template/mollie/form/api.phtml',
-		);
-
-		foreach ($oldFiles as $file)
-		{
-			if(file_exists($file)) {
-				$deprFiles[] = '<span style="color:#EB5E00">'.$file.'</span>';
-			}
-		}
-
-
-		if (count($deprFiles) > 0)
-		{
-			return '<b>'.$core->__('Outdated file(s) found!').'</b><br />' . implode('<br />', $deprFiles) . '<br />'.$core->__('These aren&lsquo;t needed any longer; you might as well delete them.');
 		}
 
 		// All is fine
@@ -322,10 +313,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	public function getWaitingPayment($order_id)
 	{
 		$order = Mage::getModel('sales/order')->loadByIncrementId($order_id);
+
 		if ($order['status'] == Mage_Sales_Model_Order::STATE_PENDING_PAYMENT)
 		{
 			return '<span class="mpm_waiting_msg">'. Mage::helper('core')->__($this->__('Your order is awaiting payment before being released for processing and shipment.')) .'</span>';
 		}
+
 		return NULL;
 	}
 	
@@ -390,5 +383,4 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	{
 		return @file_get_contents($this->update_url . '/releases.atom');
 	}
-
 }
