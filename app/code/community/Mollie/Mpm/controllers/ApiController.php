@@ -167,10 +167,13 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				$session->setMollieQuoteId($session->getQuoteId());
 			}
 
+			$store_code  = Mage::app()->getStore()->getCode();
+			$store_url   = Mage::app()->getStore($store_code)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+
 			// Assign required value's
 			$amount       = $this->getAmount($order);
 			$description  = str_replace('%', $order->getIncrementId(), Mage::helper('mpm/data')->getConfig('mollie', 'description'));
-			$redirect_url = Mage::getUrl('mpm/api/return') . '?order_id=' . intval($order_id) . '&utm_nooverride=1';
+			$redirect_url = str_replace('/admin/', $store_url, Mage::getUrl('mpm/api/return') . '?order_id=' . intval($order_id) . '&utm_nooverride=1');
 			$method       = $this->getRequest()->getParam('method_id', NULL);
 			$issuer       = $this->getRequest()->getParam('issuer', NULL);
 

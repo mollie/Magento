@@ -3,7 +3,7 @@
 # Changelog #
 
 ## Changes in release 4.2.3 ##
-+ Using store url at webhook to truly enable multistore functions.
++ Using store url at webhook/redirecturl to truly enable multistore functions.
 + Added bank transfer due date (This will send a email to the customer when he/she uses bank transfer)
 
 ## Changes in release 4.2.2 ##
