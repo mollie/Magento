@@ -18,7 +18,7 @@ class Mollie_Mpm_Helper_ApiTest extends MagentoPlugin_TestCase
 	{
 		parent::setUp();
 
-		$this->data = $this->getMock("stdClass", array("getApiKey"), array());
+		$this->data = $this->getMock("stdClass", array("getApiKey", "getBankTransferDueDateDays"), array());
 
 		$this->data->expects($this->any())
 			->method("getApiKey")
