@@ -128,47 +128,47 @@ class Mollie_Mpm_Helper_Api
 
 		$store = Mage::app()->getStore();
 
-		$params = [
+		$params = array(
 			"amount"       => $this->getAmount(),
 			"description"  => $this->getDescription(),
 			"redirectUrl"  => $this->getRedirectURL(),
 			"method"       => $method,
 			"issuer"       => (empty($issuer) ? NULL : $issuer),
-			"metadata"     => [
+			"metadata"     => array(
 				"order_id" => $order->getId(),
 				"store_id" => $store->getId(),
-			],
+			),
 			"locale"       => $this->getLocaleCode(),
 			"webhookUrl"   => $this->getWebhookURL(),
-		];
+		);
 
 		if($method == "banktransfer" && $this->getBankTransferDueDateDays())
 		{
-			$params += [
+			$params += array(
 				"dueDate"      => $this->getBankTransferDueDateDays(),
 				"billingEmail" => $order->getCustomerEmail(),
-			];
+			);
 		}
 
 		if ($billing = $order->getBillingAddress())
 		{
-			$params += [
+			$params += array(
 				"billingCity"    => $billing->getCity(),
 				"billingRegion"  => $billing->getRegion(),
 				"billingPostal"  => $billing->getPostcode(),
 				"billingCountry" => $billing->getCountryId(),
-			];
+			);
 		}
 
 		if ($shipping = $order->getShippingAddress())
 		{
-			$params += [
+			$params += array(
 				"shippingAddress" => $shipping->getStreetFull(),
 				"shippingCity"    => $shipping->getCity(),
 				"shippingRegion"  => $shipping->getRegion(),
 				"shippingPostal"  => $shipping->getPostcode(),
 				"shippingCountry" => $shipping->getCountry(),
-			];
+			);
 		}
 
 		try
@@ -593,14 +593,14 @@ class Mollie_Mpm_Helper_Api
 		/**
 		 * @var array Supported locales in the Mollie API.
 		 */
-		$supportedLocales = [
+		$supportedLocales = array(
 			"de",
 			"en",
 			"es",
 			"fr",
 			"be",
 			"nl",
-		];
+		);
 
 		/**
 		 * Checks if the current $storeLocale is inside the $supportedLocales array.
