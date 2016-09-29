@@ -6,7 +6,7 @@
     "description":"iDEAL, Creditcard, Bancontact/Mister Cash, SOFORT, Bank transfer, Bitcoin, PayPal & paysafecard for Magento https://www.mollie.com/",
     "require": {
       "php": ">=5.3",
-      "mollie/mollie-api-php": "dev-master"
+      "mollie/mollie-api-php": "^1.7"
     },
     "authors":[
         {
@@ -26,5 +26,9 @@
             ["app/locale/en_US/Mollie_Mpm.csv", "app/locale/en_US/Mollie_Mpm.csv"],
             ["app/locale/fr_FR/Mollie_Mpm.csv", "app/locale/fr_FR/Mollie_Mpm.csv"]
         ]
-    }
+    },
+   "require-dev": {
+      "phpunit/phpunit": "^4.8",
+      "phpcq/travis-configuration-check": "^1.1"
+   }
 }
