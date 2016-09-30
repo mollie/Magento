@@ -5,6 +5,7 @@
 ## Changes in release 4.2.4 ##
 + Fixed tests
 + Updated Mollie API Client to 1.7.0
++ Fix issue #44 - "Connection timeouts cause unhandled exceptions"
 
 ## Changes in release 4.2.3 ##
 + Using store url at webhook/redirecturl to truly enable multistore functions.
