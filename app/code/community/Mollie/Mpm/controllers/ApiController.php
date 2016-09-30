@@ -168,7 +168,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 			}
 
 			$store_code  = Mage::app()->getStore()->getCode();
-			$store_url   = Mage::app()->getStore($store_code)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+			$store_url   = Mage::app()->getStore($store_code)->getBaseUrl();
 
 			// Assign required value's
 			$amount       = $this->getAmount($order);

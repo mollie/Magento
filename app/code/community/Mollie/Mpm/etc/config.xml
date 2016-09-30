@@ -37,7 +37,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>4.2.3</version>
+            <version>4.2.4</version>
         </Mollie_Mpm>
     </modules>
 
@@ -173,7 +173,7 @@
             <mpm_void_00 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-11</sort_order>
+                <sort_order>-16</sort_order>
                 <model>mpm/void00</model>
                 <currency>EUR</currency>
             </mpm_void_00>
@@ -181,7 +181,7 @@
             <mpm_void_01 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-10</sort_order>
+                <sort_order>-15</sort_order>
                 <model>mpm/void01</model>
                 <currency>EUR</currency>
             </mpm_void_01>
@@ -189,7 +189,7 @@
             <mpm_void_02 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-9</sort_order>
+                <sort_order>-14</sort_order>
                 <model>mpm/void02</model>
                 <currency>EUR</currency>
             </mpm_void_02>
@@ -197,7 +197,7 @@
             <mpm_void_03 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-8</sort_order>
+                <sort_order>-13</sort_order>
                 <model>mpm/void03</model>
                 <currency>EUR</currency>
             </mpm_void_03>
@@ -205,7 +205,7 @@
             <mpm_void_04 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-7</sort_order>
+                <sort_order>-12</sort_order>
                 <model>mpm/void04</model>
                 <currency>EUR</currency>
             </mpm_void_04>
@@ -213,7 +213,7 @@
             <mpm_void_05 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-6</sort_order>
+                <sort_order>-11</sort_order>
                 <model>mpm/void05</model>
                 <currency>EUR</currency>
             </mpm_void_05>
@@ -221,7 +221,7 @@
             <mpm_void_06 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-5</sort_order>
+                <sort_order>-10</sort_order>
                 <model>mpm/void06</model>
                 <currency>EUR</currency>
             </mpm_void_06>
@@ -229,7 +229,7 @@
             <mpm_void_07 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-4</sort_order>
+                <sort_order>-9</sort_order>
                 <model>mpm/void07</model>
                 <currency>EUR</currency>
             </mpm_void_07>
@@ -237,7 +237,7 @@
             <mpm_void_08 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-3</sort_order>
+                <sort_order>-8</sort_order>
                 <model>mpm/void08</model>
                 <currency>EUR</currency>
             </mpm_void_08>
@@ -245,7 +245,7 @@
             <mpm_void_09 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-2</sort_order>
+                <sort_order>-7</sort_order>
                 <model>mpm/void09</model>
                 <currency>EUR</currency>
             </mpm_void_09>
@@ -253,10 +253,50 @@
             <mpm_void_10 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
-                <sort_order>-1</sort_order>
+                <sort_order>-6</sort_order>
                 <model>mpm/void10</model>
                 <currency>EUR</currency>
             </mpm_void_10>
+
+            <mpm_void_11 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-5</sort_order>
+                <model>mpm/void11</model>
+                <currency>EUR</currency>
+            </mpm_void_11>
+
+            <mpm_void_12 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-4</sort_order>
+                <model>mpm/void12</model>
+                <currency>EUR</currency>
+            </mpm_void_12>
+
+            <mpm_void_13 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-3</sort_order>
+                <model>mpm/void13</model>
+                <currency>EUR</currency>
+            </mpm_void_13>
+
+            <mpm_void_14 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-2</sort_order>
+                <model>mpm/void14</model>
+                <currency>EUR</currency>
+            </mpm_void_14>
+
+            <mpm_void_15 translate="title" module="Mollie_Mpm">
+                <group>mollie</group>
+                <active>1</active>
+                <sort_order>-1</sort_order>
+                <model>mpm/void15</model>
+                <currency>EUR</currency>
+            </mpm_void_15>
 
         </payment>
     </default>

@@ -39,6 +39,11 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 	 */
 	protected $payment_model;
 
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $store;
+
 	const TRANSACTION_ID = "1bba1d8fdbd8103b46151634bdbe0a60";
 
 	const ORDER_ID = 16;
@@ -53,7 +58,7 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 	{
 		parent::setUp();
 
-		$this->data_helper  = $this->getMock("stdClass", array("getConfig"));
+		$this->data_helper = $this->getMock("stdClass", array("getConfig"));
 		$this->api_helper = $this->getMock("Mollie_Mpm_Helper_Api", array("createPayment", "getTransactionId", "getPaymentURL"), array(), "", FALSE);
 
 		/*
@@ -113,6 +118,7 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 			array("sales/order_payment", $this->payment_model),
 		)));
 
+        $this->store = $this->getMock("stdClass", array("getBaseCurrencyCode", "getCurrentCurrencyCode", "getCode", "getBaseUrl"));
 	}
 
 	protected function expectOrderIdInRequestPresent($present)
@@ -145,6 +151,18 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 	public function testPaymentSetupCorrectly()
 	{
 		$this->expectOrderIdInRequestPresent(TRUE);
+
+        $this->mage->expects($this->any())
+            ->method("app")
+            ->will($this->returnValue($this->mage));
+
+        $this->mage->expects($this->any())
+            ->method("getStore")
+            ->will($this->returnValue($this->store));
+
+        $this->store->expects($this->any())
+            ->method("getCode")
+            ->will($this->returnValue('code'));
 
 		$this->order_model->expects($this->exactly(2))
 			->method("setState")

@@ -2,7 +2,7 @@
    "name": "mollie/magento",
     "license": "Mollie B.V.",
     "type": "magento-module",
-    "version": " 4.2.3",
+    "version": " 4.2.4",
     "description":"iDEAL, Creditcard, Bancontact/Mister Cash, SOFORT, Bank transfer, Bitcoin, PayPal & paysafecard for Magento https://www.mollie.com/",
     "require": {
       "php": ">=5.3",
