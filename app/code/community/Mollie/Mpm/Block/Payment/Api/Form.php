@@ -34,10 +34,65 @@
 
 class Mollie_Mpm_Block_Payment_Api_Form extends Mage_Payment_Block_Form
 {
+	protected $_helper = null;
+	protected $_apiHelper = null;
+	protected $_issuers = [];
+
 	public function _construct()
 	{
 		parent::_construct();
 
 		$this->setTemplate('mollie/form/details.phtml');
+	}
+
+	/**
+	 * @return Mollie_Mpm_Helper_Api
+	 */
+	public function getHelper()
+	{
+		if($this->_helper == null) {
+			$this->_helper = Mage::helper('mpm');
+		}
+
+		return $this->_helper;
+	}
+
+	public function getMethod()
+	{
+		return $this->getHelper()->getMethodByCode($this->getMethodCode());
+	}
+
+	public function getApiHelper()
+	{
+		if($this->_apiHelper == null) {
+			$this->_apiHelper = Mage::helper('mpm/api');
+		}
+
+		return $this->_apiHelper;
+	}
+
+	public function getMollieAPI()
+	{
+		return $this->getApiHelper()->_getMollieAPI();
+	}
+
+	public function getIssuers()
+	{
+		try {
+			$apiIssuers = $this->getMollieAPI()->issuers;
+
+			foreach ($apiIssuers->all() as $issuer) {
+				if (!array_key_exists($issuer->method, $this->_issuers)) {
+					$this->_issuers[$issuer->method] = array();
+				}
+
+				$this->_issuers[$issuer->method][] = $issuer;
+			}
+		} catch (Exception $ex) {
+			Mage::logException($ex);
+			Mage::log('Unable to retrieve payment methods for Mollie, please refer to exception log for details.');
+		}
+
+		return $this->_issuers;
 	}
 }
