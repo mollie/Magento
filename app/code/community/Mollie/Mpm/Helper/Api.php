@@ -46,6 +46,8 @@ class Mollie_Mpm_Helper_Api
 	protected $error_message          = '';
 	protected $_cached_methods        = NULL;
 	protected $bank_transfer_due_date = NULL;
+	protected $issuers                = array();
+	protected $skip_issuers           = FALSE;
 
 	/**
 	 * Mollie_Mpm_Helper_Api constructor.
@@ -616,4 +618,37 @@ class Mollie_Mpm_Helper_Api
 			return 'en';
 		}
 	}
+
+    /**
+     * @return array
+     */
+	public function getIssuers ()
+    {
+        if (count($this->issuers) == 0 && $this->skip_issuers == FALSE)
+        {
+            try
+            {
+                foreach ($this->_getMollieAPI()->issuers->all() as $issuer)
+                {
+                    if (!array_key_exists($issuer->method, $this->issuers))
+                    {
+                        $this->issuers[$issuer->method] = array();
+                    }
+                    $this->issuers[$issuer->method][] = $issuer;
+                }
+            }
+            catch (Exception $e)
+            {
+                /*
+                 * Since we've got an exception, stop trying to get issuers for now. This will prevent more exceptions
+                 * and in the case of a timeout, an even longer wait.
+                 */
+                $this->skip_issuers = TRUE;
+
+                Mage::logException($e);
+                Mage::log('Unable to retrieve payment methods for Mollie, please refer to exception log for details.');
+            }
+        }
+        return $this->issuers;
+    }
 }

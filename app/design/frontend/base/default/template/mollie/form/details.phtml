@@ -1,18 +1,9 @@
 <?php
-$code		= $this->getMethodCode();
-$helper		= Mage::helper('mpm/api');
-$data		= Mage::helper('mpm');
-$method		= $helper->getMethodByCode($code);
-$api		= $helper->_getMollieAPI();
-$issuers	= array();
-foreach ($api->issuers->all() as $issuer)
-{
-	if (!array_key_exists($issuer->method, $issuers))
-	{
-		$issuers[$issuer->method] = array();
-	}
-	$issuers[$issuer->method][] = $issuer;
-}
+$code    = $this->getMethodCode();
+$helper  = Mage::helper('mpm/api');
+$data    = Mage::helper('mpm');
+$method  = $helper->getMethodByCode($code);
+$issuers = $helper->getIssuers();
 ?>
 
 <ul class="form-list" id="payment_form_<?php echo $this->escapeHtml($code) ?>" style="display:none">
