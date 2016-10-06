@@ -84,7 +84,7 @@ op via info@mollie.com.
 
 # Licentie #
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
-Copyright (c) 2011-2014, Mollie B.V.
+Copyright (c) 2011-2016, Mollie B.V.
 
 + [Meer informatie over iDEAL via Mollie](https://www.mollie.com/ideal/)
 + [Meer informatie over Creditcard via Mollie](https://www.mollie.com/creditcard/)
@@ -94,5 +94,3 @@ Copyright (c) 2011-2014, Mollie B.V.
 + [Meer informatie over PayPal via Mollie](https://www.mollie.com/paypal/)
 + [Meer informatie over paysafecard via Mollie](https://www.mollie.com/paysafecard/)
 + [Meer informatie over SOFORT Banking via Mollie](https://www.mollie.com/sofort/)
-
-![Powered By Mollie](https://www.mollie.nl/images/badge-betaling-medium.png)

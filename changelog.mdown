@@ -2,9 +2,13 @@
 
 # Changelog #
 
+## Changes in release 4.2.5 ##
++ Added payment method [KBC/CBC](https://www.mollie.com/kbccbc)
++ Updated [Mollie API Client](https://github.com/mollie/mollie-api-php) to 1.7.1
+
 ## Changes in release 4.2.4 ##
 + Fixed tests
-+ Updated Mollie API Client to 1.7.0
++ Updated [Mollie API Client](https://github.com/mollie/mollie-api-php) to 1.7.0
 + Fix issue #44 - "Connection timeouts cause unhandled exceptions"
 
 ## Changes in release 4.2.3 ##
