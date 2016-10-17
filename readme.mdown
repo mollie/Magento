@@ -24,6 +24,12 @@ Via [Mollie](https://www.mollie.com/) is iDEAL gemakkelijk aan te sluiten zonder
 ### Bancontact/Mister Cash ###
 [Bancontact/Mister Cash](https://www.mollie.com/mistercash/) maakt gebruik van een fysieke kaart die gekoppeld is aan tegoed op een Belgische bankrekening. Betalingen via Bancontact/Mister Cash zijn gegarandeerd en lijken daarmee sterk op iDEAL in Nederland. Daarom is het uitermate geschikt voor uw webwinkel.
 
+### Belfius Direct Net ###
+Als een van de grootste banken van België voorziet [Belfius](https://www.mollie.com/belfiusdirectnet) in een eigen betaaloplossing voor haar klanten. Betalingen zijn gegarandeerd en worden direct verwerkt.
+
+### KBC/CBC-Betaalknop ###
+De [KBC/CBC-Betaalknop](https://www.mollie.com/kbccbc) is een populaire betaalmethode in België. De knop wordt gebruikt door klanten van de grote Belgische banken KBC en CBC en maakt het ook mogelijk om achteraf te betalen of via QR-code. 
+
 ### SOFORT Banking ###
 [SOFORT Banking](https://www.mollie.com/sofort/) is een in Duitsland zeer populaire betaalmethode. Betalingen zijn direct en niet storneerbaar, waarmee het sterk op het Nederlandse iDEAL lijkt. Daarom is het uitermate geschikt voor uw webwinkel.
 
