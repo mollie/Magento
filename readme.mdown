@@ -1,3 +1,5 @@
+*Magento 2.x* users check out our [Magento 2 plugin](https://github.com/mollie/magento2).
+
 ![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Magento plugin voor [betalingen via Mollie](https://www.mollie.com/). #
@@ -74,7 +76,7 @@ In dit bestand voegt u de volgende regels in met daarbij de bijhorende vertaling
 ````
 "iDEAL","iDEAL"
 "Creditcard","Creditcard"
-"Bancontact/Mister Cash","Bancontact/Mister Cash"
+"Bancontact","Bancontact"
 "SOFORT Banking","SOFORT Banking"
 "Bank transfer","Bank transfer"
 "Bitcoin","Bitcoin"
@@ -91,12 +93,3 @@ op via info@mollie.com.
 # Licentie #
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
 Copyright (c) 2011-2016, Mollie B.V.
-
-+ [Meer informatie over iDEAL via Mollie](https://www.mollie.com/ideal/)
-+ [Meer informatie over Creditcard via Mollie](https://www.mollie.com/creditcard/)
-+ [Meer informatie over Bancontact/Mister Cash via Mollie](https://www.mollie.com/mistercash/)
-+ [Meer informatie over Overboeking via Mollie](https://www.mollie.com/banktransfer/)
-+ [Meer informatie over Bitcoin via Mollie](https://www.mollie.com/bitcoin/)
-+ [Meer informatie over PayPal via Mollie](https://www.mollie.com/paypal/)
-+ [Meer informatie over paysafecard via Mollie](https://www.mollie.com/paysafecard/)
-+ [Meer informatie over SOFORT Banking via Mollie](https://www.mollie.com/sofort/)
