@@ -1,4 +1,6 @@
-*Magento 2.x* users check out our [Magento 2 plugin](https://github.com/mollie/magento2).
+**Magento 2.x** users check out our [Magento 2 plugin](https://github.com/mollie/magento2).
+
+
 
 ![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
