@@ -173,7 +173,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		// If this is a void field to be filled, fill it
 		if ($this->isValidIndex())
 		{
-			return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
+			$title = Mage::helper('mpm/data')->getMethodTitle($this->_api->methods[$this->_index]['id']);
+
+			return $title ?: Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
 		}
 
 		// Otherwise, translate the title from config.xml

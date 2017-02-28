@@ -14,6 +14,16 @@ foreach ($methods as $method)
 		$method_count++;
 	}
 }
+
+if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
+	$storeId = Mage::getModel('core/store')->load($code)->getId();
+} elseif (strlen($code = Mage::getSingleton('adminhtml/config_data')->getWebsite())) {
+	$websiteId = Mage::getModel('core/website')->load($code)->getId();
+	$storeId = Mage::app()->getWebsite($websiteId)->getDefaultStore()->getId();
+} else {
+	$storeId = 0;
+}
+
 ?>
 	<tr><td>
 		<b><?php echo $core->__('Api Key'); ?></b><br />
@@ -34,6 +44,8 @@ foreach ($methods as $method)
 			?>
 			<table>
 				<tr>
+					<th style="width:200px;"><?php echo $core->__('Title');?></th>
+					<th style="width: 40px"></th>
 					<th style="width:150px;"><?php echo $core->__('Description');?></th>
 					<th style="width:150px;"><?php echo $core->__('Minimum Amount');?></th>
 					<th style="width:150px;"><?php echo $core->__('Maximum Amount');?></th>
@@ -41,8 +53,23 @@ foreach ($methods as $method)
 				<?php
 				foreach($methods as $method):
 					if ($method['available']):
+						$title = Mage::helper('mpm/data')->getMethodTitle($method['id'], $storeId);
 						?>
 						<tr>
+							<td class="value">
+								<input type="text"
+									   name="groups[mollie_title][fields][<?php echo $method['id']; ?>][value]"
+									   value="<?php echo $title ?: $core->__($method['description']); ?>"
+									   class="input-text disabled"
+								/>
+							</td>
+							<td class="use-default">
+								<input id="payment_mollie_apikey_inherit" name="groups[mollie_title][fields][<?php echo $method['id']; ?>][inherit]"
+									   type="checkbox" value="1"
+									   class="checkbox config-inherit"
+									   checked="checked"
+									   onclick="toggleValueElements(this, Element.previous(this.parentNode))">
+							</td>
 							<td><?php echo $core->__($method['description']); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->minimum, 2); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->maximum, 2); ?></td>
