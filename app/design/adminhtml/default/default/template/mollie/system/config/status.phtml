@@ -53,8 +53,8 @@ $countries = Mage::getModel('adminhtml/system_config_source_country')->toOptionA
 				</tr>
 				<?php
 				foreach($methods as $key => $method):
-					$allowSpecific = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'allowspecific');
-					$specificCountry = explode(',', Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'specificcountry'));
+					$allowSpecific = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'allowspecific', $storeId);
+					$specificCountry = explode(',', Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'specificcountry'), $storeId);
 
 					if ($method['available']):
 						?>
