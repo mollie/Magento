@@ -83,7 +83,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 			->method("getRestoreCart")
 			->will($this->returnValue(true));
 
-		$this->checkout_session_singleton   = $this->getMock("Mage_Core_Model_Session", array("getQuote", "getMollieQuoteId"));
+		$this->checkout_session_singleton   = $this->getMock("Mage_Checkout_Model_Session", array("getQuote", "getMollieQuoteId"));
 
 		$this->checkout_session_singleton->expects($this->any())
 			->method("getQuote")
