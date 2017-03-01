@@ -51,20 +51,22 @@ if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
 					<th style="width:150px;"><?php echo $core->__('Maximum Amount');?></th>
 				</tr>
 				<?php
-				foreach($methods as $method):
+				foreach($methods as $key => $method):
+					$title = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'title', $storeId);
+
 					if ($method['available']):
-						$title = Mage::helper('mpm/data')->getMethodTitle($method['id'], $storeId);
 						?>
 						<tr>
 							<td class="value">
 								<input type="text"
-									   name="groups[mollie_title][fields][<?php echo $method['id']; ?>][value]"
+									   name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][title][value]"
 									   value="<?php echo $title ?: $core->__($method['description']); ?>"
 									   class="input-text disabled"
 								/>
 							</td>
 							<td class="use-default">
-								<input id="payment_mollie_apikey_inherit" name="groups[mollie_title][fields][<?php echo $method['id']; ?>][inherit]"
+								<input id="payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_apikey_inherit"
+									   name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][title][inherit]"
 									   type="checkbox" value="1"
 									   class="checkbox config-inherit"
 									   checked="checked"
