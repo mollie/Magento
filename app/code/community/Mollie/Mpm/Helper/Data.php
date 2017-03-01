@@ -163,6 +163,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @param string $paymentmethod
 	 * @param string $key
+	 * @param int $storeId
 	 *
 	 * @return string
 	 */
