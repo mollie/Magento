@@ -44,12 +44,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @param int $storeId
 	 * @return string
 	 */
-
-	/**
-	 * @param $id
-	 * @param null $storeId
-	 * @return mixed
-	 */
 	public function getMethodTitle($id, $storeId = NULL)
 	{
 		return Mage::getStoreConfig("payment/mollie_title/{$id}", $storeId ?: $this->getCurrentStore());
