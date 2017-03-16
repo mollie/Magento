@@ -136,7 +136,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
 			if ($field === "sort_order")
 			{
-				return $this->_api->methods[$this->_index]['sort_order'];
+				$sortOrder = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($this->_index, 2, "0", STR_PAD_LEFT), $field, $storeId);
+
+				return $sortOrder ?: $this->_api->methods[$this->_index]['sort_order'];
 			}
 
 			if ($field === "title")
