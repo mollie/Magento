@@ -38,6 +38,18 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	public $should_update = 'maybe';
 
 	/**
+	 * Get the title for the given payment method
+	 *
+	 * @param string $id
+	 * @param int $storeId
+	 * @return string
+	 */
+	public function getMethodTitle($id, $storeId = NULL)
+	{
+		return Mage::getStoreConfig("payment/mollie_title/{$id}", $storeId ?: $this->getCurrentStore());
+	}
+
+	/**
 	 * Get payment bank status by order_id
 	 *
 	 * @return array
