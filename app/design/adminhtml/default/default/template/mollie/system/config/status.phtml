@@ -14,16 +14,6 @@ foreach ($methods as $method)
 		$method_count++;
 	}
 }
-
-if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
-	$storeId = Mage::getModel('core/store')->load($code)->getId();
-} elseif (strlen($code = Mage::getSingleton('adminhtml/config_data')->getWebsite())) {
-	$websiteId = Mage::getModel('core/website')->load($code)->getId();
-	$storeId = Mage::app()->getWebsite($websiteId)->getDefaultStore()->getId();
-} else {
-	$storeId = 0;
-}
-
 ?>
 	<tr><td>
 		<b><?php echo $core->__('Api Key'); ?></b><br />
@@ -47,24 +37,15 @@ if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
 					<th style="width:150px;"><?php echo $core->__('Description');?></th>
 					<th style="width:150px;"><?php echo $core->__('Minimum Amount');?></th>
 					<th style="width:150px;"><?php echo $core->__('Maximum Amount');?></th>
-					<th style="width:40px;"><?php echo $core->__('Sort Order');?></th>
 				</tr>
 				<?php
-				foreach($methods as $key => $method):
-					$sortOrder = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'sort_order', $storeId);
-
+				foreach($methods as $method):
 					if ($method['available']):
 						?>
 						<tr>
 							<td><?php echo $core->__($method['description']); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->minimum, 2); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->maximum, 2); ?></td>
-							<td>
-								<input id="payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_sort_order"
-									   name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][sort_order][value]"
-									   value="<?php echo $sortOrder; ?>"
-									   style="width:40px;" />
-							</td>
 						</tr>
 					<?php
 					endif;
