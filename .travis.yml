@@ -1,11 +1,23 @@
 language: php
+
 php:
-  - "7.0"
-  - "5.6"
-  - "5.5"
-  - "5.4"
-  - "5.3"
-before_script:
-  - composer install
+- 5.3
+- 5.4
+- 5.5
+- 5.6
+- 7.0
+- 7.1
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+install:
+- travis_retry composer install --no-interaction
+
 script:
-  - vendor/bin/phpunit -c tests/phpunit.xml
+- composer validate --strict
+- find app scripts tests -name *.php | xargs -n 1 -P4 php -l
+- vendor/bin/phpunit -c tests/phpunit.xml

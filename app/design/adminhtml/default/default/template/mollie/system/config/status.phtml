@@ -25,7 +25,6 @@ if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
 }
 
 $countries = Mage::getModel('adminhtml/system_config_source_country')->toOptionArray();
-
 ?>
 	<tr><td>
 		<b><?php echo $core->__('Api Key'); ?></b><br />
@@ -46,19 +45,39 @@ $countries = Mage::getModel('adminhtml/system_config_source_country')->toOptionA
 			?>
 			<table>
 				<tr>
+					<th><?php echo $core->__('Title');?></th>
+					<th style="width: 40px"></th>
 					<th style="width:150px;"><?php echo $core->__('Description');?></th>
 					<th style="width:150px;"><?php echo $core->__('Minimum Amount');?></th>
 					<th style="width:150px;"><?php echo $core->__('Maximum Amount');?></th>
 					<th><?php if($storeId == 0) : echo $core->__('Allowed countries'); endif;?></th>
+					<th style="width:40px;"><?php echo $core->__('Sort Order');?></th>
 				</tr>
 				<?php
 				foreach($methods as $key => $method):
 					$allowSpecific = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'allowspecific', $storeId);
 					$specificCountry = explode(',', Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'specificcountry'), $storeId);
+					$sortOrder = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'sort_order', $storeId);
+					$title = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'title', $storeId);
 
 					if ($method['available']):
 						?>
 						<tr>
+							<td class="value">
+								<input type="text"
+									   name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][title][value]"
+									   value="<?php echo $title ?: $core->__($method['description']); ?>"
+									   class="input-text disabled"
+								/>
+							</td>
+							<td class="use-default">
+								<input id="payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_apikey_inherit"
+									   name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][title][inherit]"
+									   type="checkbox" value="1"
+									   class="checkbox config-inherit"
+									   checked="checked"
+									   onclick="toggleValueElements(this, Element.previous(this.parentNode))">
+							</td>
 							<td><?php echo $core->__($method['description']); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->minimum, 2); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->maximum, 2); ?></td>
@@ -93,6 +112,12 @@ $countries = Mage::getModel('adminhtml/system_config_source_country')->toOptionA
 								<?php endforeach; ?>
 									</select>
 								<?php endif; ?>
+              </td>
+							<td>
+								<input id="payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_sort_order"
+									   name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][sort_order][value]"
+									   value="<?php echo $sortOrder; ?>"
+									   style="width:40px;" />
 							</td>
 						</tr>
 					<?php
