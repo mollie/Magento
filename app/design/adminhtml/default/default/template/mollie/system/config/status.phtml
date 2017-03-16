@@ -24,6 +24,7 @@ if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
 	$storeId = 0;
 }
 
+$countries = Mage::getModel('adminhtml/system_config_source_country')->toOptionArray();
 ?>
 	<tr><td>
 		<b><?php echo $core->__('Api Key'); ?></b><br />
@@ -49,10 +50,13 @@ if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
 					<th style="width:150px;"><?php echo $core->__('Description');?></th>
 					<th style="width:150px;"><?php echo $core->__('Minimum Amount');?></th>
 					<th style="width:150px;"><?php echo $core->__('Maximum Amount');?></th>
+					<th><?php if($storeId == 0) : echo $core->__('Allowed countries'); endif;?></th>
 					<th style="width:40px;"><?php echo $core->__('Sort Order');?></th>
 				</tr>
 				<?php
 				foreach($methods as $key => $method):
+					$allowSpecific = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'allowspecific', $storeId);
+					$specificCountry = explode(',', Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'specificcountry'), $storeId);
 					$sortOrder = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'sort_order', $storeId);
 					$title = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT), 'title', $storeId);
 
@@ -77,6 +81,38 @@ if (strlen($code = Mage::getSingleton('adminhtml/config_data')->getStore())) {
 							<td><?php echo $core->__($method['description']); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->minimum, 2); ?></td>
 							<td>&euro; <?php echo number_format($method['amount']->maximum, 2); ?></td>
+							<td class="value">
+								<?php if ($storeId == 0): ?>
+									<select id="payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_allowspecific"
+											name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][allowspecific][value]"
+											class=" select">
+										<option value="0" <?php if(!$allowSpecific): ?>selected="selected"<?php endif;?>><?php echo $core->__('All Allowed Countries');?></option>
+										<option value="1" <?php if($allowSpecific): ?>selected="selected"<?php endif;?>><?php echo $core->__('Specific Countries');?></option>
+									</select>
+									<script type="text/javascript">
+										Event.observe('payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_allowspecific', 'change', function(){
+											specific=$('payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_allowspecific').value;
+											$('payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_specificcountry').disabled = (!specific || specific!=1);
+											$('payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_specificcountry').toggle();
+										});
+									</script>
+									<br/><br/>
+									<select id="payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_specificcountry"
+											name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][specificcountry][value][]"
+											class=" select multiselect"
+											size="10"
+											<?php if(!$allowSpecific): ?>disabled="disabled"<?php endif; ?>
+											multiple="multiple"
+											<?php if(!$allowSpecific): ?>style="display: none;"<?php endif; ?>
+									<?php foreach($countries as $country): ?>
+									<?php $selected = (in_array($country['value'], $specificCountry) || $country['value'] == $specificCountry) ? true : false; ?>
+									<option value="<?php echo $country['value']; ?>" <?php if($allowSpecific && $selected): ?>selected="selected"<?php endif; ?>>
+										<?php echo $country['label']; ?>
+									</option>
+								<?php endforeach; ?>
+									</select>
+								<?php endif; ?>
+              </td>
 							<td>
 								<input id="payment_mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>_sort_order"
 									   name="groups[mpm_void_<?php echo str_pad($key, 2, "0", STR_PAD_LEFT); ?>][fields][sort_order][value]"
