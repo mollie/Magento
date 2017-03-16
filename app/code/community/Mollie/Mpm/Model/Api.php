@@ -136,7 +136,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
 			if ($field === "sort_order")
 			{
-				return $this->_api->methods[$this->_index]['sort_order'];
+				$sortOrder = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($this->_index, 2, "0", STR_PAD_LEFT), $field, $storeId);
+
+				return $sortOrder ?: $this->_api->methods[$this->_index]['sort_order'];
 			}
 
 			if ($field === "title")
@@ -173,7 +175,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		// If this is a void field to be filled, fill it
 		if ($this->isValidIndex())
 		{
-			return Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
+			$title = Mage::helper('mpm/data')->getConfig('mpm_void_' . str_pad($this->_index, 2, "0", STR_PAD_LEFT), 'title');
+
+			return $title ?: Mage::helper('core')->__($this->_api->methods[$this->_index]['description']);
 		}
 
 		// Otherwise, translate the title from config.xml

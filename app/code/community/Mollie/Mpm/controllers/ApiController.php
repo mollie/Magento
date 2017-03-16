@@ -195,6 +195,8 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				$payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH);
 				$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, $this->__(Mollie_Mpm_Model_Api::PAYMENT_FLAG_INPROGRESS), FALSE)->save();
 
+				Mage::getSingleton('core/session')->setRestoreCart(true);
+
 				$this->_redirectUrl($this->_api->getPaymentURL());
 			}
 			else
@@ -354,6 +356,14 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 	 */
 	public function returnAction ()
 	{
+		// Unset the restore cart session when returned properly (used for the cart restore when clicking the browser's back button during a payment).
+		if(Mage::getSingleton('core/session')->getRestoreCart()) {
+			Mage::getSingleton('core/session')->unsRestoreCart();
+		}
+
+		// Clear the cart just in case it has been restored by accident (e.g: user refreshes Magento in a seperate tab while still in payment screen).
+		$this->_clearCart();
+
 		// Get order_id and transaction_id from url (Ex: http://yourmagento.com/index.php/api/return?order_id=123 )
 		$orderId       = $this->getRequest()->getParam('order_id');
 		$transactionId = Mage::helper('mpm')->getTransactionIdByOrderId($orderId);
@@ -437,5 +447,23 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 				$session->setQuoteId($quoteId);
 			}
 		}
+	}
+
+	/**
+	 * Clear the cart
+	 */
+	protected function _clearCart ()
+	{
+		$session = $this->_getCheckout();
+
+		if (is_object($session) && $quoteId = $session->getMollieQuoteId())
+		{
+			$quote = Mage::getModel('sales/quote')->load($quoteId);
+
+			if ($quote->getId())
+			{
+				$quote->setIsActive(false)->save();
+			}
+    	}
 	}
 }

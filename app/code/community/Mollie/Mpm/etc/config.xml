@@ -96,6 +96,16 @@
                 <template>mollie/page/payment_fail.phtml</template>
             </api_payment_fail>
         </layouts>
+        <events>
+            <controller_action_predispatch>
+                <observers>
+                    <mollie_check_restore_cart_session>
+                        <class>mpm/observer</class>
+                        <method>checkRestoreCartSession</method>
+                    </mollie_check_restore_cart_session>
+                </observers>
+            </controller_action_predispatch>
+        </events>
     </global>
 
     <frontend>
