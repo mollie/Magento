@@ -407,7 +407,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		// fetch order and transaction info
 		$order = $payment->getOrder();
 		$row   = $this->_mysqlr->fetchRow(
-			'SELECT * FROM `' . $this->_table . '` WHERE `order_id` = ' . intval($order->entity_id),
+			'SELECT * FROM `' . $this->_table . '` WHERE `bank_status` = `paid` AND `order_id` = ' . intval($order->entity_id),
 			array(),
 			Zend_Db::FETCH_ASSOC
 		);
