@@ -39,6 +39,16 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 	 */
 	protected $payment_model;
 
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $core_session_singleton;
+
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $store;
+
 	const TRANSACTION_ID = "1bba1d8fdbd8103b46151634bdbe0a60";
 
 	const ORDER_ID = 16;
@@ -53,7 +63,7 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 	{
 		parent::setUp();
 
-		$this->data_helper  = $this->getMock("stdClass", array("getConfig"));
+		$this->data_helper = $this->getMock("stdClass", array("getConfig"));
 		$this->api_helper = $this->getMock("Mollie_Mpm_Helper_Api", array("createPayment", "getTransactionId", "getPaymentURL"), array(), "", FALSE);
 
 		/*
@@ -62,9 +72,9 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->any())
 			->method("Helper")
 			->will($this->returnValueMap(array(
-			array("mpm/data", $this->data_helper),
-			array("mpm/api", $this->api_helper),
-		)));
+				array("mpm/data", $this->data_helper),
+				array("mpm/api", $this->api_helper),
+			)));
 
 		$this->controller = $this->getMock("Mollie_Mpm_ApiController", array("getRequest", "_redirectUrl", "_showException", "_getCheckout"), array());
 
@@ -102,17 +112,33 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 			->method("getOrderCurrencyCode")
 			->will($this->returnValue('EUR'));
 
+		$this->core_session_singleton   = $this->getMock("Mage_Core_Model_Session", array("setData", "getData", "setRestoreCart", "getRestoreCart"));
+
+		$this->core_session_singleton->expects($this->any())
+			->method("getRestoreCart")
+			->will($this->returnValue(true));
+
 		/*
 		 * Mage::getModel() method
 		 */
 		$this->mage->expects($this->any())
 			->method("getModel")
 			->will($this->returnValueMap(array(
-			array("mpm/api", $this->api_model),
-			array("sales/order", $this->order_model),
-			array("sales/order_payment", $this->payment_model),
-		)));
+				array("mpm/api", $this->api_model),
+				array("sales/order", $this->order_model),
+				array("sales/order_payment", $this->payment_model),
+			)));
 
+		/*
+		 * Mage::getSingleton() method
+		 */
+		$this->mage->expects($this->any())
+			->method("getSingleton")
+			->will($this->returnValueMap(array(
+				array("core/session", $this->core_session_singleton),
+			)));
+
+		$this->store = $this->getMock("stdClass", array("getBaseCurrencyCode", "getCurrentCurrencyCode", "getCode", "getBaseUrl"));
 	}
 
 	protected function expectOrderIdInRequestPresent($present)
@@ -138,13 +164,25 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 		$this->data_helper->expects($this->atLeastOnce())
 			->method("getConfig")
 			->will($this->returnValueMap(array(
-			array("mollie", "description", "Bankafschrift order % deluxe"),
-		)));
+				array("mollie", "description", "Bankafschrift order % deluxe"),
+			)));
 	}
 
 	public function testPaymentSetupCorrectly()
 	{
 		$this->expectOrderIdInRequestPresent(TRUE);
+
+		$this->mage->expects($this->any())
+			->method("app")
+			->will($this->returnValue($this->mage));
+
+		$this->mage->expects($this->any())
+			->method("getStore")
+			->will($this->returnValue($this->store));
+
+		$this->store->expects($this->any())
+			->method("getCode")
+			->will($this->returnValue('code'));
 
 		$this->order_model->expects($this->exactly(2))
 			->method("setState")
@@ -198,6 +236,11 @@ class Mollie_Mpm_ApiControllerPaymentActionTest extends MagentoPlugin_TestCase
 		$this->api_helper->expects($this->atLeastOnce())
 			->method("getPaymentURL")
 			->will($this->returnValue(self::PAYMENT_URL));
+
+		$this->core_session_singleton->expects($this->once())
+			->method("setRestoreCart")
+			->with(TRUE);
+
 
 		$this->controller->expects($this->once())
 			->method("_redirectUrl")

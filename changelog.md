@@ -2,6 +2,20 @@
 
 # Changelog #
 
+## Changes in release 4.3.0 ##
++ Added payment method renaming, sort order and limiting availability to specific countries.
++ Added functionality which restores the cart for a user who cancels a payment on the Mollie payment screen or hits back.
++ Updated [Mollie API Client](https://github.com/mollie/mollie-api-php) to 1.9.2
+
+## Changes in release 4.2.5 ##
++ Added payment method [KBC/CBC](https://www.mollie.com/kbccbc)
++ Updated [Mollie API Client](https://github.com/mollie/mollie-api-php) to 1.7.1
+
+## Changes in release 4.2.4 ##
++ Fixed tests
++ Updated [Mollie API Client](https://github.com/mollie/mollie-api-php) to 1.7.0
++ Fix issue #44 - "Connection timeouts cause unhandled exceptions"
+
 ## Changes in release 4.2.3 ##
 + Using store url at webhook/redirecturl to truly enable multistore functions.
 + Added bank transfer due date (This will send a email to the customer when he/she uses bank transfer)

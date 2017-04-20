@@ -1,6 +1,7 @@
 ![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
-# Magento plugin voor [betalingen via Mollie](https://www.mollie.com/). #
+# Magento 1.x plugin voor [betalingen via Mollie](https://www.mollie.com/). #
+**Magento 2.x** users check out our [Mollie Magento 2 plugin](https://github.com/mollie/magento2).
 
 ## Installatie [![Build Status](https://travis-ci.org/mollie/Magento.png)](https://travis-ci.org/mollie/Magento) ##
 **Let op:** voor de installatie van deze module is FTP-toegang tot je webserver benodigd. Heb je hier geen ervaring mee? Laat de installatie van deze module dan over aan je websitebouwer of serverbeheerder.
@@ -23,6 +24,12 @@ Via [Mollie](https://www.mollie.com/) is iDEAL gemakkelijk aan te sluiten zonder
 
 ### Bancontact/Mister Cash ###
 [Bancontact/Mister Cash](https://www.mollie.com/mistercash/) maakt gebruik van een fysieke kaart die gekoppeld is aan tegoed op een Belgische bankrekening. Betalingen via Bancontact/Mister Cash zijn gegarandeerd en lijken daarmee sterk op iDEAL in Nederland. Daarom is het uitermate geschikt voor uw webwinkel.
+
+### Belfius Direct Net ###
+Als een van de grootste banken van België voorziet [Belfius](https://www.mollie.com/belfiusdirectnet) in een eigen betaaloplossing voor haar klanten. Betalingen zijn gegarandeerd en worden direct verwerkt.
+
+### KBC/CBC-Betaalknop ###
+De [KBC/CBC-Betaalknop](https://www.mollie.com/kbccbc) is een populaire betaalmethode in België. De knop wordt gebruikt door klanten van de grote Belgische banken KBC en CBC en maakt het ook mogelijk om achteraf te betalen of via QR-code. 
 
 ### SOFORT Banking ###
 [SOFORT Banking](https://www.mollie.com/sofort/) is een in Duitsland zeer populaire betaalmethode. Betalingen zijn direct en niet storneerbaar, waarmee het sterk op het Nederlandse iDEAL lijkt. Daarom is het uitermate geschikt voor uw webwinkel.
@@ -68,7 +75,7 @@ In dit bestand voegt u de volgende regels in met daarbij de bijhorende vertaling
 ````
 "iDEAL","iDEAL"
 "Creditcard","Creditcard"
-"Bancontact/Mister Cash","Bancontact/Mister Cash"
+"Bancontact","Bancontact"
 "SOFORT Banking","SOFORT Banking"
 "Bank transfer","Bank transfer"
 "Bitcoin","Bitcoin"
@@ -84,15 +91,4 @@ op via info@mollie.com.
 
 # Licentie #
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
-Copyright (c) 2011-2014, Mollie B.V.
-
-+ [Meer informatie over iDEAL via Mollie](https://www.mollie.com/ideal/)
-+ [Meer informatie over Creditcard via Mollie](https://www.mollie.com/creditcard/)
-+ [Meer informatie over Bancontact/Mister Cash via Mollie](https://www.mollie.com/mistercash/)
-+ [Meer informatie over Overboeking via Mollie](https://www.mollie.com/banktransfer/)
-+ [Meer informatie over Bitcoin via Mollie](https://www.mollie.com/bitcoin/)
-+ [Meer informatie over PayPal via Mollie](https://www.mollie.com/paypal/)
-+ [Meer informatie over paysafecard via Mollie](https://www.mollie.com/paysafecard/)
-+ [Meer informatie over SOFORT Banking via Mollie](https://www.mollie.com/sofort/)
-
-![Powered By Mollie](https://www.mollie.nl/images/badge-betaling-medium.png)
+Copyright (c) 2011-2017, Mollie B.V.

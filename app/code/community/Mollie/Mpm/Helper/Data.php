@@ -38,6 +38,18 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	public $should_update = 'maybe';
 
 	/**
+	 * Get the title for the given payment method
+	 *
+	 * @param string $id
+	 * @param int $storeId
+	 * @return string
+	 */
+	public function getMethodTitle($id, $storeId = NULL)
+	{
+		return Mage::getStoreConfig("payment/mollie_title/{$id}", $storeId ?: $this->getCurrentStore());
+	}
+
+	/**
 	 * Get payment bank status by order_id
 	 *
 	 * @return array
@@ -163,17 +175,20 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @param string $paymentmethod
 	 * @param string $key
+     * @param int $storeId
 	 *
 	 * @return string
 	 */
-	public function getConfig ($paymentmethod = NULL, $key = NULL)
+	public function getConfig ($paymentmethod = NULL, $key = NULL, $storeId = NULL)
 	{
 		$arr            = array('active', 'apikey', 'description', 'skip_invoice', 'skip_order_mails', 'skip_invoice_mails', 'show_images', 'show_bank_list', 'banktransfer_due_date_days');
 		$paymentmethods = array('mollie');
 
-		if(in_array($key, $arr) && in_array($paymentmethod, $paymentmethods))
-		{
-			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}", $this->getCurrentStore());
+		if(
+			in_array($key, $arr) && in_array($paymentmethod, $paymentmethods)
+			|| substr($paymentmethod, 0, 9) == 'mpm_void_'
+		) {
+			return Mage::getStoreConfig("payment/{$paymentmethod}/{$key}", $storeId ?: $this->getCurrentStore());
 		}
 
 		return NULL;
@@ -331,8 +346,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
 		return NULL;
 	}
-	
-	
+
 	public function getModuleVersion()
 	{
 		return Mage::getConfig()->getNode('modules')->children()->Mollie_Mpm->version;

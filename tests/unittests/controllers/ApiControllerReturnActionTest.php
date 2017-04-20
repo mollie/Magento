@@ -17,12 +17,12 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject
 	 */
-	protected $datahelper;
+	protected $data_helper;
 
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject
 	 */
-	protected $order;
+	protected $core_session_singleton;
 
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject
@@ -32,7 +32,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject
 	 */
-	protected $session;
+	protected $checkout_session_singleton;
 
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject
@@ -62,7 +62,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 			->method("getRequest")
 			->will($this->returnValue($this->request));
 
-		$this->datahelper  = $this->getMock("stdClass", array("getOrderIdByTransactionId", "getTransactionIdByOrderId", "getStatusById"));
+		$this->data_helper = $this->getMock("stdClass", array("getOrderIdByTransactionId", "getTransactionIdByOrderId", "getStatusById"));
 
 		/*
 		 * Mage::Helper() method
@@ -70,12 +70,24 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->any())
 			->method("Helper")
 			->will($this->returnValueMap(array(
-			array("mpm", $this->datahelper),
-		)));
+				array("mpm", $this->data_helper),
+			)));
 
-		$this->order = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save"));
+		$this->order_model = $this->getMock("Mage_Sales_Model_Order", array("getData", "setPayment", "getGrandTotal", "getAllItems", "setState", "sendNewOrderEmail", "setEmailSent", "cancel", "save", "load"));
 
-		$this->order_model   = $this->getMock("stdClass", array("load"));
+		$this->quote = $this->getMock("stdClass");
+
+		$this->core_session_singleton = $this->getMock("Mage_Core_Model_Session", array("unsRestoreCart", "getRestoreCart"));
+
+		$this->core_session_singleton->expects($this->any())
+			->method("getRestoreCart")
+			->will($this->returnValue(true));
+
+		$this->checkout_session_singleton   = $this->getMock("Mage_Checkout_Model_Session", array("getQuote", "getMollieQuoteId"));
+
+		$this->checkout_session_singleton->expects($this->any())
+			->method("getQuote")
+			->will($this->returnValue($this->quote));
 
 		/*
 		 * Mage::getModel() method
@@ -83,15 +95,8 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->any())
 			->method("getModel")
 			->will($this->returnValueMap(array(
-			array("sales/order", $this->order_model),
-		)));
-
-		$this->session = $this->getMock("stdClass", array("getQuote", "getMollieQuoteId"));
-		$this->quote = $this->getMock("stdClass");
-
-		$this->session->expects($this->any())
-			->method("getQuote")
-			->will($this->returnValue($this->quote));
+			    array("sales/order", $this->order_model),
+		    )));
 
 		/*
 		 * Mage::getSingleton() method
@@ -99,8 +104,19 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 		$this->mage->expects($this->any())
 			->method("getSingleton")
 			->will($this->returnValueMap(array(
-			array("checkout/session", $this->session),
-		)));
+				array("core/session", $this->core_session_singleton),
+				array("checkout/session", $this->checkout_session_singleton),
+			)));
+	}
+
+	protected function expectSessionSingleton()
+	{
+		$this->core_session_singleton->expects($this->once())
+			->method("getRestoreCart")
+			->will($this->returnValue(TRUE));
+
+		$this->core_session_singleton->expects($this->once())
+			->method("unsRestoreCart");
 	}
 
 	protected function expectOrderState($expected_state)
@@ -108,7 +124,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 		/*
 		 * Status must be checked with the order.
 		 */
-		$this->order->expects($this->once())
+		$this->order_model->expects($this->once())
 			->method("getData")
 			->with("status")
 			->will($this->returnValue($expected_state));
@@ -116,11 +132,11 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 
 	protected function expectsOrderModelCanBeloaded()
 	{
-		$this->datahelper->expects($this->any())
+		$this->data_helper->expects($this->any())
 			->method("getOrderIdByTransactionId")
 			->with(self::TRANSACTION_ID)
 			->will($this->returnValue(self::ORDER_ID));
-		$this->datahelper->expects($this->any())
+		$this->data_helper->expects($this->any())
 			->method("getTransactionIdByOrderId")
 			->with(self::ORDER_ID)
 			->will($this->returnValue(self::TRANSACTION_ID));
@@ -128,7 +144,7 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 
 	protected function expectOrderSaved()
 	{
-		$this->order->expects($this->once())
+		$this->order_model->expects($this->once())
 			->method("save");
 	}
 
@@ -137,23 +153,24 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 		/*
 		 * Put in the amounts
 		 */
-		$this->order->expects($this->atLeastOnce())
+		$this->order_model->expects($this->atLeastOnce())
 			->method("getGrandTotal")
 			->will($this->returnValue($string_amount)); // Is a string, for realsies.
 	}
 
 	public function testEverythingGoesGreat()
 	{
+		$this->expectSessionSingleton();
 
 		$this->expectsOrderModelCanBeloaded();
 
-		$this->datahelper->expects($this->once())
+		$this->data_helper->expects($this->once())
 			->method("getStatusById")
 			->with(self::TRANSACTION_ID)
 			->will($this->returnValue(array(
-			'bank_status' => Mollie_Mpm_Model_Api::STATUS_PAID,
-			'updated_at' => '2014-04-26',
-		)));
+				'bank_status' => Mollie_Mpm_Model_Api::STATUS_PAID,
+				'updated_at' => '2014-04-26',
+			)));
 
 		$this->quote->items_count = 0;
 
@@ -172,13 +189,13 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 	{
 		$this->expectsOrderModelCanBeloaded();
 
-		$this->datahelper->expects($this->once())
+		$this->data_helper->expects($this->once())
 			->method("getStatusById")
 			->with(self::TRANSACTION_ID)
 			->will($this->returnValue(array(
-						'bank_status' => Mollie_Mpm_Model_Api::STATUS_PENDING,
-						'updated_at' => '2014-04-26',
-					)));
+				'bank_status' => Mollie_Mpm_Model_Api::STATUS_PENDING,
+				'updated_at' => '2014-04-26',
+			)));
 
 		$this->quote->items_count = 0;
 
@@ -195,9 +212,11 @@ class Mollie_Mpm_ApiControllerReturnActionTest extends MagentoPlugin_TestCase
 
 	public function testPaymentCancelled()
 	{
+		$this->expectSessionSingleton();
+
 		$this->expectsOrderModelCanBeloaded();
 
-		$this->datahelper->expects($this->once())
+		$this->data_helper->expects($this->once())
 			->method("getStatusById")
 			->with(self::TRANSACTION_ID)
 			->will($this->returnValue(array(
