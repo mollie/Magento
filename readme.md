@@ -1,7 +1,7 @@
 ![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Magento 1.x plugin voor [betalingen via Mollie](https://www.mollie.com/). #
-**Let op! Wij ervaren problemen met Magento 1.9.3.x en adviseren nog niet te upgraden. Er zal zsm een update voor onze plugin worden uitgebracht.
+**Let op! Wij ervaren problemen met Magento 1.9.3.x en adviseren nog niet te upgraden. Er zal zsm een update voor onze plugin worden uitgebracht.**
 
 **Magento 2.x** users check out our [Mollie Magento 2 plugin](https://github.com/mollie/magento2).
 
