@@ -415,7 +415,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 		$transaction_id = $row['transaction_id'];
 
 		// fetch payment info
-		$mollie = $this->_api->_getMollieAPI();
+		$mollie = $this->_api->_getMollieAPI(trim(Mage::getStoreConfig("payment/mollie/apikey", $order->getStoreId())));
 		$mollie_payment = $mollie->payments->get($transaction_id);
 
 		// attempt a refund
