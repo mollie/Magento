@@ -86,9 +86,7 @@ In dit bestand voegt u de volgende regels in met daarbij de bijhorende vertaling
 **Ik heb een probleem met deze module.**
 
 Heeft u problemen met de installatie of bevat de module volgens u een bug? Stuurt u dan een email 
-naar magentosupport@mollie.com met een zo precies mogelijke omschrijving van het probleem. U wordt 
-dan direct geholpen door onze Magento-expert. Heeft u andere vragen? Neemt u dan contact met ons 
-op via info@mollie.com.
+naar techsupport@mollie.com met een zo precies mogelijke omschrijving van het probleem.
 
 # Licentie #
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
