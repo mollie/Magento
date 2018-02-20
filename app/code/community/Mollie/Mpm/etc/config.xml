@@ -1,51 +1,58 @@
 <?xml version="1.0"?>
-
 <!--
- *
- * Copyright (c) 2012-2014, Mollie B.V.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met: 
- * 
- * - Redistributions of source code must retain the above copyright notice, 
- *    this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY 
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY 
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
- * DAMAGE. 
- *
- * @category    Mollie
- * @package     Mollie_Payment_Module
- * @author      Mollie B.V. (info@mollie.nl)
- * @copyright   Copyright (c) 2012-2014 Mollie B.V. (http://www.mollie.nl)
- * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- * 
--->
-
+  ~ Copyright (c) 2012-2018, Mollie B.V.
+  ~ All rights reserved.
+  ~
+  ~ Redistribution and use in source and binary forms, with or without
+  ~ modification, are permitted provided that the following conditions are met:
+  ~
+  ~ - Redistributions of source code must retain the above copyright notice,
+  ~   this list of conditions and the following disclaimer.
+  ~ - Redistributions in binary form must reproduce the above copyright notice,
+  ~   this list of conditions and the following disclaimer in the documentation
+  ~   and/or other materials provided with the distribution.
+  ~
+  ~ THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
+  ~ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  ~ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  ~ DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
+  ~ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  ~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  ~ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  ~ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+  ~ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+  ~ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+  ~ DAMAGE.
+  ~
+  ~ @category    Mollie
+  ~ @package     Mollie_Mpm
+  ~ @author      Mollie B.V. (info@mollie.nl)
+  ~ @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+  ~ @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
+  -->
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>4.3.0</version>
+            <version>4.4.0</version>
         </Mollie_Mpm>
     </modules>
-
     <global>
         <models>
             <mpm>
                 <class>Mollie_Mpm_Model</class>
+                <resourceModel>mpm_mysql4</resourceModel>
             </mpm>
+            <mpm_mysql4>
+                <class>Mollie_Mpm_Model_Mysql4</class>
+                <entities>
+                    <methods>
+                        <table>mollie_methods</table>
+                    </methods>
+                    <payments>
+                        <table>mollie_payments</table>
+                    </payments>
+                </entities>
+            </mpm_mysql4>
         </models>
         <blocks>
             <mpm>
@@ -86,28 +93,7 @@
                 </connection>
             </mpm_read>
         </resources>
-        <layouts>
-            <mollie_exception>
-                <label>Mollie Exception</label>
-                <template>mollie/page/exception.phtml</template>
-            </mollie_exception>
-            <api_payment_fail>
-                <label>Payment Failed</label>
-                <template>mollie/page/payment_fail.phtml</template>
-            </api_payment_fail>
-        </layouts>
-        <events>
-            <controller_action_predispatch>
-                <observers>
-                    <mollie_check_restore_cart_session>
-                        <class>mpm/observer</class>
-                        <method>checkRestoreCartSession</method>
-                    </mollie_check_restore_cart_session>
-                </observers>
-            </controller_action_predispatch>
-        </events>
     </global>
-
     <frontend>
         <routers>
             <mpm>
@@ -130,12 +116,22 @@
         <layout>
             <updates>
                 <mpm>
-                    <file>mpm.xml</file>
+                    <file>mollie_mpm.xml</file>
                 </mpm>
             </updates>
         </layout>
     </frontend>
-
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <mollie after="Mage_Adminhtml">Mollie_Mpm</mollie>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <adminhtml>
         <translate>
             <modules>
@@ -146,40 +142,32 @@
                 </Mollie_Mpm>
             </modules>
         </translate>
-        <acl>
-            <resources>
-                <all>
-                    <title>Allow Everything</title>
-                </all>
-                <admin>
-                    <children>
-                        <system>
-                            <children>
-                                <config>
-                                    <children>
-                                        <mollie>
-                                            <title>Mollie Betaalmethodes</title>
-                                        </mollie>
-                                    </children>
-                                </config>
-                            </children>
-                        </system>
-                    </children>
-                </admin>
-            </resources>
-        </acl>
         <layout>
             <updates>
                 <mpm>
-                    <file>mpm.xml</file>
+                    <file>mollie_mpm.xml</file>
                 </mpm>
             </updates>
         </layout>
     </adminhtml>
-
     <default>
         <payment>
-
+            <mollie>
+                <active>0</active>
+                <description>Order %</description>
+                <show_images>0</show_images>
+                <show_bank_list>1</show_bank_list>
+                <show_giftcard_list>1</show_giftcard_list>
+                <banktransfer_due_date_days>10</banktransfer_due_date_days>
+                <loading_screen>1</loading_screen>
+                <import_payment_info>1</import_payment_info>
+                <order_status_pending>pending</order_status_pending>
+                <order_status_processing>processing</order_status_processing>
+                <skip_invoice>0</skip_invoice>
+                <skip_order_mails>0</skip_order_mails>
+                <skip_invoice_mails>0</skip_invoice_mails>
+                <debug>1</debug>
+            </mollie>
             <mpm_void_00 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -187,7 +175,6 @@
                 <model>mpm/void00</model>
                 <currency>EUR</currency>
             </mpm_void_00>
-
             <mpm_void_01 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -195,7 +182,6 @@
                 <model>mpm/void01</model>
                 <currency>EUR</currency>
             </mpm_void_01>
-
             <mpm_void_02 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -203,7 +189,6 @@
                 <model>mpm/void02</model>
                 <currency>EUR</currency>
             </mpm_void_02>
-
             <mpm_void_03 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -211,7 +196,6 @@
                 <model>mpm/void03</model>
                 <currency>EUR</currency>
             </mpm_void_03>
-
             <mpm_void_04 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -219,7 +203,6 @@
                 <model>mpm/void04</model>
                 <currency>EUR</currency>
             </mpm_void_04>
-
             <mpm_void_05 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -227,7 +210,6 @@
                 <model>mpm/void05</model>
                 <currency>EUR</currency>
             </mpm_void_05>
-
             <mpm_void_06 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -235,7 +217,6 @@
                 <model>mpm/void06</model>
                 <currency>EUR</currency>
             </mpm_void_06>
-
             <mpm_void_07 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -243,7 +224,6 @@
                 <model>mpm/void07</model>
                 <currency>EUR</currency>
             </mpm_void_07>
-
             <mpm_void_08 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -251,7 +231,6 @@
                 <model>mpm/void08</model>
                 <currency>EUR</currency>
             </mpm_void_08>
-
             <mpm_void_09 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -259,7 +238,6 @@
                 <model>mpm/void09</model>
                 <currency>EUR</currency>
             </mpm_void_09>
-
             <mpm_void_10 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -267,7 +245,6 @@
                 <model>mpm/void10</model>
                 <currency>EUR</currency>
             </mpm_void_10>
-
             <mpm_void_11 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -275,7 +252,6 @@
                 <model>mpm/void11</model>
                 <currency>EUR</currency>
             </mpm_void_11>
-
             <mpm_void_12 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -283,7 +259,6 @@
                 <model>mpm/void12</model>
                 <currency>EUR</currency>
             </mpm_void_12>
-
             <mpm_void_13 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -291,7 +266,6 @@
                 <model>mpm/void13</model>
                 <currency>EUR</currency>
             </mpm_void_13>
-
             <mpm_void_14 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -299,7 +273,6 @@
                 <model>mpm/void14</model>
                 <currency>EUR</currency>
             </mpm_void_14>
-
             <mpm_void_15 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
                 <active>1</active>
@@ -307,7 +280,6 @@
                 <model>mpm/void15</model>
                 <currency>EUR</currency>
             </mpm_void_15>
-
         </payment>
     </default>
 </config>

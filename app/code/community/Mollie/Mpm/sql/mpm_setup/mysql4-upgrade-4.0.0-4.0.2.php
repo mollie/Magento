@@ -1,17 +1,16 @@
 <?php
-
 /**
- * Copyright (c) 2012-2014, Mollie B.V.
+ * Copyright (c) 2012-2018, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * - Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ *   this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -28,39 +27,24 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
- * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- *
- **/
-
-$installer = $this;
-$table = $installer->getTable('mollie_methods');
-/*
- * Tabel Betaalmethodes
+ * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
+
+/** @var $installer Mage_Catalog_Model_Resource_Setup */
+$installer = $this;
+$installer->startSetup();
+
 $installer->run(
-	sprintf("
-		CREATE TABLE IF NOT EXISTS `%s` (
+    sprintf(
+        "CREATE TABLE IF NOT EXISTS `%s` (
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `method_id` varchar(32) NOT NULL DEFAULT '',
 		  `description` varchar(32) NOT NULL DEFAULT '',
 		  PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-		$table
-	)
+        $installer->getTable('mollie_methods')
+    )
 );
-if (!$installer->tableExists($table))
-{
-	echo("
-		<div style='background:white;border:3px solid red;padding:10px;'><b style='color:red;'>Insufficient SQL rights to create the $table table! Please make sure you have sufficient access rights to install modules and/or run this query manually:</b><br /><pre>" .
-		sprintf("
-			CREATE TABLE IF NOT EXISTS `%s` (
-			  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-			  `method_id` varchar(32) NOT NULL DEFAULT '',
-			  `description` varchar(32) NOT NULL DEFAULT '',
-			  PRIMARY KEY (`id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-			$table
-		) .
-		"</pre><br/>(If you do not know how to run SQL queries, please contact your hosting provider)</div>");
-}
+
+$installer->endSetup();

@@ -90,4 +90,4 @@ naar techsupport@mollie.com met een zo precies mogelijke omschrijving van het pr
 
 # Licentie #
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
-Copyright (c) 2011-2017, Mollie B.V.
+Copyright (c) 2011-2018, Mollie B.V.

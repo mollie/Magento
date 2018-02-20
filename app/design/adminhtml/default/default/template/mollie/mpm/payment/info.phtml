@@ -1,0 +1,75 @@
+<?php
+/**
+ * Copyright (c) 2012-2018, Mollie B.V.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
+ *
+ * @category    Mollie
+ * @package     Mollie_Mpm
+ * @author      Mollie B.V. (info@mollie.nl)
+ * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
+ */
+?>
+<?php
+if ($img = $this->getMethod()->getImage()) {
+    echo '<img src="' . $img . '" border="0" style="max-width: 20px;margin-right: 10px;float: left;margin-top: 0px;" />';
+}
+
+echo $this->htmlEscape($this->getMethod()->getTitle()) . '<br/>';
+
+$transaction = null;
+if ($this->getInfo()->getOrder() != null) {
+    if ($transactionId = $this->getInfo()->getOrder()->getPayment()->getLastTransId()) {
+        $transaction = Mage::getModel('mpm/payments')->loadByTransactionId($transactionId);
+    }
+}
+
+if ($transaction != null) {
+    echo '<hr noshade="" style="border: 1px solid #6f8892;margin-top: 5px;margin-bottom: 5px;">';
+    if ($statsus = $transaction->getBankStatus()) {
+        echo Mage::helper('mpm')->__('Status: %s', $this->htmlEscape(ucfirst($statsus))) . '<br/>';
+    }
+    if ($issuer = $transaction->getIssuer()) {
+        if ($bank = Mage::helper('mpm/data')->getBankByIssuer($issuer)) {
+            $issuer = $bank;
+        } else {
+            $issuer = ucfirst($issuer);
+        }
+        echo Mage::helper('mpm')->__('Issuer: %s', $this->htmlEscape($issuer)) . '<br/>';
+    }
+    if ($name = $transaction->getConsumerName()) {
+        echo Mage::helper('mpm')->__('Transaction Name: %s', $this->htmlEscape($name)) . '<br/>';
+    }
+    if ($account = $transaction->getBankAccount()) {
+        if (strpos($account, '@') !== false) {
+            echo Mage::helper('mpm')->__('Payment Email: %s', $this->htmlEscape($account)) . '<br/>';
+        } else {
+            echo Mage::helper('mpm')->__('IBAN: %s', $this->htmlEscape($account));
+            if ($bic = $transaction->getConsumerBic()) {
+                echo Mage::helper('mpm')->__(' - BIC: %s', $this->htmlEscape($bic));
+            }
+            echo '<br/>';
+        }
+    }
+}	

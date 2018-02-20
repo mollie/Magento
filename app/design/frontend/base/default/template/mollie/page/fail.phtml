@@ -1,9 +1,0 @@
-<div class="page-title">
-	<h1><?php echo $this->escapeHtml($this->getErrorTitle());?></h1>
-</div>
-
-<p><?php echo $this->escapeHtml(sprintf($this->getErrorMessage(), number_format($this->getOrder()->getGrandTotal(),2))) ?></p>
-
-<div class="buttons-set">
-	<p><?php echo $this->__('Click <a href="%s">here</a> to continue shopping.', Mage::getBaseUrl()) ?></p>
-</div>

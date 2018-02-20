@@ -1,0 +1,151 @@
+/**
+ * Copyright (c) 2012-2018, Mollie B.V.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
+ *
+ * @category    Mollie
+ * @package     Mollie_Mpm
+ * @author      Mollie B.V. (info@mollie.nl)
+ * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
+ **/
+
+.mollie-header {
+    background: url('images/logo.png') 30px 23px no-repeat;
+    background-size: 140px;
+    padding: 20px 10px 20px 20px;
+    background-color: white;
+    border: 1px solid #DFDFDF;
+}
+
+.mollie-header p {
+    margin-left: 175px;
+}
+
+.mollie-header td a {
+    margin-left: 15px;
+}
+
+.mollie-header table {
+    margin-top: 10px;
+    margin-left: 160px;
+}
+
+.mollie-success {
+    display: block;
+    border: 2px solid #79A22E;
+    background-color: white;
+    padding: 2px;
+}
+
+.mollie-success:before {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    padding: 10px;
+    color: #79A22E;
+    content: '✓';
+}
+
+.mollie-error {
+    display: block;
+    background-color: white;
+    border: 2px solid #EB5202;
+    padding: 2px;
+}
+
+.mollie-error:before {
+    color: #EB5202;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    padding: 10px;
+    content: '✕';
+}
+
+.mollietable {
+    margin: 10px;
+}
+
+.mollietable tr {
+    margin: 30px;
+}
+
+.mollietable td {
+    padding: 10px 15px 10px 5px;
+}
+
+.mollietable tr:nth-child(even) {
+    background: #F5F5F5;
+}
+
+.mollietable tr:nth-child(odd) {
+    background: #FFF;
+}
+
+.mollietable tbody {
+    border: 2px solid #E8E8E8;
+    display: block;
+}
+
+.mollietable td.value select {
+    margin: 5px;
+}
+
+.mollietable td input.input-text {
+    margin: 5px;
+}
+
+.mollietable .title {
+    width: auto;
+    padding: 10px 15px 10px 10px;
+}
+
+.mollietable .checkbox {
+    margin: 10px 5px 5px 10px
+}
+
+.mollietable .description {
+    width: auto;
+    padding: 10px 15px 10px 5px;
+}
+
+.mollietable .minimum {
+    width: auto;
+    padding: 10px 15px 10px 5px;
+}
+
+.mollietable .maximum {
+    width: auto;
+    padding: 10px 15px 10px 5px;
+}
+
+.mollietable .countries {
+    width: auto;
+    padding: 10px 15px 10px 10px;
+}
+
+.mollietable .sort {
+    width: auto;
+    padding: 10px 15px 10px 5px;
+}

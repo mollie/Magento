@@ -1,17 +1,16 @@
 <?php
-
 /**
- * Copyright (c) 2012-2014, Mollie B.V.
+ * Copyright (c) 2012-2018, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * - Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ *   this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -28,20 +27,23 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @copyright   Copyright (c) 2012-2014 Mollie B.V. (https://www.mollie.nl)
- * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
- *
- **/
+ * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
+ */
 
+/** @var $installer Mage_Catalog_Model_Resource_Setup */
 $installer = $this;
-
-$table_mollie_payments = $installer->getTable('mollie_payments');
+$installer->startSetup();
 
 $installer->run(
-	"ALTER TABLE $table_mollie_payments
-	ADD COLUMN `created_at` datetime NOT NULL AFTER `bank_status`,
-	ADD COLUMN `updated_at` datetime DEFAULT NULL AFTER `created_at`,
-	ADD UNIQUE KEY `transaction_id` (`transaction_id`),
-	ADD KEY `order_id` (`order_id`) ;"
+    sprintf(
+        "ALTER TABLE `%s`
+          ADD COLUMN `created_at` datetime NOT NULL AFTER `bank_status`,
+	      ADD COLUMN `updated_at` datetime DEFAULT NULL AFTER `created_at`,
+	      ADD UNIQUE KEY `transaction_id` (`transaction_id`),
+	      ADD KEY `order_id` (`order_id`);",
+        $installer->getTable('mollie_payments')
+    )
 );
 
+$installer->endSetup();
