@@ -19,3 +19,4 @@ app/design/adminhtml/default/default/template/mollie/mpm/system/config/apitest_r
 skin/frontend/base/default/mollie/mpm/style.css            skin/frontend/base/default/mollie/mpm/style.css
 skin/adminhtml/default/default/mollie/mpm/images/logo.png            skin/adminhtml/default/default/mollie/mpm/images/logo.png
 skin/adminhtml/default/default/mollie/mpm/style.css            skin/adminhtml/default/default/mollie/mpm/style.css
+lib/Mollie            lib/Mollie
