@@ -356,7 +356,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
                 $payment->setTransactionId($transactionId)->setIsTransactionClosed(true);
                 $order->setPayment($payment);
 
-                if ($paymentData->amount == $order->getGrandTotal()) {
+                if (abs($paymentData->amount - $order->getGrandTotal()) < 0.01) {
                     $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
                     $order->save();
                 }
