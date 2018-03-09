@@ -517,36 +517,35 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
      */
     public function refund(Varien_Object $payment, $amount)
     {
-        $order = $payment->getOrder();
         /** @var $order Mage_Sales_Model_Order */
+        $order = $payment->getOrder();
 
         $orderId = $order->getId();
         $storeId = $order->getStoreId();
-
         $transactionId = $this->molliePaymentsModel->getTransactionIdByOrderId($orderId);
         if (empty($transactionId)) {
             $msg = array('error' => true, 'msg' => 'Transaction not found');
             $this->mollieHelper->addLog('refund [ERR]', $msg);
             return $this;
         }
-
         $apiKey = $this->mollieHelper->getApiKey($storeId);
         if (empty($apiKey)) {
             $msg = array('error' => true, 'msg' => 'Api key not found');
             $this->mollieHelper->addLog('refund [ERR]', $msg);
             return $this;
         }
-
         $api = $this->mollieHelper->getMollieAPI();
-        $payment = $api->payments->get($transactionId);
-
         try {
-            $api->payments->refund($payment, $amount);
+            $payment = $api->payments->get($transactionId);
+            $msg = $this->mollieHelper->__(
+                'Creditmemo for order %s',
+                $order->getIncrementId()
+            );
+            $api->payments->refund($payment, array('amount' => $amount, 'description' => $msg));
         } catch (Exception $e) {
             $this->mollieHelper->addLog('refund [ERR]', $e->getMessage());
             Mage::throwException('Impossible to create a refund for this transaction. Details: ' . $e->getMessage() . '<br />');
         }
-
         return $this;
     }
 }
