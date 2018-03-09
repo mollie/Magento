@@ -1,93 +1,62 @@
 ![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
-# Magento 1.x plugin voor [betalingen via Mollie](https://www.mollie.com/). #
+# Official Magento 1.x plugin for [Mollie Payments](https://www.mollie.com/). #
 
 **Magento 2.x** users check out our [Mollie Magento 2 plugin](https://github.com/mollie/magento2).
 
-## Installatie [![Build Status](https://travis-ci.org/mollie/Magento.png)](https://travis-ci.org/mollie/Magento) ##
-**Let op:** voor de installatie van deze module is FTP-toegang tot je webserver benodigd. Heb je hier geen ervaring mee? Laat de installatie van deze module dan over aan je websitebouwer of serverbeheerder.
+***
 
-* Download de laatste versie van de module via de [Releases-pagina](https://github.com/mollie/Magento/releases).
-* Kopieer alles in de mappen `app` en `lib` naar de mappen `app` en `lib` van uw Magento installatie.
-* Ga in het menu naar _Systeem_ en selecteer _Beheer Cache_ vervolgens klikt u op het knopje _Verwijder Magento cache_.
-* Klik dan in het menu onder _Systeem_ op _Configuratie_ aan de linkerkant klikt u op _Betaalmethodes_.
-* Klik op het Mollie logo om de betaalmethodes in te stellen.
-* Mocht u een 404 (pagina niet gevonden) melding zien, log dan uit en weer in.
-* Vul uw _API-key_ in en sla de gegevens vervolgens op.
+## Installation & Update the Mollie Payments plugin ##
 
-# Ondersteunde betaalmethodes #
-### iDEAL ###
-Met iDEAL kunt u vertrouwd, veilig en gemakkelijk uw online aankopen afrekenen. iDEAL is het systeem dat u direct koppelt aan uw internetbankierprogramma bij een online aankoop.
-Via [Mollie](https://www.mollie.com/) is iDEAL gemakkelijk aan te sluiten zonder de gebruikelijke technische en administratieve rompslomp. Mollie geeft u op ieder moment toegang tot uw transactieoverzichten en andere statistieken. Tevens is het mogelijk per e-mail of SMS een notificatie te ontvangen bij elke gelukte betaling. [Mollie](https://www.mollie.nl/) is hierdoor dus een perfecte partner op het gebied van iDEAL en is het dan ook niet verbazingwekkend dat [Mollie](https://www.mollie.nl/) ondertussen op meer dan 20.000 websites iDEAL-betalingen mag verzorgen.
+[1. Installation through Magento Connect](https://github.com/magmodules/Wiki/wiki/Install-through-Magento-Connect)
 
-### Creditcard ###
-[Creditcard](https://www.mollie.com/creditcard/) is vrijwel de bekendste methode voor het ontvangen van betalingen met wereldwijde dekking. Doordat we onder andere de bekende merken Mastercard en Visa ondersteunen, zorgt dit direct voor veel potentiële kopers.
+[2. Installation by FTP](https://github.com/magmodules/Wiki/wiki/Install-the-Mollie-Payment-extension)
 
-### Bancontact/Mister Cash ###
-[Bancontact/Mister Cash](https://www.mollie.com/mistercash/) maakt gebruik van een fysieke kaart die gekoppeld is aan tegoed op een Belgische bankrekening. Betalingen via Bancontact/Mister Cash zijn gegarandeerd en lijken daarmee sterk op iDEAL in Nederland. Daarom is het uitermate geschikt voor uw webwinkel.
+[3. Update by FTP](https://github.com/magmodules/Wiki/wiki/Update-the-Mollie-Payment-extension)
 
-### Belfius Direct Net ###
-Als een van de grootste banken van België voorziet [Belfius](https://www.mollie.com/belfiusdirectnet) in een eigen betaaloplossing voor haar klanten. Betalingen zijn gegarandeerd en worden direct verwerkt.
+[- Configuration and Troubleshooting](https://github.com/magmodules/Wiki/wiki/)
 
-### KBC/CBC-Betaalknop ###
-De [KBC/CBC-Betaalknop](https://www.mollie.com/kbccbc) is een populaire betaalmethode in België. De knop wordt gebruikt door klanten van de grote Belgische banken KBC en CBC en maakt het ook mogelijk om achteraf te betalen of via QR-code. 
 
-### SOFORT Banking ###
-[SOFORT Banking](https://www.mollie.com/sofort/) is een in Duitsland zeer populaire betaalmethode. Betalingen zijn direct en niet storneerbaar, waarmee het sterk op het Nederlandse iDEAL lijkt. Daarom is het uitermate geschikt voor uw webwinkel.
+## About Mollie Payments ##
+With Mollie, you can accept payments and donations online and expand your customer base internationally with support for all major payment methods through a single integration. No need to spend weeks on paperwork or security compliance procedures. No more lost conversions because you don’t support a shopper’s favourite payment method or because they don’t feel safe. We made our products and API expansive, intuitive, and safe for merchants, customers and developers alike. 
 
-### Overboekingen ###
-[Overboekingen](https://www.mollie.com/banktransfer/) binnen de SEPA zone ontvangen via Mollie. Hiermee kun je betalingen ontvangen van zowel particulieren als zakelijke klanten in meer dan 35 Europese landen.
+Mollie requires no minimum costs, no fixed contracts, no hidden costs. At Mollie you only pay for successful transactions. More about this pricing model can be found [here](https://www.mollie.com/en/pricing/). You can create an account [here](https://www.mollie.com/dashboard/signup). The Mollie Magento 1 plugin quickly integrates all major payment methods ready-made into your Magento webshop.
+   
 
-### PayPal ###
-[PayPal](https://www.mollie.com/paypal/) is wereldwijd een zeer populaire betaalmethode. In enkele klikken kunt u betalingen ontvangen via een bankoverschrijving, creditcard of het PayPal-saldo.
+## Supported Mollie Payment Methods ##
+- iDEAL
 
-### Bitcoin ###
-[Bitcoin](https://www.mollie.com/bitcoin/) is een vorm van elektronisch geld. De bitcoin-euro wisselkoers wordt vastgesteld op het moment van de transactie waardoor het bedrag en de uitbetaling zijn gegarandeerd.
+- Creditcard
 
-### paysafecard ###
-[paysafecard](https://www.mollie.com/paysafecard/) is de populairste prepaidcard voor online betalingen die veel door ouders voor hun kinderen wordt gekocht.
+- CartaSi & Cartes Bancaires
 
-# Veel gestelde vragen #
+- Bancontact
 
-**Ik heb meerdere _Store Views_, maar ik wil per _Store View_ andere instellingen**
+- Belfius Pay Button
 
-Dat is mogelijk. Ga naar de instellingenpagina van de plugin, en kies linksboven in bij ’Current Configuration Scope’ de _store view_ waarvoor u andere instellingen wilt gebruiken.
+- ING HomePay
 
-Maak de instelling die u wilt en schakel het _Use Website_ vakje uit. U kunt per _Store View_ bijvoorbeeld een andere API-key gebruiken.
+- KBC/CBC-Betaalknop
 
-**Ik heb alles ingesteld, maar de module verschijnt niet bij het afrekenen.**
+- SOFORT Banking
 
-Controleert u alstublieft of de module ingeschakeld is, én of uw bestelling in Euro's. Via Mollie kunnen alleen orders in Euro's afgerekend worden. De standaardinstelling van Magento is USD ($). U kunt dit aanpassen via de admin.
+- BankTransfer
 
-**Moet ik ook een return- en / of webhook-URL instellen?**
+- PayPal
 
-Het is niet nodig een return- en / of webhook-URL in te stellen, de module stelt dit automatisch in.
+- Bitcoin
 
-**De module is niet zichtbaar in de admin van Magento**
+- Paysafecard
 
-Verwijdert u eerst alle caches van Magento via het knopje _Verwijder Magento cache_ op _Systeem_, _Beheer cache_. Wanneer u vervolgens opnieuw inlogt ziet u bij _Systeem_, _Configuratie_, _Betaalmethoden_ een tab _Mollie Betalingen_.
+- SEPA bank transfer
 
-**Ik wil dat de betaalmethodes anders heten op mijn website**
+- Giftcards 
 
-Maak een translate.csv bestand aan in de map van de huidige template(s) bijvoorbeeld `/app/design/frontend/default/<template_naam>/locale/nl_NL/translate.csv`
+## Configuration, FAQ and Troubleshooting  ##
+If you experience problems with the extension installation, setup or whenever you need more information about how to setup the Mollie Payment extension in Magento 1.x, please see our [WIKI Page](https://github.com/mollie/Magento/wiki) or sent an e-mail to [info@mollie.com](mailto:info@mollie.com) with an exact description of the problem.
 
-In dit bestand voegt u de volgende regels in met daarbij de bijhorende vertaling. Het deel na de komma is de vertaling.
 
-````
-"iDEAL","iDEAL"
-"Creditcard","Creditcard"
-"Bancontact","Bancontact"
-"SOFORT Banking","SOFORT Banking"
-"Bank transfer","Bank transfer"
-"Bitcoin","Bitcoin"
-"PayPal","PayPal"
-````
-
-**Ik heb een probleem met deze module.**
-
-Heeft u problemen met de installatie of bevat de module volgens u een bug? Stuurt u dan een email 
-naar techsupport@mollie.com met een zo precies mogelijke omschrijving van het probleem.
-
-# Licentie #
+## License ##
 [BSD (Berkeley Software Distribution) License](http://www.opensource.org/licenses/bsd-license.php).
 Copyright (c) 2011-2018, Mollie B.V.
+
