@@ -1,16 +1,19 @@
 {
-   "name": "mollie/magento",
-    "license": "BSD-2-Clause",
-    "type": "magento-module",
-    "description":"iDEAL, Creditcard, Bancontact/Mister Cash, SOFORT, Bank transfer, Bitcoin, PayPal & paysafecard for Magento https://www.mollie.com/",
-    "require": {
-      "php": ">=5.3",
-      "mollie/mollie-api-php": "^1.7"
-    },
-    "authors":[
-        {
-            "name":"Mollie", 
-            "email":"info@mollie.nl"
-        }
-    ]
+  "name": "mollie/magento",
+  "license": "BSD-2-Clause",
+  "type": "magento-module",
+  "description": "iDEAL, Creditcard, Bancontact/Mister Cash, SOFORT, Bank transfer, Bitcoin, PayPal & paysafecard for Magento https://www.mollie.com/",
+  "require": {
+    "php": ">=5.3",
+    "mollie/mollie-api-php": "^1.7"
+  },
+  "authors": [
+    {
+      "name": "Mollie",
+      "email": "info@mollie.nl"
+    }
+  ],
+  "require-dev": {
+    "phpcq/travis-configuration-check": "^1.1"
+  }
 }
