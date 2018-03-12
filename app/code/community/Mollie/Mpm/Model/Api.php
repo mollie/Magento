@@ -392,7 +392,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
         } elseif ($paymentData->isOpen() == true) {
             if ($paymentData->method == 'banktransfer' && !$order->getEmailSent()) {
                 $order->sendNewOrderEmail()->setEmailSent(true)->save();
-                $status = $this->mollieHelper->getStatusProcessing($storeId);
+                $status = $this->mollieHelper->getStatusPending($storeId);
                 $state = Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
                 $message = $this->mollieHelper->__('New order email sent');
                 $order->setState($state, $status, $message, false)->save();
