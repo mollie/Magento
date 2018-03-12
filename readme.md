@@ -8,13 +8,13 @@
 
 ## Installation & Update the Mollie Payments plugin ##
 
-[1. Installation through Magento Connect](https://github.com/magmodules/Wiki/wiki/Install-through-Magento-Connect)
+[1. Installation through Magento Connect](https://github.com/mollie/Magento/wiki/Install-through-Magento-Connect)
 
-[2. Installation by FTP](https://github.com/magmodules/Wiki/wiki/Install-the-Mollie-Payment-extension)
+[2. Installation by FTP](https://github.com/mollie/Magento/wiki/Install-the-Mollie-Payment-extension)
 
-[3. Update by FTP](https://github.com/magmodules/Wiki/wiki/Update-the-Mollie-Payment-extension)
+[3. Update by FTP](https://github.com/mollie/Magento/wiki/Update-the-Mollie-Payment-extension)
 
-[- Configuration and Troubleshooting](https://github.com/magmodules/Wiki/wiki/)
+[- Configuration and Troubleshooting](https://github.com/mollie/Magento/wiki/)
 
 
 ## About Mollie Payments ##
