@@ -402,8 +402,10 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
         } elseif ($paymentData->isPending() == true) {
             $msg = array('success' => true, 'status' => 'pending', 'order_id' => $orderId, 'type' => $type);
             $this->mollieHelper->addLog('processTransaction [SUCC]', $msg);
-        } elseif (!$paymentData->isOpen() && $type == 'webhook') {
-            $this->cancelOrder($order, $paymentData->status);
+        } elseif (!$paymentData->isOpen()) {
+            if ($type == 'webhook') {
+                $this->cancelOrder($order, $paymentData->status);
+            }
             $msg = array('success' => false, 'status' => 'cancel', 'order_id' => $orderId, 'type' => $type);
             $this->mollieHelper->addLog('processTransaction [SUCC]', $msg);
         }
@@ -444,16 +446,21 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
      * @param null                   $status
      *
      * @return bool
-     * @throws Exception
-     * @throws Mage_Core_Exception
      */
     public function cancelOrder($order, $status = null)
     {
         if ($order->getId() && $order->getState() != Mage_Sales_Model_Order::STATE_CANCELED) {
-            $comment = $this->mollieHelper->__('The order was canceled (status: %s)', $status);
-            $this->mollieHelper->addlog('cancelOrder', $order->getIncrementId() . ' ' . $comment);
-            $order->registerCancellation($comment)->save();
-            return true;
+            try {
+                $order->cancel();
+                $comment = $this->mollieHelper->__('The order was canceled (status: %s)', $status);
+                $this->mollieHelper->addlog('cancelOrder', $order->getIncrementId() . ' ' . $comment);
+                $order->addStatusToHistory($order->getStatus(), $comment, false);
+                $order->save();
+                return true;
+            } catch (Exception $e) {
+                $this->mollieHelper->addlog('cancelOrder', $e->getMessage());
+                return false;
+            }
         }
 
         return false;
