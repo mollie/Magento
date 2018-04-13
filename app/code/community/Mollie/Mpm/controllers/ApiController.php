@@ -43,6 +43,10 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
      */
     const RETURN_ERR_MSG = 'An error occured while processing your payment, please try again with other method.';
     /**
+     * Visible error message for cancelled transaction.
+     */
+    const RETURN_CANCEL_MSG = 'Payment cancelled, please try again.';
+    /**
      * Mollie API Helper.
      *
      * @var Mollie_Mpm_Helper_API
@@ -153,7 +157,11 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
         if (!empty($status['success'])) {
             $this->_redirect('checkout/onepage/success?utm_nooverride=1');
         } else {
-            $this->mollieHelper->setError(self::RETURN_ERR_MSG);
+            if (isset($status['status']) && $status['status'] == 'cancel') {
+                $this->mollieHelper->setError(self::RETURN_CANCEL_MSG);
+            } else {
+                $this->mollieHelper->setError(self::RETURN_ERR_MSG);
+            }
             $this->mollieHelper->restoreCart();
             $this->_redirect('checkout/cart');
         }

@@ -351,6 +351,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         $offset = $this->getStoreConfig(self::XPATH_BANKTRANSFER_DUE_DAYS, $storeId);
         if ($offset > 0) {
             return date("Y-m-d", strtotime("+" . $offset . " day"));
+        } else {
+            return date("Y-m-d", strtotime("+14 days"));
         }
     }
 
