@@ -260,9 +260,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             "locale"      => $this->mollieHelper->getLocaleCode()
         );
 
-        if (($method == "banktransfer") && ($dueDate = $this->mollieHelper->getBankTransferDueDateDays())) {
+        if ($method == "banktransfer") {
             $request += array(
-                "dueDate"      => $dueDate,
+                "dueDate"      => $this->mollieHelper->getBankTransferDueDateDays(),
                 "billingEmail" => $order->getCustomerEmail(),
             );
         }
