@@ -370,6 +370,14 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
                     $invoice = $this->invoiceOrder($order);
                     $sendInvoice = $this->mollieHelper->sendInvoiceEmail($storeId);
 
+                    if (!$order->getIsVirtual()) {
+                        $status = $this->mollieHelper->getStatusProcessing($storeId);
+                        if ($status && ($status != $order->getStatus())) {
+                            $message = $this->mollieHelper->__('Updated processing status');
+                            $order->setState($order->getState(), $status, $message, false)->save();
+                        }
+                    }
+
                     if ($invoice && $sendInvoice && !$invoice->getEmailSent()) {
                         $invoice->setEmailSent(true)->sendEmail()->save();
                     }
