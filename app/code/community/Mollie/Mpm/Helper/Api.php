@@ -332,7 +332,7 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
      */
     public function getPhpApiErrorMessage()
     {
-        $url = '<a href="https://github.com/mollie/Magento/wiki/Troubleshooting" target="_blank">GitHub Wiki</a>';
+        $url = '<a href="https://github.com/mollie/Magento/wiki/The-Mollie-API-client-for-PHP-is-not-installed" target="_blank">GitHub Wiki</a>';
         $error = 'The Mollie API client for PHP is not installed, for more information 
             about this issue see our ' . $url . ' troubleshooting page.';
 
