@@ -1,0 +1,15 @@
+[submodule "lib/Mollie/Mollie"]
+	path = lib/Mollie/Mollie
+	url = https://github.com/mollie/mollie-api-php
+[submodule "lib/Mollie/GuzzleHttp/Psr7"]
+	path = lib/Mollie/GuzzleHttp/Psr7
+	url = https://github.com/guzzle/psr7
+[submodule "lib/Mollie/GuzzleHttp/Promises"]
+	path = lib/Mollie/GuzzleHttp/Promises
+	url = https://github.com/guzzle/promises
+[submodule "lib/Mollie/GuzzleHttp/Guzzle"]
+	path = lib/Mollie/GuzzleHttp/Guzzle
+	url = https://github.com/guzzle/guzzle
+[submodule "lib/Mollie/Psr/HttpMessage"]
+	path = lib/Mollie/Psr/HttpMessage
+	url = https://github.com/php-fig/http-message
