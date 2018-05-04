@@ -39,15 +39,15 @@
                 parameters: {apikey: apiKey, isAjax: 1},
                 method: 'get',
                 onCreate: function () {
-                    $('apitest_result').hide();
+                    $('payment_mollie_apitest_result').hide();
                 },
                 onSuccess: function (transport) {
                     if (transport.responseText) {
-                        $('apitest_result').update(transport.responseText);
+                        $('payment_mollie_apitest_result').update(transport.responseText);
                     } else {
-                        $('apitest_result').update('Unkown error, please check logs');
+                        $('payment_mollie_apitest_result').update('Unkown error, please check logs');
                     }
-                    $('apitest_result').show();
+                    $('payment_mollie_apitest_result').show();
                 }
             });
         }

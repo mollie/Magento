@@ -176,4 +176,3 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
         $this->renderLayout();
     }
 }
-

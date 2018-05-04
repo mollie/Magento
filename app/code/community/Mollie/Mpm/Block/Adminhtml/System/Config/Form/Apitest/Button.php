@@ -82,7 +82,7 @@ class Mollie_Mpm_Block_Adminhtml_System_Config_Form_Apitest_Button
         $button = $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setData(
                 array(
-                    'id'      => 'apitest_check_button',
+                    'id'      => 'payment_mollie_apitest_button',
                     'label'   => $this->helper('adminhtml')->__('Test API key'),
                     'onclick' => 'javascript:checkApikey(); return false;'
                 )

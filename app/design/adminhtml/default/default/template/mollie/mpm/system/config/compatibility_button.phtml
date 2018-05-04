@@ -37,15 +37,15 @@
         new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
             method: 'get',
             onCreate: function () {
-                $('compatibility_result').hide();
+                $('payment_mollie_compatibility_result').hide();
             },
             onSuccess: function (transport) {
                 if (transport.responseText) {
-                    $('compatibility_result').update(transport.responseText);
+                    $('payment_mollie_compatibility_result').update(transport.responseText);
                 } else {
-                    $('compatibility_result').update('Unkown error, please check logs');
+                    $('payment_mollie_compatibility_result').update('Unkown error, please check logs');
                 }
-                $('compatibility_result').show();
+                $('payment_mollie_compatibility_result').show();
             }
         });
     }

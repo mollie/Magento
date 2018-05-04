@@ -105,7 +105,18 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
                 return '';
             }
 
-            $apiMethods = $api->methods->all();
+            $params = array();
+            if (!Mage::app()->getStore()->isAdmin()) {
+                /** @var Mage_Checkout_Model_Session $checkoutSession */
+                $checkoutSession = Mage::getModel('checkout/session');
+                if ($checkoutSession->getQuote()->getId()) {
+                    $quote = $checkoutSession->getQuote();
+                    $amount = $this->getOrderAmountByQuote($quote);
+                    $params = array("amount[value]" => $amount['value'], "amount[currency]" => $amount['currency']);
+                }
+            }
+
+            $apiMethods = $api->methods->all($params);
             $allMethods = $methodModel->getStoredMethods();
             $showImage = $this->showImages();
 
@@ -158,7 +169,7 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
 
             $methodModel->setStoredMethods($allMethods);
             return $allMethods;
-        } catch (Mollie_API_Exception $e) {
+        } catch (\Mollie\Api\Exceptions\ApiException $e) {
             $this->addLog('getPaymentMethods [ERR]', 'Faild, msg: ' . $e->getMessage() . ' (' . $e->getCode() . ')');
             if (strpos($e->getMessage(), "Unable to communicate with Mollie") === 0) {
                 return Mage::helper('core')->__('The payment service is currently unavailable.');
@@ -174,8 +185,8 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
     /**
      * @param null $apiKey
      *
-     * @return bool|Mollie_API_Client|null
-     * @throws Mollie_API_Exception
+     * @return bool|\Mollie\Api\MollieApiClient
+     * @throws \Mollie\Api\Exceptions\ApiException
      */
     public function getMollieAPI($apiKey = null)
     {
@@ -203,12 +214,11 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
             $this->_apiKey = $this->getApiKey();
         }
 
-        $this->setAutoLoader();
-        $mollieApi = new Mollie_API_Client;
-        $mollieApi->setApiKey($this->_apiKey);
-        $mollieApi->addVersionString('Magento/' . $this->getMagentoVersion());
-        $mollieApi->addVersionString('MollieMagento/' . $this->getModuleVersion());
-        $this->_mollieApi = $mollieApi;
+        $mollieApiClient = new Mollie\Api\MollieApiClient();
+        $mollieApiClient->setApiKey($this->_apiKey);
+        $mollieApiClient->addVersionString('Magento/' . $this->getMagentoVersion());
+        $mollieApiClient->addVersionString('MollieMagento/' . $this->getModuleVersion());
+        $this->_mollieApi = $mollieApiClient;
 
         return $this->_mollieApi;
     }
@@ -220,36 +230,11 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
      */
     public function checkApiInstalled()
     {
-        $libDir = Mage::getBaseDir('lib');
-        if (!file_exists($libDir . '/Mollie/src/Mollie/API/Autoloader.php')) {
-            $this->addLog('checkApiInstalled [ERR]', 'Mollie API not installed');
+        if (!class_exists('\Mollie\Api\MollieApiClient')) {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Set AutoLoader.
-     */
-    public function setAutoLoader()
-    {
-        $autoloaderCallbacks = spl_autoload_functions();
-        $originalAutoload = null;
-
-        foreach ($autoloaderCallbacks as $callback) {
-            if (is_array($callback) && $callback[0] instanceof Varien_Autoload) {
-                $originalAutoload = $callback;
-            }
-        }
-
-        if (!is_null($originalAutoload)) {
-            spl_autoload_unregister($originalAutoload);
-            require_once Mage::getBaseDir('lib') . '/Mollie/src/Mollie/API/Autoloader.php';
-            spl_autoload_register($originalAutoload);
-        } else {
-            require_once Mage::getBaseDir('lib') . '/Mollie/src/Mollie/API/Autoloader.php';
-        }
     }
 
     /**
@@ -266,7 +251,8 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
         }
 
         try {
-            foreach ($this->getMollieAPI()->issuers->all() as $issuer) {
+            $issuersList = $this->getMollieAPI()->methods->get('ideal', array("include" => "issuers"))->issuers;
+            foreach ($issuersList as $issuer) {
                 $issuers[] = $issuer;
             }
         } catch (Exception $e) {
@@ -318,12 +304,11 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
     }
 
     /**
-     * @return Mollie_API_CompatibilityChecker
+     * @return \Mollie\Api\CompatibilityChecker
      */
     public function getMollieCompatibilityChecker()
     {
-        $this->setAutoLoader();
-        $mollieSelfTest = new Mollie_API_CompatibilityChecker;
+        $mollieSelfTest = new Mollie\Api\CompatibilityChecker();
         return $mollieSelfTest;
     }
 
@@ -332,10 +317,9 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
      */
     public function getPhpApiErrorMessage()
     {
-        $url = '<a href="https://github.com/mollie/Magento/wiki/The-Mollie-API-client-for-PHP-is-not-installed" target="_blank">GitHub Wiki</a>';
-        $error = 'The Mollie API client for PHP is not installed, for more information 
-            about this issue see our ' . $url . ' troubleshooting page.';
-
-        return $error;
+        return $this->__(
+            'The Mollie API client is not installed, see check our <a href="%s" target="_blank">GitHub Wiki troubleshooting</a> page for a solution.',
+            'https://github.com/mollie/Magento/wiki/The-Mollie-API-client-for-PHP-is-not-installed'
+        );
     }
 }

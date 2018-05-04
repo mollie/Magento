@@ -67,7 +67,7 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
 
             $labelBlock = Mage::app()->getLayout()->createBlock('core/template', null, array(
                 'template'             => 'mollie/mpm/payment/label.phtml',
-                'payment_method_icon'  => $method['image']->normal,
+                'payment_method_icon'  => $method['image']->size2x,
                 'payment_method_label' => $title,
                 'payment_method_class' => $code
             ));
