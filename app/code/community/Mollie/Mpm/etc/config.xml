@@ -33,7 +33,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>4.4.1</version>
+            <version>4.5.0</version>
         </Mollie_Mpm>
     </modules>
     <global>
@@ -93,6 +93,17 @@
                 </connection>
             </mpm_read>
         </resources>
+        <events>
+            <controller_front_init_before>
+                <observers>
+                    <mollie_mpm>
+                        <type>object</type>
+                        <class>Mollie_Mpm_Helper_Autoloader</class>
+                        <method>createAndRegister</method>
+                    </mollie_mpm>
+                </observers>
+            </controller_front_init_before>
+        </events>
     </global>
     <frontend>
         <routers>
@@ -163,10 +174,12 @@
                 <import_payment_info>1</import_payment_info>
                 <order_status_pending>pending</order_status_pending>
                 <order_status_processing>processing</order_status_processing>
-                <skip_invoice>0</skip_invoice>
                 <skip_order_mails>0</skip_order_mails>
                 <skip_invoice_mails>0</skip_invoice_mails>
                 <debug>1</debug>
+                <register_autoloader>1</register_autoloader>
+                <autoloader_basepath>lib/Mollie</autoloader_basepath>
+                <force_base_currency>1</force_base_currency>
             </mollie>
             <mpm_void_00 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>

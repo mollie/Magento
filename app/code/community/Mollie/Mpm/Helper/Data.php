@@ -42,11 +42,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_SHOW_GIFTCARD_ISSUERS = 'payment/mollie/show_giftcard_list';
     const XPATH_BANKTRANSFER_DUE_DAYS = 'payment/mollie/banktransfer_due_date_days';
     const XPATH_LOCALE = 'payment/mollie/locale';
+    const XPATH_FORCE_BASE_CURRENCY = 'payment/mollie/force_base_currency';
     const XPATH_LOADING_SCREEN = 'payment/mollie/loading_screen';
     const XPATH_IMPORT_PAYMENT_INFO = 'payment/mollie/import_payment_info';
     const XPATH_ORDER_STATUS_PENDING = 'payment/mollie/order_status_pending';
     const XPATH_ORDER_STATUS_PROCESSING = 'payment/mollie/order_status_processing';
-    const XPATH_SKIP_INVOICE = 'payment/mollie/skip_invoice';
     const XPATH_SKIP_ORDER_EMAIL = 'payment/mollie/skip_order_mails';
     const XPATH_SKIP_INVOICE_EMAIL = 'payment/mollie/skip_invoice_mails';
     const XPATH_DEBUG = 'payment/mollie/debug';
@@ -389,20 +389,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param null $storeId
-     *
-     * @return bool
-     */
-    public function invoiceOrder($storeId = null)
-    {
-        if ($this->getStoreConfig(self::XPATH_SKIP_INVOICE, $storeId)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Build url for Redirect.
      *
      * @return string
@@ -446,7 +432,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         $locale = $this->getStoreConfig(self::XPATH_LOCALE);
 
         if (!$locale) {
-            return '';
+            return null;
         }
 
         if ($locale == 'store') {
@@ -454,7 +440,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             if (in_array($localeCode, $this->getSupportedLocal())) {
                 return $localeCode;
             } else {
-                return '';
+                return null;
             }
         }
 
@@ -474,34 +460,59 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @param Mage_Sales_Model_Order $order
      *
-     * @return string
-     * @throws Mage_Core_Exception
+     * @return array
      */
-    public function getOrderAmount($order)
+    public function getOrderAmountByOrder($order)
     {
-        $grandTotal = '';
+        $baseCurrency = $this->useBaseCurrency($order->getStoreId());
 
-        if ($order->getBaseCurrencyCode() === 'EUR') {
-            $grandTotal = $order->getBaseGrandTotal();
-        } elseif ($order->getOrderCurrencyCode() === 'EUR') {
-            $grandTotal = $order->getGrandTotal();
+        if ($baseCurrency) {
+            $orderAmount = array(
+                "currency" => $order->getBaseCurrencyCode(),
+                "value"    => number_format($order->getBaseGrandTotal(), 2)
+            );
         } else {
-            $this->addLog('getOrderAmount [ERR]', 'Neither Base nor Order currency is in Euros.');
-            Mage::throwException('Neither Base nor Order currency is in Euros.');
+            $orderAmount = array(
+                "currency" => $order->getOrderCurrencyCode(),
+                "value"    => number_format($order->getGrandTotal(), 2)
+            );
         }
 
-        return $grandTotal;
+        return $orderAmount;
     }
 
     /**
-     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Quote $quote
      *
-     * @return string
-     * @throws Zend_Currency_Exception
+     * @return array
      */
-    public function formatGrandTotal($order)
+    public function getOrderAmountByQuote($quote)
     {
-        return Mage::app()->getLocale()->currency($order->getOrderCurrencyCode())->toCurrency($order->getGrandTotal());
+        $baseCurrency = $this->useBaseCurrency($quote->getStoreId());
+
+        if ($baseCurrency) {
+            $orderAmount = array(
+                "currency" => $quote->getBaseCurrencyCode(),
+                "value"    => number_format($quote->getBaseGrandTotal(), 2)
+            );
+        } else {
+            $orderAmount = array(
+                "currency" => $quote->getQuoteCurrencyCode(),
+                "value"    => number_format($quote->getGrandTotal(), 2)
+            );
+        }
+
+        return $orderAmount;
+    }
+
+    /**
+     * @param $storeId
+     *
+     * @return bool
+     */
+    public function useBaseCurrency($storeId)
+    {
+        return $this->getStoreConfig(self::XPATH_FORCE_BASE_CURRENCY, $storeId);
     }
 
     /**

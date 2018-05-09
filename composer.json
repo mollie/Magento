@@ -4,8 +4,8 @@
   "type": "magento-module",
   "description": "iDEAL, Creditcard, Bancontact/Mister Cash, SOFORT, Bank transfer, Bitcoin, PayPal & paysafecard for Magento https://www.mollie.com/",
   "require": {
-    "php": ">=5.3",
-    "mollie/mollie-api-php": "^1.7"
+    "php": ">=5.6",
+    "mollie/mollie-api-php": "^2.0"
   },
   "authors": [
     {

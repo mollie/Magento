@@ -58,7 +58,7 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
     }
 
     /**
-     *
+     * API-Key Test Action
      */
     public function apitestAction()
     {
@@ -72,17 +72,21 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
         $apiKey = Mage::app()->getRequest()->getParam('apikey');
 
         if (empty($apiKey)) {
-            $results[] = '<span class="mollie-error">Test Key: Empty value</span>';
+            $msg = $this->mollieHelper->__('Test Key: Empty value');
+            $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
         } else {
             if (!preg_match('/^(live|test)_\w{30,}$/', $apiKey)) {
-                $results[] = '<span class="mollie-error">API Key: Should start with "test_" or "live_"</span>';
+                $msg = $this->mollieHelper->__('API Key: Should start with "test_" or "live_"');
+                $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
             } else {
                 try {
                     $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
-                    $mollieApi->issuers->all();
-                    $results[] = '<span class="mollie-success">API Key: Success!</span>';
+                    $mollieApi->methods->all();
+                    $msg = $this->mollieHelper->__('API Key: Success!');
+                    $results[] = sprintf('<span class="mollie-success">%s</span>', $msg);
                 } catch (\Exception $e) {
-                    $results[] = '<span class="mollie-error">API Key: ' . $e->getMessage() . '</span>';
+                    $msg = $this->mollieHelper->__('API Key: %s', $e->getMessage());
+                    $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
                 }
             }
         }
@@ -92,7 +96,7 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
     }
 
     /**
-     *
+     * Selftest Action
      */
     public function selftestAction()
     {
@@ -106,41 +110,20 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
         $compatibilityChecker = $this->mollieHelper->getMollieCompatibilityChecker();
 
         if (!$compatibilityChecker->satisfiesPhpVersion()) {
-            $minPhpVersion = $compatibilityChecker::$MIN_PHP_VERSION;
-            $msg = 'Error: The client requires PHP version >= ' . $minPhpVersion . ', you have ' . PHP_VERSION . '.';
-            $results[] = '<span class="mollie-error">' . $msg . '</span>';
+            $minPhpVersion = $compatibilityChecker::MIN_PHP_VERSION;
+            $msg = $this->mollieHelper->__('Error: The client requires PHP version >= %s, you have %s.', $minPhpVersion, PHP_VERSION);
+            $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
         } else {
-            $msg = 'Success: PHP version: ' . PHP_VERSION . '.';
-            $results[] = '<span class="mollie-success">' . $msg . '</span>';
+            $msg = $this->mollieHelper->__('Success: PHP version: %s.', PHP_VERSION);
+            $results[] = sprintf('<span class="mollie-success">%s</span>', $msg);
         }
 
         if (!$compatibilityChecker->satisfiesJsonExtension()) {
-            $msg = 'Error: PHP extension JSON is not enabled. ';
-            $msg .= 'Please make sure to enable \'json\' in your PHP configuration.';
-            $results[] = '<span class="mollie-error">' . $msg . '</span>';
+            $msg = $this->mollieHelper->__('Error: PHP extension JSON is not enabled, please enable.');
+            $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
         } else {
-            $msg = 'Success: JSON is enabled.';
-            $results[] = '<span class="mollie-success">' . $msg . '</span>';
-        }
-
-        if (!$compatibilityChecker->satisfiesCurlExtension()) {
-            $msg = 'Error: PHP extension cURL is not enabled. ';
-            $msg .= 'Please make sure to enable \'curl\' in your PHP configuration.';
-            $results[] = '<span class="mollie-error">' . $msg . '</span>';
-        } else {
-            $msg = 'Success: cURL is enabled.';
-            $results[] = '<span class="mollie-success">' . $msg . '</span>';
-        }
-
-        if (!$compatibilityChecker->satisfiesCurlFunctions()) {
-            $reqCurlFunctions = implode(', ', $compatibilityChecker::$REQUIRED_CURL_FUNCTIONS);
-            $msg = 'Error: This client requires the following cURL functions to ';
-            $msg .= 'be available: ' . $reqCurlFunctions . '.<br/>';
-            $msg .= 'Please check that none of these functions are disabled in your PHP configuration.';
-            $results[] = '<span class="mollie-error">' . $msg . '</span>';
-        } else {
-            $msg = 'Success: cURL functions are enabled.';
-            $results[] = '<span class="mollie-success">' . $msg . '</span>';
+            $msg = $this->mollieHelper->__('Success: JSON is enabled.');
+            $results[] = sprintf('<span class="mollie-success">%s</span>', $msg);
         }
 
         $msg = implode('<br/>', $results);

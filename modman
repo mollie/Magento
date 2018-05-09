@@ -4,6 +4,8 @@ app/etc/modules/Mollie_Mpm.xml            app/etc/modules/Mollie_Mpm.xml
 app/locale/en_US/Mollie_Mpm.csv            app/locale/en_US/Mollie_Mpm.csv
 app/locale/nl_NL/Mollie_Mpm.csv            app/locale/nl_NL/Mollie_Mpm.csv
 app/locale/fr_FR/Mollie_Mpm.csv            app/locale/fr_FR/Mollie_Mpm.csv
+app/locale/de_DE/Mollie_Mpm.csv            app/locale/de_DE/Mollie_Mpm.csv
+app/locale/es_ES/Mollie_Mpm.csv            app/locale/es_ES/Mollie_Mpm.csv
 app/design/frontend/base/default/layout/mollie_mpm.xml            app/design/frontend/base/default/layout/mollie_mpm.xml
 app/design/frontend/base/default/template/mollie/mpm/payment/info.phtml            app/design/frontend/base/default/template/mollie/mpm/payment/info.phtml
 app/design/frontend/base/default/template/mollie/mpm/payment/label.phtml            app/design/frontend/base/default/template/mollie/mpm/payment/label.phtml

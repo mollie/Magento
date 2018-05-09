@@ -82,7 +82,7 @@ class Mollie_Mpm_Block_Adminhtml_System_Config_Form_Compatibility_Button
         $button = $this->getLayout()->createBlock('adminhtml/widget_button')
             ->setData(
                 array(
-                    'id'      => 'compatibility_check_button',
+                    'id'      => 'payment_mollie_compatibility_button',
                     'label'   => $this->helper('adminhtml')->__('Run Self Test'),
                     'onclick' => 'javascript:checkComatibility(); return false;'
                 )
