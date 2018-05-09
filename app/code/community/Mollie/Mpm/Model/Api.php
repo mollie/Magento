@@ -347,10 +347,6 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             $currency = $paymentData->amount->currency;
             $orderAmount = $this->mollieHelper->getOrderAmountByOrder($order);
 
-            if (abs($amount - $orderAmount['value']) < 0.01) {
-                $amount = $order->getBaseGrandTotal();
-            }
-
             if ($currency != $orderAmount['currency']) {
                 $msg = array('success' => false, 'status' => 'paid', 'order_id' => $orderId, 'type' => $type);
                 $errorMsg = $this->mollieHelper->__('Currency does not match.');
@@ -359,17 +355,20 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             }
 
             $payment = $order->getPayment();
-
             if (!$payment->getIsTransactionClosed() && $type == 'webhook') {
-                $payment->setTransactionId($transactionId);
-                $payment->setCurrencyCode($currency);
-                $payment->setIsTransactionClosed(true);
-                $payment->registerCaptureNotification($amount, true);
-                $order->save();
 
                 if (abs($amount - $orderAmount['value']) < 0.01) {
-                    $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE);
-                    $order->save();
+                    $payment->setTransactionId($transactionId);
+                    $payment->setCurrencyCode($order->getBaseCurrencyCode());
+                    $payment->setIsTransactionClosed(true);
+                    $payment->registerCaptureNotification($order->getBaseGrandTotal(), true);
+
+                    if ($paymentData->amount->currency != $paymentData->settlementAmount->currency) {
+                        $message = $this->mollieHelper->__('Mollie: Captured %s, Settlement Amount %s',
+                            $paymentData->amount->currency . ' ' . $paymentData->amount->value,
+                            $paymentData->settlementAmount->currency . ' ' . $paymentData->settlementAmount->value);
+                        $order->setState($order->getState(), $order->getStatus(), $message, false)->save();
+                    }
                 }
 
                 $sendOrderEmail = $this->mollieHelper->sendOrderEmail($storeId);

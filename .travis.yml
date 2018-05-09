@@ -12,7 +12,6 @@ cache:
     - $HOME/.composer/cache
 
 install:
-- composer config minimum-stability dev
 - travis_retry composer install --no-interaction
 
 script:
