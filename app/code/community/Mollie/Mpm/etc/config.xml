@@ -179,6 +179,7 @@
                 <debug>1</debug>
                 <register_autoloader>1</register_autoloader>
                 <autoloader_basepath>lib/Mollie</autoloader_basepath>
+                <force_base_currency>1</force_base_currency>
             </mollie>
             <mpm_void_00 translate="title" module="Mollie_Mpm">
                 <group>mollie</group>
