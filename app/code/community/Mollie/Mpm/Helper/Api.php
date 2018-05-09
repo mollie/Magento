@@ -225,12 +225,17 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
 
     /**
      * Check if API is installed.
+     * If not, write to var/mollie.log and return false.
+     * Also write to var/system.log due to error suppression (developer mode issue with autoload).
      *
      * @return bool
      */
     public function checkApiInstalled()
     {
-        if (!class_exists('\Mollie\Api\MollieApiClient')) {
+        if (!@class_exists('\Mollie\Api\MollieApiClient')) {
+            $msg = 'Could not load Mollie\Api\MollieApiClient';
+            $this->addLog('checkApiInstalled [ERR]', $msg);
+            Mage::log($msg, null, 'system.log');
             return false;
         }
 
@@ -318,7 +323,7 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
     public function getPhpApiErrorMessage()
     {
         return $this->__(
-            'The Mollie API client is not installed, see check our <a href="%s" target="_blank">GitHub Wiki troubleshooting</a> page for a solution.',
+            'The Mollie API (v2) client is not installed, see check our <a href="%s" target="_blank">GitHub Wiki troubleshooting</a> page for a solution.',
             'https://github.com/mollie/Magento/wiki/The-Mollie-API-client-for-PHP-is-not-installed'
         );
     }
