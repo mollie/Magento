@@ -276,6 +276,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             );
         }
 
+        $request = $this->mollieHelper->validateRequestData($request);
         $this->mollieHelper->addLog('startTransaction [REQ]', $request);
         $payment = $this->mollieHelper->getMollieAPI()->payments->create($request);
         $this->mollieHelper->addLog('startTransaction [RESP]', $payment);

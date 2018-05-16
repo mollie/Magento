@@ -578,4 +578,28 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * @param array $request
+     *
+     * @return mixed
+     */
+    public function validateRequestData($request)
+    {
+        if (isset($request['billingAddress'])) {
+            foreach ($request['billingAddress'] as $k => $v) {
+                if ((empty($v)) && ($k != 'region')) {
+                    unset($request['billingAddress']);
+                }
+            }
+        }
+        if (isset($request['shippingAddress'])) {
+            foreach ($request['shippingAddress'] as $k => $v) {
+                if ((empty($v)) && ($k != 'region')) {
+                    unset($request['shippingAddress']);
+                }
+            }
+        }
+
+        return $request;
+    }
 }
