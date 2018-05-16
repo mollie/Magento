@@ -469,12 +469,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $order->getBaseCurrencyCode(),
-                "value"    => number_format($order->getBaseGrandTotal(), 2)
+                "value"    => number_format($order->getBaseGrandTotal(), 2, '.', '')
             );
         } else {
             $orderAmount = array(
                 "currency" => $order->getOrderCurrencyCode(),
-                "value"    => number_format($order->getGrandTotal(), 2)
+                "value"    => number_format($order->getGrandTotal(), 2, '.', '')
             );
         }
 
@@ -493,12 +493,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $quote->getBaseCurrencyCode(),
-                "value"    => number_format($quote->getBaseGrandTotal(), 2)
+                "value"    => number_format($quote->getBaseGrandTotal(), 2, '.', '')
             );
         } else {
             $orderAmount = array(
                 "currency" => $quote->getQuoteCurrencyCode(),
-                "value"    => number_format($quote->getGrandTotal(), 2)
+                "value"    => number_format($quote->getGrandTotal(), 2, '.', '')
             );
         }
 
