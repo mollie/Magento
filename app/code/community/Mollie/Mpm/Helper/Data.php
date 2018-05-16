@@ -570,6 +570,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             "ideal_SNSBNL2A" => "SNS Bank",
             "ideal_TRIONL2U" => "Triodos Bank",
             "ideal_FVLBNL22" => "van Lanschot",
+            "ideal_MOYONL21" => "Moneyou",
             "ideal_TESTNL99" => "Test Bank"
         );
 
