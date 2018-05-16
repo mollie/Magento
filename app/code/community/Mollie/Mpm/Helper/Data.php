@@ -469,12 +469,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $order->getBaseCurrencyCode(),
-                "value"    => number_format($order->getBaseGrandTotal(), 2)
+                "value"    => number_format($order->getBaseGrandTotal(), 2, '.', '')
             );
         } else {
             $orderAmount = array(
                 "currency" => $order->getOrderCurrencyCode(),
-                "value"    => number_format($order->getGrandTotal(), 2)
+                "value"    => number_format($order->getGrandTotal(), 2, '.', '')
             );
         }
 
@@ -493,12 +493,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $quote->getBaseCurrencyCode(),
-                "value"    => number_format($quote->getBaseGrandTotal(), 2)
+                "value"    => number_format($quote->getBaseGrandTotal(), 2, '.', '')
             );
         } else {
             $orderAmount = array(
                 "currency" => $quote->getQuoteCurrencyCode(),
-                "value"    => number_format($quote->getGrandTotal(), 2)
+                "value"    => number_format($quote->getGrandTotal(), 2, '.', '')
             );
         }
 
@@ -570,6 +570,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             "ideal_SNSBNL2A" => "SNS Bank",
             "ideal_TRIONL2U" => "Triodos Bank",
             "ideal_FVLBNL22" => "van Lanschot",
+            "ideal_MOYONL21" => "Moneyou",
             "ideal_TESTNL99" => "Test Bank"
         );
 
@@ -578,4 +579,28 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * @param array $request
+     *
+     * @return mixed
+     */
+    public function validateRequestData($request)
+    {
+        if (isset($request['billingAddress'])) {
+            foreach ($request['billingAddress'] as $k => $v) {
+                if ((empty($v)) && ($k != 'region')) {
+                    unset($request['billingAddress']);
+                }
+            }
+        }
+        if (isset($request['shippingAddress'])) {
+            foreach ($request['shippingAddress'] as $k => $v) {
+                if ((empty($v)) && ($k != 'region')) {
+                    unset($request['shippingAddress']);
+                }
+            }
+        }
+
+        return $request;
+    }
 }
