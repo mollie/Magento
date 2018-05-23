@@ -58,6 +58,7 @@
 "Mollie Dashboard [&rarr;]","Panel de control Mollie [→]"
 "{Reserved}","{Reservado}"
 "Select a bank:","Seleccione un banco:"
+"Select Bank","Seleccione un banco"
 "Your order is awaiting payment before being released for processing and shipment.","Una vez que recibamos su pago, su pedido será procesado."
 "You are currently using version %s. We strongly recommend you to upgrade to the new version %s!","Actualmente está utilizando la versión %s. ¡Le recomendamos encarecidamente que actualice a la nueva versión %s!"
 "Note: version information is accurate only when the cache is cleared.","Aviso: La información de la versión sólo es precisa cuando la caché está vacía."

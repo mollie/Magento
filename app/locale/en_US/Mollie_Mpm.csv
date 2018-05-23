@@ -57,6 +57,7 @@
 "Mollie Dashboard [&rarr;]","Mollie Dashboard [&rarr;]"
 "{Reserved}","{Reserved}"
 "Select a bank:","Select a bank:"
+"Select Bank","Select Bank"
 "Your order is awaiting payment before being released for processing and shipment.","Your order is awaiting payment before being released for processing and shipment."
 "You are currently using version %s. We strongly recommend you to upgrade to the new version %s!","You are currently using version %s. We strongly recommend you to upgrade to the new version %s!"
 "Note: version information is accurate only when the cache is cleared.","Note: version information is accurate only when the cache is cleared."
