@@ -364,6 +364,8 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
                     $payment->setIsTransactionClosed(true);
                     $payment->registerCaptureNotification($order->getBaseGrandTotal(), true);
 
+                    $order->setIsInProcess(true)->save();
+
                     if ($paymentData->amount->currency != $paymentData->settlementAmount->currency) {
                         $message = $this->mollieHelper->__('Mollie: Captured %s, Settlement Amount %s',
                             $paymentData->amount->currency . ' ' . $paymentData->amount->value,
