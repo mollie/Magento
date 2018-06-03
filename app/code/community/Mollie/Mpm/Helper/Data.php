@@ -469,12 +469,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $order->getBaseCurrencyCode(),
-                "value"    => number_format($order->getBaseGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($order->getBaseGrandTotal(), $order->getBaseCurrencyCode())
             );
         } else {
             $orderAmount = array(
                 "currency" => $order->getOrderCurrencyCode(),
-                "value"    => number_format($order->getGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($order->getGrandTotal(), $order->getOrderCurrencyCode())
             );
         }
 
@@ -493,12 +493,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $quote->getBaseCurrencyCode(),
-                "value"    => number_format($quote->getBaseGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($quote->getBaseGrandTotal(), $quote->getBaseCurrencyCode())
+
             );
         } else {
             $orderAmount = array(
                 "currency" => $quote->getQuoteCurrencyCode(),
-                "value"    => number_format($quote->getGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($quote->getGrandTotal(), $quote->getQuoteCurrencyCode())
             );
         }
 
@@ -513,6 +514,33 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     public function useBaseCurrency($storeId)
     {
         return $this->getStoreConfig(self::XPATH_FORCE_BASE_CURRENCY, $storeId);
+    }
+
+    /**
+     * @param $value
+     * @param $currency
+     *
+     * @return string
+     */
+    public function formatCurrencyValue($value, $currency)
+    {
+        $decimalPrecision = 2;
+        $currenciesWithoutDecimal = $this->getCurrenciesWithoutDecimal();
+        if (in_array($currency, $currenciesWithoutDecimal)) {
+            $decimalPrecision = 0;
+        }
+
+        return number_format($value, $decimalPrecision, '.', '');
+    }
+
+    /**
+     * List of currencies that have no decimals
+     *
+     * @return array
+     */
+    public function getCurrenciesWithoutDecimal()
+    {
+        return array('JPY');
     }
 
     /**
