@@ -91,7 +91,7 @@
 "Error: The client requires PHP version >= %s, you have %s.","Fehler: Mollie unterstützt einzig PHP Version >= %s, du hast %s."
 "Success: PHP version: %s.","Erfolgreich: PHP Version: %s."
 "API Key: %s","API Key: %s"
-"Test Key: Empty value","Testschlüssel: leerer Wert"
+"API Key: Empty value","API Key: leerer Wert"
 "API Key: Should start with ""test_"" or ""live_""","API Key: Sollte mit beginnen ""test_"" oder ""live_"""
 "Please make sure to enable \'json\' in your PHP configuration.","Kontrollieren Sie, ob \'json\' in der PHP Konfiguration aktiviert ist"
 "Error: PHP extension JSON is not enabled. ","Fehler: PHP Erweiterung JSON ist nicht aktiviert. "

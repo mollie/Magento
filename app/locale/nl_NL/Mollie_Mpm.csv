@@ -101,7 +101,7 @@
 "Success: PHP version: %s.","Succesvol: PHP versie: %s."
 "API Key: Success!","API Key: Success!"
 "API Key: %s","API Key: %s"
-"Test Key: Empty value","Test Key: Lege waarde"
+"API Key: Empty value","API Key: Lege waarde"
 "API Key: Should start with ""test_"" or ""live_""","API Key: Moet beginnen met ""test_"" of ""live_"""
 "Show iDeal Bank List","Toon iDeal bank keuze lijst"
 "Show Giftcard List","Toon Giftcard keuze lijst"

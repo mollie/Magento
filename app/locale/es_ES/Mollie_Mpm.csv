@@ -102,7 +102,7 @@
 "Error: The client requires PHP version >= %s, you have %s.","Error: Mollie sólo soporta la versión PHP = %s, tienes %s."
 "Success: PHP version: %s.","Logrado con éxito: versión PHP: %s."
 "API Key: %s","Clave API %s"
-"Test Key: Empty value","Clé de test: valeur vide"
+"API Key: Empty value","Clave API: valeur vide"
 "API Key: Should start with ""test_"" or ""live_""","Clave API: debería comenzar con ""test_"" o ""live_"""
 "Show iDeal Bank List","Mostrar la lista de selección de bancos de iDeal"
 "Show Giftcard List","Mostrar la lista de selección de Tarjeta regalo"

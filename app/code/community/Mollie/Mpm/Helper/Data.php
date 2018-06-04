@@ -94,15 +94,15 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getStoreConfig($path, $storeId = null, $websiteId = null)
     {
-        if ($websiteId > 0) {
+        if ($storeId > 0) {
+            $value = Mage::getStoreConfig($path, $storeId);
+        } elseif ($websiteId > 0) {
             try {
                 $value = Mage::app()->getWebsite($websiteId)->getConfig($path);
             } catch (\Exception $e) {
                 $this->addLog('getStoreConfig [ERR]', $e->getMessage());
                 $value = null;
             }
-        } elseif ($storeId > 0) {
-            $value = Mage::getStoreConfig($path, $storeId);
         } else {
             $value = Mage::getStoreConfig($path);
         }
@@ -242,7 +242,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getConfigStoreId()
     {
-        $storeId = (int)Mage::app()->getRequest()->getParam('store', 0);
+        $storeId = 0;
+        $code = Mage::getSingleton('adminhtml/config_data')->getStore();
+        if (!empty($code)) {
+            $storeId = Mage::getModel('core/store')->load($code)->getId();
+        }
+
         return $storeId;
     }
 
@@ -253,7 +258,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getConfigWebsiteId()
     {
-        $websiteId = (int)Mage::app()->getRequest()->getParam('website', 0);
+        $websiteId = 0;
+        $code = Mage::getSingleton('adminhtml/config_data')->getWebsite();
+        if (!empty($code)) {
+            $websiteId = Mage::getModel('core/website')->load($code)->getId();
+        }
+
         return $websiteId;
     }
 

@@ -79,7 +79,7 @@
 "Error: The client requires PHP version >= %s, you have %s.","Erreur: le client requiert la version PHP> = %s, tu as %s."
 "Success: PHP version: %s.","Succès: version PHP: %s."
 "API Key: %s","API Key: %s"
-"Test Key: Empty value","Clé de test: valeur vide"
+"API Key: Empty value","Clé de l'API: valeur vide"
 "API Key: Should start with ""test_"" or ""live_""","Clé de l'API: devrait commencer par ""test_"" ou ""live_"""
 "Creditcard","Carte de crédit"
 "{Reserved}","{Reservé}"

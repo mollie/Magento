@@ -72,7 +72,7 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
         $apiKey = Mage::app()->getRequest()->getParam('apikey');
 
         if (empty($apiKey)) {
-            $msg = $this->mollieHelper->__('Test Key: Empty value');
+            $msg = $this->mollieHelper->__('API Key: Empty value');
             $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
         } else {
             if (!preg_match('/^(live|test)_\w{30,}$/', $apiKey)) {

@@ -99,7 +99,7 @@
 "Error: The client requires PHP version >= %s, you have %s.","Error: The client requires PHP version >= %s, you have %s."
 "Success: PHP version: %s.","Success: PHP version: %s."
 "API Key: %s","API Key: %s"
-"Test Key: Empty value","Test Key: Empty value"
+"API Key: Empty value","API Key: Empty value"
 "API Key: Should start with ""test_"" or ""live_""","API Key: Should start with ""test_"" or ""live_"""
 "Show iDeal Bank List","Show iDeal Bank List"
 "Show Giftcard List","Show Giftcard List"
