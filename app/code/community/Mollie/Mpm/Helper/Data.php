@@ -94,15 +94,15 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getStoreConfig($path, $storeId = null, $websiteId = null)
     {
-        if ($websiteId > 0) {
+        if ($storeId > 0) {
+            $value = Mage::getStoreConfig($path, $storeId);
+        } elseif ($websiteId > 0) {
             try {
                 $value = Mage::app()->getWebsite($websiteId)->getConfig($path);
             } catch (\Exception $e) {
                 $this->addLog('getStoreConfig [ERR]', $e->getMessage());
                 $value = null;
             }
-        } elseif ($storeId > 0) {
-            $value = Mage::getStoreConfig($path, $storeId);
         } else {
             $value = Mage::getStoreConfig($path);
         }
@@ -242,7 +242,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getConfigStoreId()
     {
-        $storeId = (int)Mage::app()->getRequest()->getParam('store', 0);
+        $storeId = 0;
+        $code = Mage::getSingleton('adminhtml/config_data')->getStore();
+        if (!empty($code)) {
+            $storeId = Mage::getModel('core/store')->load($code)->getId();
+        }
+
         return $storeId;
     }
 
@@ -253,7 +258,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getConfigWebsiteId()
     {
-        $websiteId = (int)Mage::app()->getRequest()->getParam('website', 0);
+        $websiteId = 0;
+        $code = Mage::getSingleton('adminhtml/config_data')->getWebsite();
+        if (!empty($code)) {
+            $websiteId = Mage::getModel('core/website')->load($code)->getId();
+        }
+
         return $websiteId;
     }
 
@@ -469,12 +479,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $order->getBaseCurrencyCode(),
-                "value"    => number_format($order->getBaseGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($order->getBaseGrandTotal(), $order->getBaseCurrencyCode())
             );
         } else {
             $orderAmount = array(
                 "currency" => $order->getOrderCurrencyCode(),
-                "value"    => number_format($order->getGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($order->getGrandTotal(), $order->getOrderCurrencyCode())
             );
         }
 
@@ -493,12 +503,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($baseCurrency) {
             $orderAmount = array(
                 "currency" => $quote->getBaseCurrencyCode(),
-                "value"    => number_format($quote->getBaseGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($quote->getBaseGrandTotal(), $quote->getBaseCurrencyCode())
+
             );
         } else {
             $orderAmount = array(
                 "currency" => $quote->getQuoteCurrencyCode(),
-                "value"    => number_format($quote->getGrandTotal(), 2, '.', '')
+                "value"    => $this->formatCurrencyValue($quote->getGrandTotal(), $quote->getQuoteCurrencyCode())
             );
         }
 
@@ -513,6 +524,33 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     public function useBaseCurrency($storeId)
     {
         return $this->getStoreConfig(self::XPATH_FORCE_BASE_CURRENCY, $storeId);
+    }
+
+    /**
+     * @param $value
+     * @param $currency
+     *
+     * @return string
+     */
+    public function formatCurrencyValue($value, $currency)
+    {
+        $decimalPrecision = 2;
+        $currenciesWithoutDecimal = $this->getCurrenciesWithoutDecimal();
+        if (in_array($currency, $currenciesWithoutDecimal)) {
+            $decimalPrecision = 0;
+        }
+
+        return number_format($value, $decimalPrecision, '.', '');
+    }
+
+    /**
+     * List of currencies that have no decimals
+     *
+     * @return array
+     */
+    public function getCurrenciesWithoutDecimal()
+    {
+        return array('JPY');
     }
 
     /**

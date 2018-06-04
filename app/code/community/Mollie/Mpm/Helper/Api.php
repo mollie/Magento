@@ -92,15 +92,17 @@ class Mollie_Mpm_Helper_Api extends Mollie_Mpm_Helper_Data
     /**
      * Get array of available Payment Methods.
      *
+     * @param null $apiKey
+     *
      * @return array|string
      */
-    public function getPaymentMethods()
+    public function getPaymentMethods($apiKey = null)
     {
         /** @var Mollie_Mpm_Model_Methods $methodModel */
         $methodModel = Mage::getModel('mpm/methods');
 
         try {
-            $api = $this->getMollieAPI();
+            $api = $this->getMollieAPI($apiKey);
             if (!$api) {
                 return '';
             }

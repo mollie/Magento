@@ -32,10 +32,17 @@
  */
 
 $countries = $this->mollieHelper->getCountryOptionArray();
-$methods = $this->mollieHelper->getPaymentMethods();
 
 $storeId = $this->mollieHelper->getConfigStoreId();
 $websiteId = $this->mollieHelper->getConfigWebsiteId();
+$apiKey = $this->mollieHelper->getApiKey($storeId, $websiteId);
+
+if (empty($apiKey)) {
+    $message = $this->mollieHelper->__('API Key: Empty value');
+    $methods = array();
+} else {
+    $methods = $this->mollieHelper->getPaymentMethods($apiKey);
+}
 
 if (is_string($methods)) {
     $message = $methods;

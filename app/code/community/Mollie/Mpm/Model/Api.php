@@ -364,6 +364,8 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
                     $payment->setIsTransactionClosed(true);
                     $payment->registerCaptureNotification($order->getBaseGrandTotal(), true);
 
+                    $order->setIsInProcess(true)->save();
+
                     if ($paymentData->amount->currency != $paymentData->settlementAmount->currency) {
                         $message = $this->mollieHelper->__('Mollie: Captured %s, Settlement Amount %s',
                             $paymentData->amount->currency . ' ' . $paymentData->amount->value,
@@ -437,17 +439,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             return $msg;
         }
 
-        if ($status == 'canceled') {
-            if ($type == 'webhook') {
-                $this->cancelOrder($order, $paymentData->status);
-            }
-            $msg = array('success' => false, 'status' => 'cancel', 'order_id' => $orderId, 'type' => $type);
-            $this->molliePaymentsModel->updatePayment($orderId, $msg['status'], $paymentData);
-            $this->mollieHelper->addLog('processTransaction [SUCC]', $msg);
-            return $msg;
-        }
-
-        if ($status == 'failed') {
+        if ($status == 'canceled' || $status == 'failed' || $status == 'expired') {
             if ($type == 'webhook') {
                 $this->cancelOrder($order, $paymentData->status);
             }
@@ -472,7 +464,10 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
     public function cancelOrder($order, $status = null)
     {
         if ($order->getId() && $order->getState() != Mage_Sales_Model_Order::STATE_CANCELED) {
-            $comment = $this->mollieHelper->__('The order was canceled (status: %s)', $status);
+            $comment = $this->mollieHelper->__('The order was canceled');
+            if ($status !== null) {
+                $comment = $this->mollieHelper->__('The order was canceled, reason: payment %s', $status);
+            }
             $this->mollieHelper->addlog('cancelOrder', $order->getIncrementId() . ' ' . $comment);
             $order->registerCancellation($comment)->save();
             return true;
