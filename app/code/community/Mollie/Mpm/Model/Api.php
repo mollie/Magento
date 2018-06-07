@@ -385,10 +385,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
                 if ($order->hasInvoices()) {
                     if (!$order->getIsVirtual() && $order->getState() == Mage_Sales_Model_Order::STATE_PROCESSING) {
-                        $status = $this->mollieHelper->getStatusProcessing($storeId);
-                        if ($status && ($status != $order->getStatus())) {
-                            $message = $this->mollieHelper->__('Updated processing status');
-                            $order->setState($order->getState(), $status, $message, false)->save();
+                        $defaultStatusProcessing = $this->mollieHelper->getStatusProcessing($storeId);
+                        if ($defaultStatusProcessing && ($defaultStatusProcessing != $order->getStatus())) {
+                            $order->setStatus($defaultStatusProcessing)->save();
                         }
                     }
 
