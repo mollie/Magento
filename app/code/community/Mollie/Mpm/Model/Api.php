@@ -366,11 +366,15 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
                     $order->setIsInProcess(true)->save();
 
-                    if ($paymentData->amount->currency != $paymentData->settlementAmount->currency) {
-                        $message = $this->mollieHelper->__('Mollie: Captured %s, Settlement Amount %s',
-                            $paymentData->amount->currency . ' ' . $paymentData->amount->value,
-                            $paymentData->settlementAmount->currency . ' ' . $paymentData->settlementAmount->value);
-                        $order->setState($order->getState(), $order->getStatus(), $message, false)->save();
+                    if ($paymentData->settlementAmount !== null) {
+                        if ($paymentData->amount->currency != $paymentData->settlementAmount->currency) {
+                            $message = $this->mollieHelper->__(
+                                'Mollie: Captured %s, Settlement Amount %s',
+                                $paymentData->amount->currency . ' ' . $paymentData->amount->value,
+                                $paymentData->settlementAmount->currency . ' ' . $paymentData->settlementAmount->value
+                            );
+                            $order->addStatusHistoryComment($message)->save();
+                        }
                     }
                 }
 
