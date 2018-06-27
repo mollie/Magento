@@ -418,12 +418,24 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * @param $orderId
+     * @param $paymentToken
      *
      * @return string
      */
-    public function getReturnUrl($orderId)
+    public function getReturnUrl($orderId, $paymentToken)
     {
-        return Mage::getUrl('mpm/api/return', array('_query' => 'order_id=' . $orderId . '&utm_nooverride=1'));
+        return Mage::getUrl(
+            'mpm/api/return',
+            array('_query' => 'order_id=' . $orderId . '&payment_token=' . $paymentToken . '&utm_nooverride=1')
+        );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentToken()
+    {
+        return Mage::helper('core')->uniqHash();
     }
 
     /**

@@ -89,23 +89,27 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
                 $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
                 $this->mollieHelper->addLog('paymentAction [ERR]', 'Order not found in session.');
                 $this->_redirect('checkout/cart');
+                return;
             }
 
             $methodInstance = $order->getPayment()->getMethodInstance();
             $redirectUrl = $methodInstance->startTransaction($order);
             if (!empty($redirectUrl)) {
                 $this->_redirectUrl($redirectUrl);
+                return;
             } else {
                 $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
                 $this->mollieHelper->addLog('paymentAction [ERR]', 'Missing Redirect Url');
                 $this->mollieHelper->restoreCart();
                 $this->_redirect('checkout/cart');
+                return;
             }
         } catch (\Exception $e) {
             $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
             $this->mollieHelper->addLog('paymentAction [ERR]', $e->getMessage());
             $this->mollieHelper->restoreCart();
             $this->_redirect('checkout/cart');
+            return;
         }
     }
 
@@ -137,25 +141,28 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
      */
     public function returnAction()
     {
-        $params = $this->getRequest()->getParams();
+        $orderId = $this->getRequest()->getParam('order_id', null);
+        $paymentToken = $this->getRequest()->getParam('payment_token', null);
 
-        if (!isset($params['order_id'])) {
+        if ($orderId === null) {
             $this->mollieHelper->setError(self::RETURN_ERR_MSG);
             $this->mollieHelper->addLog('returnAction [ERR]', 'Invalid return, missing order_id param.');
             $this->_redirect('checkout/cart');
         }
 
         try {
-            $status = $this->mollieApiModel->processTransaction($params['order_id'], 'success');
+            $status = $this->mollieApiModel->processTransaction($orderId, 'success', $paymentToken);
         } catch (\Exception $e) {
             $this->mollieHelper->setError(self::RETURN_ERR_MSG);
             $this->mollieHelper->addLog('returnAction [ERR]', $e->getMessage());
             $this->mollieHelper->restoreCart();
             $this->_redirect('checkout/cart');
+            return;
         }
 
         if (!empty($status['success'])) {
             $this->_redirect('checkout/onepage/success?utm_nooverride=1');
+            return;
         } else {
             if (isset($status['status']) && $status['status'] == 'cancel') {
                 $this->mollieHelper->setError(self::RETURN_CANCEL_MSG);
@@ -164,6 +171,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             }
             $this->mollieHelper->restoreCart();
             $this->_redirect('checkout/cart');
+            return;
         }
     }
 
