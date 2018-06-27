@@ -361,6 +361,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
             $payment = $order->getPayment();
             if (!$payment->getIsTransactionClosed() && $type == 'webhook') {
+                if ($order->isCanceled()) {
+                    $order = $this->uncancelOrder($order);
+                }
 
                 if (abs($amount - $orderAmount['value']) < 0.01) {
                     $payment->setTransactionId($transactionId);
@@ -459,6 +462,28 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
         }
 
         return $msg;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return Mage_Sales_Model_Order
+     */
+    public function uncancelOrder($order)
+    {
+        try {
+            $state = Mage_Sales_Model_Order::STATE_NEW;
+            $status = $this->mollieHelper->getStatusPending($order->getStoreId());
+            $message = $this->mollieHelper->__('Order uncancelled by webhook.');
+            $order->setState($state, $status, $message, false)->save();
+            foreach ($order->getAllItems() as $item) {
+                $item->setQtyCanceled(0)->save();
+            }
+        } catch (Exception $e) {
+            $this->mollieHelper->addLog('uncancelOrder [ERR]', $e->getMessage());
+        }
+
+        return $order;
     }
 
     /**
