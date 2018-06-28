@@ -237,16 +237,19 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             return $paymentUrl;
         }
 
+        $paymentToken = $this->mollieHelper->getPaymentToken();
+
         $request = array(
             "amount"      => $this->mollieHelper->getOrderAmountByOrder($order),
             "description" => $this->mollieHelper->getDescription($order),
-            "redirectUrl" => $this->mollieHelper->getReturnUrl($orderId),
+            "redirectUrl" => $this->mollieHelper->getReturnUrl($orderId, $paymentToken),
             "webhookUrl"  => $this->mollieHelper->getWebhookUrl(),
             "method"      => $method,
             "issuer"      => $issuer,
             "metadata"    => array(
-                "order_id" => $orderId,
-                "store_id" => $storeId,
+                "order_id"      => $orderId,
+                "store_id"      => $storeId,
+                "payment_token" => $paymentToken,
             ),
             "locale"      => $this->mollieHelper->getLocaleCode()
         );
@@ -300,13 +303,14 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
     /**
      * @param        $orderId
      * @param string $type
+     * @param null   $paymentToken
      *
      * @return array|string
      * @throws Exception
      * @throws Mage_Core_Exception
      * @throws \Mollie\Api\Exceptions\ApiException
      */
-    public function processTransaction($orderId, $type = 'webhook')
+    public function processTransaction($orderId, $type = 'webhook', $paymentToken = null)
     {
         $msg = '';
 
@@ -357,6 +361,9 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
 
             $payment = $order->getPayment();
             if (!$payment->getIsTransactionClosed() && $type == 'webhook') {
+                if ($order->isCanceled()) {
+                    $order = $this->uncancelOrder($order);
+                }
 
                 if (abs($amount - $orderAmount['value']) < 0.01) {
                     $payment->setTransactionId($transactionId);
@@ -403,6 +410,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             $msg = array('success' => true, 'status' => 'paid', 'order_id' => $orderId, 'type' => $type);
             $this->molliePaymentsModel->updatePayment($orderId, $msg['status'], $paymentData);
             $this->mollieHelper->addLog('processTransaction [SUCC]', $msg);
+            $this->checkCheckoutSession($order, $paymentToken, $paymentData, $type);
             return $msg;
         }
 
@@ -432,6 +440,7 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
             $msg = array('success' => true, 'status' => 'open', 'order_id' => $orderId, 'type' => $type);
             $this->molliePaymentsModel->updatePayment($orderId, $msg['status'], $paymentData);
             $this->mollieHelper->addLog('processTransaction [SUCC]', $msg);
+            $this->checkCheckoutSession($order, $paymentToken, $paymentData, $type);
             return $msg;
         }
 
@@ -453,6 +462,58 @@ class Mollie_Mpm_Model_Api extends Mage_Payment_Model_Method_Abstract
         }
 
         return $msg;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return Mage_Sales_Model_Order
+     */
+    public function uncancelOrder($order)
+    {
+        try {
+            $state = Mage_Sales_Model_Order::STATE_NEW;
+            $status = $this->mollieHelper->getStatusPending($order->getStoreId());
+            $message = $this->mollieHelper->__('Order uncancelled by webhook.');
+            $order->setState($state, $status, $message, false)->save();
+            foreach ($order->getAllItems() as $item) {
+                $item->setQtyCanceled(0)->save();
+            }
+        } catch (Exception $e) {
+            $this->mollieHelper->addLog('uncancelOrder [ERR]', $e->getMessage());
+        }
+
+        return $order;
+    }
+
+    /**
+     * Check if there is an active checkout session and if not, create this based on the payment data.
+     * Validates the PaymentToken of the return url with the meta data PaymentToken.
+     * Issue #72: https://github.com/mollie/Magento/issues/72
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param $paymentToken
+     * @param $paymentData
+     * @param $type
+     */
+    public function checkCheckoutSession($order, $paymentToken, $paymentData, $type)
+    {
+        if ($type == 'webhook') {
+            return;
+        }
+
+        /** @var Mage_Checkout_Model_Session $session */
+        $session = Mage::getSingleton('checkout/session');
+        if ($type != 'webhook' && ($session->getLastOrderId() != $order->getId())) {
+            if ($paymentToken && isset($paymentData->metadata->payment_token)) {
+                if ($paymentToken == $paymentData->metadata->payment_token) {
+                    $session->setLastQuoteId($order->getQuoteId())
+                        ->setLastSuccessQuoteId($order->getQuoteId())
+                        ->setLastOrderId($order->getId())
+                        ->setLastRealOrderId($order->getIncrementId());
+                }
+            }
+        }
     }
 
     /**

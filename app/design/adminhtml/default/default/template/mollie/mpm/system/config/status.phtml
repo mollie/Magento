@@ -60,56 +60,65 @@ foreach ($methods as $method) {
 <tr>
     <td>
         <b><?php echo $this->mollieHelper->__('Payment methods'); ?></b><br/>
-        <?php if ($methodCount > 0) { ?>
+        <?php if ($methodCount > 0): ?>
             <?php
-            if ($methodCount !== 1) {
+            if ($methodCount !== 1):
                 echo $this->mollieHelper->__('%d payment methods available:', $methodCount);
-            } else {
+            else:
                 echo $this->mollieHelper->__('One payment method available:');
-            }
+            endif;
             ?>
             <table class="mollietable">
                 <tr>
-                    <th class="title"><?php echo $this->mollieHelper->__('Title'); ?></th>
-                    <th class="checkbox"><?php echo $this->mollieHelper->__('Default'); ?></th>
-                    <th class="description"><?php echo $this->mollieHelper->__('Description'); ?></th>
-                    <th class="countries"><?php if ($storeId == 0) {
-                            echo $this->mollieHelper->__('Allowed countries');
-                        } ?></th>
-                    <th class="sort"><?php echo $this->mollieHelper->__('Sort Order'); ?></th>
+                    <th class="title">
+                        <?php echo $this->mollieHelper->__('Title'); ?>
+                    </th>
+                    <th class="checkbox">
+                        <?php echo $this->mollieHelper->__('Default'); ?>
+                    </th>
+                    <th class="description">
+                        <?php echo $this->mollieHelper->__('Description'); ?>
+                    </th>
+                    <?php if ($storeId == 0 && $websiteId == 0): ?>
+                        <th class="countries">
+                            <?php echo $this->mollieHelper->__('Allowed countries'); ?>
+                        </th>
+                    <?php endif; ?>
+                    <th class="sort">
+                        <?php echo $this->mollieHelper->__('Sort Order'); ?>
+                    </th>
                 </tr>
                 <?php
-                foreach ($methods as $key => $method) {
+                foreach ($methods as $key => $method):
 
                     $configKey = 'mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT);
-                    $sortOrder = $this->mollieHelper->getMethodSortOrder($configKey, $storeId);
-                    $title = $this->mollieHelper->getMethodTitle($configKey, $storeId);
-                    $allowSpecific = $this->mollieHelper->getMethodAllowSpecific($configKey, $storeId);
-                    $specificCountry = $this->mollieHelper->getMethodSpecificCountry($configKey, $storeId);
+                    $sortOrder = $this->mollieHelper->getMethodSortOrder($configKey, $storeId, $websiteId);
+                    $title = $this->mollieHelper->getMethodTitle($configKey, $storeId, $websiteId);
+                    $inherit = $this->mollieHelper->getUseDefaultTitle($configKey, $storeId, $websiteId);
+                    $allowSpecific = $this->mollieHelper->getMethodAllowSpecific($configKey);
+                    $specificCountry = $this->mollieHelper->getMethodSpecificCountry($configKey);
 
-                    if ($method['available']) {
-                        ?>
+                    if ($method['available']) : ?>
                         <tr>
                             <td class="value">
                                 <input type="text"
                                        name="groups[<?php echo $configKey; ?>][fields][title][value]"
                                        value="<?php echo $title ?: $this->mollieHelper->__($method['description']); ?>"
-                                       class="input-text <?php echo($title ?: 'disabled'); ?>"
-                                />
+                                       class="input-text <?php echo $inherit ? 'disabled' : ''; ?>">
                             </td>
                             <td class="use-default">
                                 <input id="payment_<?php echo $configKey; ?>_apikey_inherit"
                                        name="groups[<?php echo $configKey; ?>][fields][title][inherit]"
                                        type="checkbox" value="1"
                                        class="checkbox config-inherit"
-                                    <?php echo $title ?: ' checked="checked"'; ?>
+                                       <?php echo $inherit ? ' checked="checked"' : ''; ?>
                                        onclick="toggleValueElements(this, Element.previous(this.parentNode))">
                             </td>
                             <td>
                                 <?php echo $this->mollieHelper->__($method['description']); ?>
                             </td>
-                            <td class="value">
-                                <?php if ($storeId == 0) { ?>
+                            <?php if ($storeId == 0 && $websiteId == 0): ?>
+                                <td class="value">
                                     <select id="payment_<?php echo $configKey; ?>_allowspecific"
                                             name="groups[<?php echo $configKey; ?>][fields][allowspecific][value]"
                                             class=" select">
@@ -130,19 +139,20 @@ foreach ($methods as $method) {
                                             size="10"
                                             <?php if (!$allowSpecific): ?>disabled="disabled"<?php endif; ?>
                                             multiple="multiple"
-                                            <?php if (!$allowSpecific): ?>style="display: none;"<?php endif; ?>
-                                    <?php foreach ($countries
-
-                                    as $country) { ?>
-                                    <?php $selected = (in_array($country['value'],
-                                            $specificCountry) || $country['value'] == $specificCountry) ? true : false; ?>
-                                    <option value="<?php echo $country['value']; ?>" <?php if ($allowSpecific && $selected): ?>selected="selected"<?php endif; ?>>
-                                        <?php echo $country['label']; ?>
-                                    </option>
-                                <?php } ?>
+                                            <?php if (!$allowSpecific): ?>style="display: none;"<?php endif; ?>>
+                                        <?php foreach ($countries as $country): ?>
+                                            <?php $selected = (in_array($country['value'],
+                                                    $specificCountry) || $country['value'] == $specificCountry) ? true : false; ?>
+                                            <option value="<?php echo $country['value']; ?>" <?php if ($allowSpecific && $selected): ?>selected="selected"<?php endif; ?>>
+                                                <?php echo $country['label']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
-                                <?php } ?>
-                            </td>
+                                </td>
+                            <?php else: ?>
+                                <input type="hidden" name="groups[<?php echo $configKey; ?>][fields][allowspecific][inherit]" value="1">
+                                <input type="hidden" name="groups[<?php echo $configKey; ?>][fields][specificcountry][inherit]" value="1">
+                            <?php endif; ?>
                             <td>
                                 <input id="payment<?php echo $configKey; ?>_sort_order"
                                        name="groups[<?php echo $configKey; ?>][fields][sort_order][value]"
@@ -150,15 +160,16 @@ foreach ($methods as $method) {
                                        style="width:40px;"/>
                             </td>
                         </tr>
-                        <?php
-                    }
-                }
-                ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </table>
-        <?php } else { ?>
-            <?php echo $this->mollieHelper->__('No payment methods available for this account.<br />Reason: %s',
-                $message); ?>
-        <?php } ?>
+        <?php else: ?>
+            <?php echo $this->mollieHelper->__(
+                'No payment methods available for this account.<br />Reason: %s',
+                $message
+            );
+            ?>
+        <?php endif; ?>
         <br/>
         <script type="text/javascript">
             if (!window.pushDownPaypal) window.pushDownPaypal = function () {
