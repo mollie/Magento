@@ -169,62 +169,99 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @param      $method
      * @param null $storeId
+     * @param null $websiteId
      *
      * @return mixed
      */
-    public function getMethodSortOrder($method, $storeId = null)
+    public function getMethodSortOrder($method, $storeId = null, $websiteId = null)
     {
         if (strpos($method, 'mpm_void_') === false) {
             $method = 'mpm_void_' . str_pad($method, 2, "0", STR_PAD_LEFT);
         }
 
-        return $this->getStoreConfig(str_replace('{method}', $method, self::XPATH_METHOD_SORT_ORDER), $storeId);
+        $path = str_replace('{method}', $method, self::XPATH_METHOD_SORT_ORDER);
+        return $this->getStoreConfig($path, $storeId, $websiteId);
     }
 
     /**
      * @param      $method
      * @param null $storeId
+     * @param null $websiteId
      *
      * @return mixed
      */
-    public function getMethodTitle($method, $storeId = null)
+    public function getMethodTitle($method, $storeId = null, $websiteId = null)
     {
         if (strpos($method, 'mpm_void_') === false) {
             $method = 'mpm_void_' . str_pad($method, 2, "0", STR_PAD_LEFT);
         }
 
-        return $this->getStoreConfig(str_replace('{method}', $method, self::XPATH_METHOD_TITLE), $storeId);
+        $path = str_replace('{method}', $method, self::XPATH_METHOD_TITLE);
+        return $this->getStoreConfig($path, $storeId, $websiteId);
     }
 
     /**
      * @param      $method
      * @param null $storeId
+     * @param null $websiteId
+     *
+     * @return bool
+     */
+    public function getUseDefaultTitle($method, $storeId = null, $websiteId = null)
+    {
+        if ($storeId == null && $websiteId == null) {
+            return empty($this->getMethodTitle($method));
+        }
+
+        if (strpos($method, 'mpm_void_') === false) {
+            $method = 'mpm_void_' . str_pad($method, 2, "0", STR_PAD_LEFT);
+        }
+
+        $path = str_replace('{method}', $method, self::XPATH_METHOD_TITLE);
+        $collection = Mage::getModel('core/config_data')->getCollection()->addFieldToFilter('path', $path);
+
+        if ($storeId) {
+            $collection = $collection->addFieldToFilter('scope_id', $storeId)->addFieldToFilter('scope', 'stores');
+            $configId = $collection->getFirstItem()->getConfigId();
+            return empty($configId);
+        }
+
+        if ($websiteId) {
+            $collection = $collection->addFieldToFilter('scope_id', $websiteId)->addFieldToFilter('scope', 'websites');
+            $configId = $collection->getFirstItem()->getConfigId();
+            return empty($configId);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param      $method
      *
      * @return mixed
      */
-    public function getMethodSpecificCountry($method, $storeId = null)
+    public function getMethodSpecificCountry($method)
     {
         if (strpos($method, 'mpm_void_') === false) {
             $method = 'mpm_void_' . str_pad($method, 2, "0", STR_PAD_LEFT);
         }
 
-        $config = $this->getStoreConfig(str_replace('{method}', $method, self::XPATH_METHOD_SPECIFICCOUNTRY), $storeId);
+        $config = $this->getStoreConfig(str_replace('{method}', $method, self::XPATH_METHOD_SPECIFICCOUNTRY));
         return explode(',', $config);
     }
 
     /**
      * @param      $method
-     * @param null $storeId
      *
      * @return mixed
      */
-    public function getMethodAllowSpecific($method, $storeId = null)
+    public function getMethodAllowSpecific($method)
     {
         if (strpos($method, 'mpm_void_') === false) {
             $method = 'mpm_void_' . str_pad($method, 2, "0", STR_PAD_LEFT);
         }
 
-        return $this->getStoreConfig(str_replace('{method}', $method, self::XPATH_METHOD_ALLOWSPECIFIC), $storeId);
+        return $this->getStoreConfig(str_replace('{method}', $method, self::XPATH_METHOD_ALLOWSPECIFIC));
     }
 
     /**

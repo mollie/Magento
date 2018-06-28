@@ -92,10 +92,11 @@ foreach ($methods as $method) {
                 foreach ($methods as $key => $method):
 
                     $configKey = 'mpm_void_' . str_pad($key, 2, "0", STR_PAD_LEFT);
-                    $sortOrder = $this->mollieHelper->getMethodSortOrder($configKey, $storeId);
-                    $title = $this->mollieHelper->getMethodTitle($configKey, $storeId);
-                    $allowSpecific = $this->mollieHelper->getMethodAllowSpecific($configKey, $storeId);
-                    $specificCountry = $this->mollieHelper->getMethodSpecificCountry($configKey, $storeId);
+                    $sortOrder = $this->mollieHelper->getMethodSortOrder($configKey, $storeId, $websiteId);
+                    $title = $this->mollieHelper->getMethodTitle($configKey, $storeId, $websiteId);
+                    $inherit = $this->mollieHelper->getUseDefaultTitle($configKey, $storeId, $websiteId);
+                    $allowSpecific = $this->mollieHelper->getMethodAllowSpecific($configKey);
+                    $specificCountry = $this->mollieHelper->getMethodSpecificCountry($configKey);
 
                     if ($method['available']) : ?>
                         <tr>
@@ -103,14 +104,14 @@ foreach ($methods as $method) {
                                 <input type="text"
                                        name="groups[<?php echo $configKey; ?>][fields][title][value]"
                                        value="<?php echo $title ?: $this->mollieHelper->__($method['description']); ?>"
-                                       class="input-text <?php echo($title ?: 'disabled'); ?>">
+                                       class="input-text <?php echo $inherit ? 'disabled' : ''; ?>">
                             </td>
                             <td class="use-default">
                                 <input id="payment_<?php echo $configKey; ?>_apikey_inherit"
                                        name="groups[<?php echo $configKey; ?>][fields][title][inherit]"
                                        type="checkbox" value="1"
                                        class="checkbox config-inherit"
-                                    <?php echo $title ?: ' checked="checked"'; ?>
+                                       <?php echo $inherit ? ' checked="checked"' : ''; ?>
                                        onclick="toggleValueElements(this, Element.previous(this.parentNode))">
                             </td>
                             <td>
