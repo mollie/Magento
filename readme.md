@@ -3,8 +3,6 @@
 </p>
 <h1 align="center">Magento 1.x plugin for Mollie</h1>
 
-![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
-
 > **Magento 2.x** users check out our [Mollie Magento 2 plugin](https://github.com/mollie/magento2).
 
 ***
