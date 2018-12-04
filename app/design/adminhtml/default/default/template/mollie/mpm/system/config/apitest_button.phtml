@@ -34,9 +34,10 @@
     <script type="text/javascript">
         //<![CDATA[
         function checkApikey() {
-            var apiKey = $F('payment_mollie_apikey');
+            var apiKeyTest = $F('payment_mollie_apikey_test');
+            var apiKeyLive = $F('payment_mollie_apikey_live');
             new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
-                parameters: {apikey: apiKey, isAjax: 1},
+                parameters: {'test_key': apiKeyTest, 'live_key': apiKeyLive, isAjax: 1},
                 method: 'get',
                 onCreate: function () {
                     $('payment_mollie_apitest_result').hide();

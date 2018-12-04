@@ -35,7 +35,7 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
 {
 
     /**
-     * @var Mollie_Mpm_Helper_Api
+     * @var Mollie_Mpm_Helper_Data
      */
     public $mollieHelper;
 
@@ -46,7 +46,7 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
     {
         parent::_construct();
         $this->setTemplate('mollie/mpm/payment/form.phtml');
-        $this->mollieHelper = Mage::helper('mpm/api');
+        $this->mollieHelper = Mage::helper('mpm');
     }
 
     /**
@@ -56,23 +56,22 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
     {
         $code = $this->getMethod()->getCode();
         $method = $this->getMethodByCode($code);
-
-        if (!$this->hasData('_method_label_html')) {
-            $code = $this->getMethod()->getCode();
-            $title = $this->mollieHelper->getMethodTitle($code) ?: $method['description'];
-
-            if (!$this->mollieHelper->showImages()) {
+        if (isset($method) && !$this->hasData('_method_label_html')) {
+            if (!$this->mollieHelper->useImage()) {
                 return '';
             }
 
-            $labelBlock = Mage::app()->getLayout()->createBlock('core/template', null, array(
+            $labelBlock = Mage::app()->getLayout()->createBlock(
+                'core/template', null, array(
                 'template'             => 'mollie/mpm/payment/label.phtml',
-                'payment_method_icon'  => $method['image']->size2x,
-                'payment_method_label' => $title,
-                'payment_method_class' => $code
-            ));
+                'payment_method_icon'  => isset($method->image->size2x) ? $method->image->size2x : '',
+                'payment_method_label' => $this->getMethod()->getTitle(),
+                'payment_method_class' => $this->getMethod()->getCode()
+                )
+            );
             $this->setData('_method_label_html', $labelBlock->toHtml());
         }
+
         return $this->getData('_method_label_html');
     }
 

@@ -35,25 +35,25 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
 {
 
     /**
-     * Mollie API Helper.
+     * Mollie Test Helper.
      *
-     * @var Mollie_Mpm_Helper_Api
+     * @var Mollie_Mpm_Helper_Test
      */
-    public $mollieHelper;
+    public $testsHelper;
     /**
      * Mollie API Model.
      *
-     * @var Mollie_Mpm_Model_Api
+     * @var Mollie_Mpm_Helper_Data
      */
-    public $mollieApiModel;
+    public $mollieHelper;
 
     /**
      * Construct.
      */
     public function _construct()
     {
-        $this->mollieHelper = Mage::helper('mpm/api');
-        $this->mollieApiModel = Mage::getModel('mpm/api');
+        $this->testsHelper = Mage::helper('mpm/test');
+        $this->mollieHelper = Mage::helper('mpm');
         parent::_construct();
     }
 
@@ -68,31 +68,13 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
             return Mage::app()->getResponse()->setBody($msg);
         }
 
-        $results = array();
-        $apiKey = Mage::app()->getRequest()->getParam('apikey');
+        /** @var Mage_Core_Controller_Request_Http $request */
+        $request = Mage::app()->getRequest();
+        $testKey = $request->getParam('test_key');
+        $liveKey = $request->getParam('live_key');
+        $results = $this->testsHelper->getMethods($testKey, $liveKey);
 
-        if (empty($apiKey)) {
-            $msg = $this->mollieHelper->__('API Key: Empty value');
-            $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
-        } else {
-            if (!preg_match('/^(live|test)_\w{30,}$/', $apiKey)) {
-                $msg = $this->mollieHelper->__('API Key: Should start with "test_" or "live_"');
-                $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
-            } else {
-                try {
-                    $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
-                    $mollieApi->methods->all();
-                    $msg = $this->mollieHelper->__('API Key: Success!');
-                    $results[] = sprintf('<span class="mollie-success">%s</span>', $msg);
-                } catch (\Exception $e) {
-                    $msg = $this->mollieHelper->__('API Key: %s', $e->getMessage());
-                    $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
-                }
-            }
-        }
-
-        $msg = implode('<br/>', $results);
-        Mage::app()->getResponse()->setBody($msg);
+        return Mage::app()->getResponse()->setBody(implode('<br/>', $results));
     }
 
     /**
@@ -106,28 +88,9 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
             return Mage::app()->getResponse()->setBody($msg);
         }
 
-        $results = array();
-        $compatibilityChecker = $this->mollieHelper->getMollieCompatibilityChecker();
+        $results = $this->testsHelper->compatibilityChecker();
 
-        if (!$compatibilityChecker->satisfiesPhpVersion()) {
-            $minPhpVersion = $compatibilityChecker::MIN_PHP_VERSION;
-            $msg = $this->mollieHelper->__('Error: The client requires PHP version >= %s, you have %s.', $minPhpVersion, PHP_VERSION);
-            $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
-        } else {
-            $msg = $this->mollieHelper->__('Success: PHP version: %s.', PHP_VERSION);
-            $results[] = sprintf('<span class="mollie-success">%s</span>', $msg);
-        }
-
-        if (!$compatibilityChecker->satisfiesJsonExtension()) {
-            $msg = $this->mollieHelper->__('Error: PHP extension JSON is not enabled, please enable.');
-            $results[] = sprintf('<span class="mollie-error">%s</span>', $msg);
-        } else {
-            $msg = $this->mollieHelper->__('Success: JSON is enabled.');
-            $results[] = sprintf('<span class="mollie-success">%s</span>', $msg);
-        }
-
-        $msg = implode('<br/>', $results);
-        Mage::app()->getResponse()->setBody($msg);
+        return Mage::app()->getResponse()->setBody(implode('<br/>', $results));
     }
 
     /**

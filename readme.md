@@ -51,6 +51,8 @@ Mollie requires no minimum costs, no fixed contracts, no hidden costs. At Mollie
 
 - Paysafecard
 
+- Klarna
+
 - SEPA bank transfer
 
 - Giftcards 

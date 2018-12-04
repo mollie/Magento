@@ -57,6 +57,6 @@ class Mollie_Mpm_Block_Adminhtml_Render_Version extends Mage_Adminhtml_Block_Sys
      */
     public function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-        return $this->mollieHelper->getModuleVersion();
+        return $this->mollieHelper->getExtensionVersion();
     }
 }

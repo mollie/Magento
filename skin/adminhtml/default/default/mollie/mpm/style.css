@@ -36,6 +36,7 @@
     padding: 20px 10px 20px 20px;
     background-color: white;
     border: 1px solid #DFDFDF;
+    margin: 10px 0px 10px 0px;
 }
 
 .mollie-header p {
@@ -44,6 +45,7 @@
 
 .mollie-header td a {
     margin-left: 15px;
+    color: #888;
 }
 
 .mollie-header table {
@@ -55,7 +57,7 @@
     display: block;
     border: 2px solid #79A22E;
     background-color: white;
-    padding: 2px;
+    padding: 5px;
 }
 
 .mollie-success:before {
@@ -67,11 +69,15 @@
     content: '✓';
 }
 
+.mollie-success .enabled-methods {
+    display: block;
+}
+
 .mollie-error {
     display: block;
     background-color: white;
     border: 2px solid #EB5202;
-    padding: 2px;
+    padding: 5px;
 }
 
 .mollie-error:before {
@@ -83,69 +89,59 @@
     content: '✕';
 }
 
-.mollietable {
-    margin: 10px;
+.mollie-method {
+    margin-bottom: 10px;
 }
 
-.mollietable tr {
-    margin: 30px;
+.mollie-method p {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #D6D6D6;
+    font-weight: bold;
+    line-height: 30px;
+    margin-bottom: 10px;
 }
 
-.mollietable td {
-    padding: 10px 15px 10px 5px;
+.mollie-method .form-list td.label {
+    font-weight: bold;
 }
 
-.mollietable tr:nth-child(even) {
-    background: #F5F5F5;
+.mollie-method img {
+    width: 30px;
+    margin-right: 10px;
+    margin-left: 10px;
+    float: left;
 }
 
-.mollietable tr:nth-child(odd) {
-    background: #FFF;
+a.mollie-tooltip span {
+    display: none;
+    padding: 2px 3px;
+    margin-left: 8px;
+    width: auto;
 }
 
-.mollietable tbody {
-    border: 2px solid #E8E8E8;
+a.mollie-tooltip:hover span {
     display: block;
-}
-
-.mollietable td.value select {
-    margin: 5px;
-}
-
-.mollietable td input.input-text {
-    margin: 5px;
-}
-
-.mollietable .title {
+    position: absolute;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    color: #6C6C6C;
     width: auto;
-    padding: 10px 15px 10px 10px;
+    margin-right: 20px;
 }
 
-.mollietable .checkbox {
-    margin: 10px 5px 5px 10px
+#payment_form_mollie_paymentlink {
+    font-weight: bold;
+    line-height: 30px;
+    color: #6F8992;
 }
 
-.mollietable .description {
-    width: auto;
-    padding: 10px 15px 10px 5px;
-}
-
-.mollietable .minimum {
-    width: auto;
-    padding: 10px 15px 10px 5px;
-}
-
-.mollietable .maximum {
-    width: auto;
-    padding: 10px 15px 10px 5px;
-}
-
-.mollietable .countries {
-    width: auto;
-    padding: 10px 15px 10px 10px;
-}
-
-.mollietable .sort {
-    width: auto;
-    padding: 10px 15px 10px 5px;
+#payment_form_mollie_paymentlink:before {
+    content: "";
+    background-image: url(../mpm/images/sent_payment_link.png);
+    width: 30px;
+    background-size: 30px;
+    background-position: -5px 0px;
+    height: 30px;
+    display: -webkit-inline-box;
+    float: left;
 }

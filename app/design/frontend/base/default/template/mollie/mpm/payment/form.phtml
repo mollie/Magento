@@ -33,22 +33,22 @@
 $code = $this->getMethodCode();
 $method = $this->getMethodByCode($code);
 ?>
-<ul class="form-list" id="payment_form_<?php echo $this->escapeHtml($code) ?>" style="display:none">
-    <?php if (!empty($method['issuers']) && !empty($method['issuers_title'])) { ?>
+<?php if ($method->issuers() && count($method->issuers())): ?>
+    <ul class="form-list" id="payment_form_<?= $this->escapeHtml($code) ?>" style="display:none">
         <li>
-            <label for="<?php echo $code ?>_issuer" class="required">
-                <em>*</em><?php echo $method['issuers_title']; ?>
+            <label for="<?= $code ?>_issuer" class="required">
+                <em>*</em><?= $this->__('Please select'); ?>
             </label>
             <span class="input-box">
-             <select name="<?php echo $code; ?>_issuer" id="<?php echo $code; ?>_issuer" class="required-entry input-text">
-                <option value=""><?php echo $this->__('Please select'); ?></option>
-                 <?php
-                 foreach ($method['issuers'] as $issuer) {
-                     echo '<option value="' . htmlspecialchars($issuer->id) . '">' . htmlspecialchars($issuer->name) . '</option>';
-                 }
-                 ?>
-                </select>
+            <select name="<?= $code; ?>_issuer" id="<?= $code; ?>_issuer" class="required-entry input-text">
+                <option value=""><?= $this->__('Please select'); ?></option>
+                <?php
+                foreach ($method->issuers() as $issuer):
+                    echo '<option value="' . htmlspecialchars($issuer->id) . '">' . htmlspecialchars($issuer->name) . '</option>';
+                endforeach;
+                ?>
+            </select>
             </span>
         </li>
-    <?php } ?>
-</ul>
+    </ul>
+<?php endif; ?>
