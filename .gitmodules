@@ -13,3 +13,6 @@
 [submodule "lib/Mollie/Psr/HttpMessage"]
 	path = lib/Mollie/Psr/HttpMessage
 	url = https://github.com/php-fig/http-message
+[submodule "lib/Mollie/Composer/CaBundle"]
+	path = lib/Mollie/Composer/CaBundle
+	url = https://github.com/composer/ca-bundle
