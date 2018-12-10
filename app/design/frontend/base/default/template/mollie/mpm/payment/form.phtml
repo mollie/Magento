@@ -33,7 +33,7 @@
 $code = $this->getMethodCode();
 $method = $this->getMethodByCode($code);
 ?>
-<?php if ($method->issuers() && count($method->issuers())): ?>
+<?php if (!empty($method->issuers)): ?>
     <ul class="form-list" id="payment_form_<?= $this->escapeHtml($code) ?>" style="display:none">
         <li>
             <label for="<?= $code ?>_issuer" class="required">

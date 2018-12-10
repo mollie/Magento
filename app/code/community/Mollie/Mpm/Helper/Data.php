@@ -747,7 +747,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
         $storeId = $quote ? $quote->getStoreId() : null;
         $availableMethods = $this->getAvailableMethods($storeId, $quote, 'orders', 'issuers');
-        $available = array_search($methodCode, array_column((array)$availableMethods, 'id'));
+        $availableMethodsArray = json_decode(json_encode($availableMethods), true);
+        $available = array_search($methodCode, array_column($availableMethodsArray, 'id'));
         if ($available === false) {
             return false;
         }
@@ -873,7 +874,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             $code = str_replace('mollie_', '', $code);
         }
 
-        $key = array_search($code, array_column((array)$this->mollieMethods, 'id'));
+        $availableMethodsArray = json_decode(json_encode($this->mollieMethods), true);
+        $key = array_search($code, array_column($availableMethodsArray, 'id'));
         if ($key !== false) {
             return $this->mollieMethods[$key];
         }
