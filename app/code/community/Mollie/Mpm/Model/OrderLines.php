@@ -115,8 +115,15 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
         }
 
         if (!$order->getIsVirtual()) {
-            $totalAmount = $forceBaseCurrency ? $order->getBaseShippingInclTax() : $order->getShippingInclTax();
-            $vatRate = $this->getShippingVatRate($order);
+            $rowTotalInclTax = $forceBaseCurrency ? $order->getBaseShippingInclTax() : $order->getShippingInclTax();
+            $discountAmount = $forceBaseCurrency ? $order->getBaseShippingDiscountAmount() : $order->getShippingDiscountAmount();
+
+            /**
+             * The total amount of the line, including VAT and discounts
+             * Should Match: (unitPrice × quantity) - discountAmount
+             * NOTE: TotalAmount can differ from actutal Total Amount due to rouding in tax or exchange rate
+             */
+            $totalAmount = $rowTotalInclTax - $discountAmount;
 
             /**
              * The amount of VAT on the line.
@@ -124,6 +131,7 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
              * Due to Mollie API requirements, we calculate this instead of using $item->getTaxAmount() to overcome
              * any rouding issues.
              */
+            $vatRate = $this->getShippingVatRate($order);
             $vatAmount = round($totalAmount * ($vatRate / (100 + $vatRate)), 2);
 
             $orderLines[] = array(
@@ -131,9 +139,9 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
                 'type'           => 'shipping_fee',
                 'name'           => preg_replace("/[^A-Za-z0-9 -]/", "", $order->getShippingDescription()),
                 'quantity'       => 1,
-                'unitPrice'      => $this->mollieHelper->getAmountArray($currency, $totalAmount),
+                'unitPrice'      => $this->mollieHelper->getAmountArray($currency, $rowTotalInclTax),
                 'totalAmount'    => $this->mollieHelper->getAmountArray($currency, $totalAmount),
-                'discountAmount' => $this->mollieHelper->getAmountArray($currency, '0'),
+                'discountAmount' => $this->mollieHelper->getAmountArray($currency, $discountAmount),
                 'vatRate'        => sprintf("%.2f", $vatRate),
                 'vatAmount'      => $this->mollieHelper->getAmountArray($currency, $vatAmount),
                 'sku'            => $order->getShippingMethod()
@@ -151,7 +159,7 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
     /**
      * @param Mage_Sales_Model_Order $order
      *
-     * @return string
+     * @return double
      */
     public function getShippingVatRate(Mage_Sales_Model_Order $order)
     {
