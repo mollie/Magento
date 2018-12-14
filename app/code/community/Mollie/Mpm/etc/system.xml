@@ -464,7 +464,7 @@
                             </depends>
                         </method>
                         <due_days translate="label">
-                            <label>Title</label>
+                            <label>Due Days</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>4</sort_order>
                             <show_in_default>1</show_in_default>
