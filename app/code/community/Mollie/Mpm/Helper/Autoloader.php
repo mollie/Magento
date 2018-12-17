@@ -54,6 +54,7 @@ class Mollie_Mpm_Helper_Autoloader
             if ($libBaseDir[0] !== '/') {
                 $libBaseDir = Mage::getBaseDir() . DS . $libBaseDir;
             }
+
             self::createAndRegisterWithBaseDir($libBaseDir);
         }
     }
@@ -72,6 +73,7 @@ class Mollie_Mpm_Helper_Autoloader
             Mage::getConfig()->loadDb();
             $configLoaded = true;
         }
+
         return Mage::getStoreConfig($path);
     }
 
@@ -89,6 +91,7 @@ class Mollie_Mpm_Helper_Autoloader
                 ->addNamespace('GuzzleHttp', $libBaseDir . '/GuzzleHttp/Guzzle/src')
                 ->addNamespace('GuzzleHttp\Psr7', $libBaseDir . '/GuzzleHttp/Psr7/src')
                 ->addNamespace('GuzzleHttp\Promise', $libBaseDir . '/GuzzleHttp/Promises/src')
+                ->addNamespace('Composer\CaBundle', $libBaseDir . '/Composer/CaBundle/src')
                 ->register();
             $registered = true;
             self::loadGuzzleFunctions($libBaseDir);
@@ -96,8 +99,6 @@ class Mollie_Mpm_Helper_Autoloader
 
     }
 
-    
-    
     /**
      * Register loader with SPL autoloader stack.
      *
@@ -134,6 +135,7 @@ class Mollie_Mpm_Helper_Autoloader
         } else {
             array_push($this->prefixes[$prefix], $baseDir);
         }
+
         return $this;
     }
 
@@ -145,9 +147,11 @@ class Mollie_Mpm_Helper_Autoloader
         if (file_exists($libBaseDir . '/GuzzleHttp/Guzzle/src/functions_include.php')) {
             require_once $libBaseDir . '/GuzzleHttp/Guzzle/src/functions_include.php';
         }
+
         if (file_exists($libBaseDir . '/GuzzleHttp/Psr7/src/functions_include.php')) {
             require_once $libBaseDir . '/GuzzleHttp/Psr7/src/functions_include.php';
         }
+
         if (file_exists($libBaseDir . '/GuzzleHttp/Promises/src/functions_include.php')) {
             require_once $libBaseDir . '/GuzzleHttp/Promises/src/functions_include.php';
         }
@@ -176,6 +180,7 @@ class Mollie_Mpm_Helper_Autoloader
             if ($mappedFile) {
                 return $mappedFile;
             }
+
             $prefix = rtrim($prefix, '\\');
         }
 
@@ -196,6 +201,7 @@ class Mollie_Mpm_Helper_Autoloader
         if (isset($this->prefixes[$prefix]) === false) {
             return false;
         }
+
         foreach ($this->prefixes[$prefix] as $baseDir) {
             $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
             if ($this->requireFile($file)) {
@@ -219,6 +225,7 @@ class Mollie_Mpm_Helper_Autoloader
             require $file;
             return true;
         }
+
         return false;
     }
 }

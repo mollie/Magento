@@ -33,35 +33,31 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>4.5.4</version>
+            <version>5.0.0</version>
         </Mollie_Mpm>
     </modules>
     <global>
         <models>
             <mpm>
                 <class>Mollie_Mpm_Model</class>
-                <resourceModel>mpm_mysql4</resourceModel>
+                <resourceModel>mpm_resource</resourceModel>
             </mpm>
-            <mpm_mysql4>
-                <class>Mollie_Mpm_Model_Mysql4</class>
+            <mpm_resource>
+                <class>Mollie_Mpm_Model_Resource</class>
                 <entities>
-                    <methods>
-                        <table>mollie_methods</table>
-                    </methods>
                     <payments>
                         <table>mollie_payments</table>
                     </payments>
+                    <orderLines>
+                        <table>mollie_order_lines</table>
+                    </orderLines>
                 </entities>
-            </mpm_mysql4>
+            </mpm_resource>
         </models>
         <blocks>
             <mpm>
                 <class>Mollie_Mpm_Block</class>
             </mpm>
-            <payment>
-                <class>Mollie_Mpm_Block</class>
-                <class>Mage_Payment_Block</class>
-            </payment>
         </blocks>
         <helpers>
             <mpm>
@@ -70,39 +66,67 @@
         </helpers>
         <payment>
             <groups>
-                <mollie>mollie</mollie>
+                <mollie>Mollie Payment Methods</mollie>
+                <mollie_deprecated>Mollie Old Methods</mollie_deprecated>
             </groups>
         </payment>
         <resources>
             <mpm_setup>
                 <setup>
                     <module>Mollie_Mpm</module>
+                    <class>Mage_Sales_Model_Resource_Setup</class>
                 </setup>
                 <connection>
                     <use>core_setup</use>
                 </connection>
             </mpm_setup>
-            <mpm_write>
-                <connection>
-                    <use>core_write</use>
-                </connection>
-            </mpm_write>
-            <mpm_read>
-                <connection>
-                    <use>core_read</use>
-                </connection>
-            </mpm_read>
         </resources>
         <events>
             <controller_front_init_before>
                 <observers>
-                    <mollie_mpm>
+                    <mollie_controller_front_init_before>
                         <type>object</type>
                         <class>Mollie_Mpm_Helper_Autoloader</class>
                         <method>createAndRegister</method>
-                    </mollie_mpm>
+                    </mollie_controller_front_init_before>
                 </observers>
             </controller_front_init_before>
+            <order_cancel_after>
+                <observers>
+                    <mollie_order_cancel_after>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>orderCancelAfter</method>
+                    </mollie_order_cancel_after>
+                </observers>
+            </order_cancel_after>
+            <sales_order_creditmemo_save_after>
+                <observers>
+                    <mollie_sales_order_creditmemo_save_after>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>salesOrderCreditmemoSaveAfter</method>
+                    </mollie_sales_order_creditmemo_save_after>
+                </observers>
+            </sales_order_creditmemo_save_after>
+            <sales_order_shipment_save_after>
+                <observers>
+                    <mollie_sales_order_shipment_save_after>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>salesOrderShipmentSaveBefore</method>
+                    </mollie_sales_order_shipment_save_after>
+                </observers>
+            </sales_order_shipment_save_after>
+            <sales_order_shipment_track_save_after>
+                <observers>
+                    <mollie_sales_order_shipment_track_save_after>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>salesOrderShipmentTrackSaveAfter</method>
+                    </mollie_sales_order_shipment_track_save_after>
+                </observers>
+            </sales_order_shipment_track_save_after>
         </events>
     </global>
     <frontend>
@@ -165,133 +189,268 @@
         <payment>
             <mollie>
                 <active>0</active>
-                <description>Order %</description>
-                <show_images>0</show_images>
-                <show_bank_list>1</show_bank_list>
-                <show_giftcard_list>1</show_giftcard_list>
-                <banktransfer_due_date_days>10</banktransfer_due_date_days>
-                <loading_screen>1</loading_screen>
-                <import_payment_info>1</import_payment_info>
+                <type>live</type>
+                <payment_images>1</payment_images>
                 <order_status_pending>pending</order_status_pending>
                 <order_status_processing>processing</order_status_processing>
-                <skip_order_mails>0</skip_order_mails>
-                <skip_invoice_mails>0</skip_invoice_mails>
+                <loading_screen>0</loading_screen>
+                <invoice_notify>1</invoice_notify>
                 <debug>1</debug>
+                <force_base_currency>1</force_base_currency>
                 <register_autoloader>1</register_autoloader>
                 <autoloader_basepath>lib/Mollie</autoloader_basepath>
-                <force_base_currency>1</force_base_currency>
             </mollie>
-            <mpm_void_00 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
+            <mollie_bancontact>
                 <active>1</active>
-                <sort_order>-16</sort_order>
-                <model>mpm/void00</model>
-                <currency>EUR</currency>
+                <sort_order>10</sort_order>
+                <title>Bancontact</title>
+                <model>mpm/method_bancontact</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_bancontact>
+            <mollie_banktransfer>
+                <active>1</active>
+                <sort_order>10</sort_order>
+                <title>Banktransfer</title>
+                <model>mpm/method_banktransfer</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <due_days>14</due_days>
+                <method/>
+            </mollie_banktransfer>
+            <mollie_belfius>
+                <active>1</active>
+                <sort_order>20</sort_order>
+                <title>Belfius</title>
+                <model>mpm/method_belfius</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_belfius>
+            <mollie_bitcoin>
+                <active>1</active>
+                <sort_order>30</sort_order>
+                <title>Bitcoin</title>
+                <model>mpm/method_bitcoin</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_bitcoin>
+            <mollie_creditcard>
+                <active>1</active>
+                <sort_order>40</sort_order>
+                <title>Credit Card</title>
+                <model>mpm/method_creditcard</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_creditcard>
+            <mollie_ideal>
+                <active>1</active>
+                <sort_order>50</sort_order>
+                <title>iDEAL</title>
+                <model>mpm/method_ideal</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_ideal>
+            <mollie_kbc>
+                <active>1</active>
+                <sort_order>60</sort_order>
+                <title>KBC</title>
+                <model>mpm/method_kbc</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_kbc>
+            <mollie_paypal>
+                <active>1</active>
+                <sort_order>70</sort_order>
+                <title>Paypal</title>
+                <model>mpm/method_paypal</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_paypal>
+            <mollie_paysafecard>
+                <active>1</active>
+                <sort_order>80</sort_order>
+                <title>Paysafecard</title>
+                <model>mpm/method_paysafecard</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_paysafecard>
+            <mollie_sofort>
+                <active>1</active>
+                <sort_order>90</sort_order>
+                <title>Sofort</title>
+                <model>mpm/method_sofort</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_sofort>
+            <mollie_inghomepay>
+                <active>1</active>
+                <sort_order>100</sort_order>
+                <title>ING Homepay</title>
+                <model>mpm/method_inghomepay</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_inghomepay>
+            <mollie_giropay>
+                <active>1</active>
+                <sort_order>110</sort_order>
+                <title>Giropay</title>
+                <model>mpm/method_giropay</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_giropay>
+            <mollie_eps>
+                <active>1</active>
+                <sort_order>120</sort_order>
+                <title>EPS</title>
+                <model>mpm/method_eps</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_eps>
+            <mollie_klarnapaylater>
+                <active>1</active>
+                <sort_order>130</sort_order>
+                <title>Klarna Pay Later</title>
+                <model>mpm/method_klarnapaylater</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>order</method>
+            </mollie_klarnapaylater>
+            <mollie_klarnasliceit>
+                <active>1</active>
+                <sort_order>140</sort_order>
+                <title>Klarna Slice</title>
+                <model>mpm/method_klarnasliceit</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>order</method>
+            </mollie_klarnasliceit>
+            <mollie_paymentlink>
+                <active>1</active>
+                <sort_order>150</sort_order>
+                <title>Payment Link / Admin Payment</title>
+                <model>mpm/method_paymentlink</model>
+                <group>mollie</group>
+                <payment_action>order</payment_action>
+                <method>order</method>
+                <allowspecific>0</allowspecific>
+                <message><![CDATA[Click <a href="%link%">here</a> to pay for your purchase.]]></message>
+            </mollie_paymentlink>
+            <mollie_giftcard>
+                <active>0</active>
+                <sort_order>10</sort_order>
+                <title>Giftcard</title>
+                <model>mpm/method_giftcard</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+            </mollie_giftcard>
+            <mpm_void_00>
+                <title>Mollie Void 00</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void00</model>
             </mpm_void_00>
-            <mpm_void_01 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-15</sort_order>
-                <model>mpm/void01</model>
-                <currency>EUR</currency>
+            <mpm_void_01>
+                <title>Mollie Void 01</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void01</model>
             </mpm_void_01>
-            <mpm_void_02 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-14</sort_order>
-                <model>mpm/void02</model>
-                <currency>EUR</currency>
+            <mpm_void_02>
+                <title>Mollie Void 02</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void02</model>
             </mpm_void_02>
-            <mpm_void_03 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-13</sort_order>
-                <model>mpm/void03</model>
-                <currency>EUR</currency>
+            <mpm_void_03>
+                <title>Mollie Void 03</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void03</model>
             </mpm_void_03>
-            <mpm_void_04 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-12</sort_order>
-                <model>mpm/void04</model>
-                <currency>EUR</currency>
+            <mpm_void_04>
+                <title>Mollie Void 04</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void04</model>
             </mpm_void_04>
-            <mpm_void_05 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-11</sort_order>
-                <model>mpm/void05</model>
-                <currency>EUR</currency>
+            <mpm_void_05>
+                <title>Mollie Void 05</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void05</model>
             </mpm_void_05>
-            <mpm_void_06 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-10</sort_order>
-                <model>mpm/void06</model>
-                <currency>EUR</currency>
+            <mpm_void_06>
+                <title>Mollie Void 06</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void06</model>
             </mpm_void_06>
-            <mpm_void_07 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-9</sort_order>
-                <model>mpm/void07</model>
-                <currency>EUR</currency>
+            <mpm_void_07>
+                <title>Mollie Void 07</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void07</model>
             </mpm_void_07>
-            <mpm_void_08 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-8</sort_order>
-                <model>mpm/void08</model>
-                <currency>EUR</currency>
+            <mpm_void_08>
+                <title>Mollie Void 08</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void08</model>
             </mpm_void_08>
-            <mpm_void_09 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-7</sort_order>
-                <model>mpm/void09</model>
-                <currency>EUR</currency>
+            <mpm_void_09>
+                <title>Mollie Void 09</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void09</model>
             </mpm_void_09>
-            <mpm_void_10 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-6</sort_order>
-                <model>mpm/void10</model>
-                <currency>EUR</currency>
+            <mpm_void_10>
+                <title>Mollie Void 10</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void10</model>
             </mpm_void_10>
-            <mpm_void_11 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-5</sort_order>
-                <model>mpm/void11</model>
-                <currency>EUR</currency>
+            <mpm_void_11>
+                <title>Mollie Void 11</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void11</model>
             </mpm_void_11>
-            <mpm_void_12 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-4</sort_order>
-                <model>mpm/void12</model>
-                <currency>EUR</currency>
+            <mpm_void_12>
+                <title>Mollie Void 12</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void12</model>
             </mpm_void_12>
-            <mpm_void_13 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-3</sort_order>
-                <model>mpm/void13</model>
-                <currency>EUR</currency>
+            <mpm_void_13>
+                <title>Mollie Void 13</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void13</model>
             </mpm_void_13>
-            <mpm_void_14 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-2</sort_order>
-                <model>mpm/void14</model>
-                <currency>EUR</currency>
+            <mpm_void_14>
+                <title>Mollie Void 14</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void14</model>
             </mpm_void_14>
-            <mpm_void_15 translate="title" module="Mollie_Mpm">
-                <group>mollie</group>
-                <active>1</active>
-                <sort_order>-1</sort_order>
-                <model>mpm/void15</model>
-                <currency>EUR</currency>
+            <mpm_void_15>
+                <title>Mollie Void 15</title>
+                <group>mollie_deprecated</group>
+                <active>0</active>
+                <model>mpm/method_deprecated_void15</model>
             </mpm_void_15>
         </payment>
     </default>

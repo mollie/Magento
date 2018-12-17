@@ -31,96 +31,10 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
+/**
+ * @deprecated since 5.5.0
+ */
 class Mollie_Mpm_Model_Methods extends Mage_Core_Model_Abstract
 {
 
-    /**
-     * Mollie Helper
-     *
-     * @var Mollie_Mpm_Helper_Data
-     */
-    public $mollieHelper;
-    /**
-     * Write Connection
-     */
-    public $writeConnection;
-    /**
-     * Method Table Name
-     */
-    public $methodsTable;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->mollieHelper = Mage::helper('mpm');
-
-        /** @var Mage_Core_Model_Resource $resource */
-        $resource = Mage::getSingleton('core/resource');
-        $this->writeConnection = $resource->getConnection('core_write');
-        $this->methodsTable = $resource->getTableName('mollie_methods');
-    }
-
-    /**
-     * Constructor.
-     */
-    public function _construct()
-    {
-        parent::_construct();
-        $this->_init('mpm/methods');
-    }
-
-    /**
-     * @param $code
-     *
-     * @return Mage_Core_Model_Abstract
-     */
-    public function getMethodByCode($code)
-    {
-        if (strpos($code, 'mpm_void_') !== false) {
-            $code = str_replace('mpm_void_', '', $code);
-        }
-
-        return $this->load($code);
-    }
-
-    /**
-     * @param array $methods
-     *
-     * @return $this
-     */
-    public function setStoredMethods(array $methods)
-    {
-        $data = array();
-        foreach ($methods as $method) {
-            $data[] = array(
-                'method_id'   => $method['method_id'],
-                'description' => $method['description'],
-            );
-        }
-
-        $this->writeConnection->insertOnDuplicate(
-            $this->methodsTable,
-            $data,
-            array('method_id', 'description')
-        );
-        $this->writeConnection->commit();
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getStoredMethods()
-    {
-        $collection = $this->getCollection()->toArray();
-        if (isset($collection['items'])) {
-            return $collection['items'];
-        }
-
-        return array();
-    }
 }

@@ -34,4 +34,99 @@
 class Mollie_Mpm_Model_Observer
 {
 
+    /**
+     * @param Varien_Event_Observer $observer
+     *
+     * @throws Mage_Core_Exception
+     */
+    public function orderCancelAfter(Varien_Event_Observer $observer)
+    {
+        /** @var Mollie_Mpm_Model_Mollie $mollieModel */
+        $mollieModel = Mage::getModel('mpm/mollie');
+
+        /** @var Mollie_Mpm_Helper_Data $mollieHelper */
+        $mollieHelper= Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $observer->getEvent()->getorder();
+
+        if ($mollieHelper->isPaidUsingMollieOrdersApi($order)) {
+            $mollieModel->cancelOrder($order);
+        }
+    }
+
+    /**
+     * @param Varien_Event_Observer $observer
+     *
+     * @throws Mage_Core_Exception
+     */
+    public function salesOrderCreditmemoSaveAfter(Varien_Event_Observer $observer)
+    {
+        /** @var Mollie_Mpm_Model_Mollie $mollieModel */
+        $mollieModel = Mage::getModel('mpm/mollie');
+
+        /** @var Mollie_Mpm_Helper_Data $mollieHelper */
+        $mollieHelper= Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Creditmemo $creditmemo */
+        $creditmemo = $observer->getEvent()->getCreditmemo();
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $creditmemo->getOrder();
+
+        if ($mollieHelper->isPaidUsingMollieOrdersApi($order)) {
+            $mollieModel->createOrderRefund($creditmemo, $order);
+        }
+    }
+
+    /**
+     * @param Varien_Event_Observer $observer
+     *
+     * @throws Mage_Core_Exception
+     */
+    public function salesOrderShipmentSaveBefore(Varien_Event_Observer $observer)
+    {
+        /** @var Mollie_Mpm_Model_Mollie $mollieModel */
+        $mollieModel = Mage::getModel('mpm/mollie');
+
+        /** @var Mollie_Mpm_Helper_Data $mollieHelper */
+        $mollieHelper= Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Shipment $shipment */
+        $shipment = $observer->getEvent()->getShipment();
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $shipment->getOrder();
+
+        if ($mollieHelper->isPaidUsingMollieOrdersApi($order)) {
+            $mollieModel->createShipment($shipment, $order);
+        }
+    }
+
+    /**
+     * @param Varien_Event_Observer $observer
+     *
+     * @throws Mage_Core_Exception
+     */
+    public function salesOrderShipmentTrackSaveAfter(Varien_Event_Observer $observer)
+    {
+        /** @var Mollie_Mpm_Model_Mollie $mollieModel */
+        $mollieModel = Mage::getModel('mpm/mollie');
+
+        /** @var Mollie_Mpm_Helper_Data $mollieHelper */
+        $mollieHelper= Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Shipment $shipment */
+        $shipment = $observer->getEvent()->getShipment();
+
+        /** @var Mage_Sales_Model_Order_Shipment_Track $track */
+        $track = $observer->getEvent()->getTrack();
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $shipment->getOrder();
+
+        if ($mollieHelper->isPaidUsingMollieOrdersApi($order)) {
+            $mollieModel->updateShipmentTrack($shipment, $track, $order);
+        }
+    }
 }

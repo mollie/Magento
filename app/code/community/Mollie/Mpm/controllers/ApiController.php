@@ -46,6 +46,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
      * Visible error message for cancelled transaction.
      */
     const RETURN_CANCEL_MSG = 'Payment cancelled, please try again.';
+
     /**
      * Mollie API Helper.
      *
@@ -53,26 +54,20 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
      */
     public $mollieHelper;
     /**
-     * Mollie API Model.
+     * Mollie Model.
      *
-     * @var Mollie_Mpm_Model_Api
+     * @var Mollie_Mpm_Model_Mollie
      */
-    public $mollieApiModel;
-    /**
-     * Mollie Payments Model.
-     *
-     * @var Mollie_Mpm_Model_Payments
-     */
-    public $molliePaymentsModel;
+    public $mollieModel;
+
 
     /**
      * Constructor.
      */
     public function _construct()
     {
-        $this->mollieHelper = Mage::helper('mpm/api');
-        $this->mollieApiModel = Mage::getModel('mpm/api');
-        $this->molliePaymentsModel = Mage::getModel('mpm/payments');
+        $this->mollieHelper = Mage::helper('mpm');
+        $this->mollieModel = Mage::getModel('mpm/mollie');
         parent::_construct();
     }
 
@@ -87,7 +82,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 
             if (!$order) {
                 $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
-                $this->mollieHelper->addLog('paymentAction [ERR]', 'Order not found in session.');
+                $this->mollieHelper->addToLog('error', 'Order not found in session.');
                 $this->_redirect('checkout/cart');
                 return;
             }
@@ -99,14 +94,14 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
                 return;
             } else {
                 $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
-                $this->mollieHelper->addLog('paymentAction [ERR]', 'Missing Redirect Url');
+                $this->mollieHelper->addToLog('error', 'Missing Redirect Url');
                 $this->mollieHelper->restoreCart();
                 $this->_redirect('checkout/cart');
                 return;
             }
         } catch (\Exception $e) {
             $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
-            $this->mollieHelper->addLog('paymentAction [ERR]', $e->getMessage());
+            $this->mollieHelper->addToLog('error', $e->getMessage());
             $this->mollieHelper->restoreCart();
             $this->_redirect('checkout/cart');
             return;
@@ -126,12 +121,12 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 
         if (!empty($params['id'])) {
             try {
-                $orderId = $this->molliePaymentsModel->getOrderIdByTransactionId($params['id']);
+                $orderId = $this->mollieModel->getOrderIdByTransactionId($params['id']);
                 if ($orderId) {
-                    $this->mollieApiModel->processTransaction($orderId, 'webhook');
+                    $this->mollieModel->processTransaction($orderId, 'webhook');
                 }
             } catch (\Exception $e) {
-                $this->mollieHelper->addLog('webhookAction [ERR]', $e->getMessage());
+                $this->mollieHelper->addToLog('error', $e->getMessage());
             }
         }
     }
@@ -146,15 +141,15 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 
         if ($orderId === null) {
             $this->mollieHelper->setError(self::RETURN_ERR_MSG);
-            $this->mollieHelper->addLog('returnAction [ERR]', 'Invalid return, missing order_id param.');
+            $this->mollieHelper->addToLog('error', 'Invalid return, missing order_id param.');
             $this->_redirect('checkout/cart');
         }
 
         try {
-            $status = $this->mollieApiModel->processTransaction($orderId, 'success', $paymentToken);
+            $status = $this->mollieModel->processTransaction($orderId, 'success', $paymentToken);
         } catch (\Exception $e) {
             $this->mollieHelper->setError(self::RETURN_ERR_MSG);
-            $this->mollieHelper->addLog('returnAction [ERR]', $e->getMessage());
+            $this->mollieHelper->addToLog('error', $e->getMessage());
             $this->mollieHelper->restoreCart();
             $this->_redirect('checkout/cart');
             return;
@@ -169,6 +164,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             } else {
                 $this->mollieHelper->setError(self::RETURN_ERR_MSG);
             }
+
             $this->mollieHelper->restoreCart();
             $this->_redirect('checkout/cart');
             return;

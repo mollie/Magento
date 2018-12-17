@@ -31,13 +31,8 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
-class Mollie_Mpm_Model_Adminhtml_System_Config_Source_Locale
+class Mollie_Mpm_Model_Adminhtml_System_Config_Source_Locale extends Mollie_Mpm_Model_Adminhtml_System_Config_Source_SourceAbstract
 {
-
-    /**
-     * @var array
-     */
-    public $options = array();
 
     /**
      * @return array
@@ -46,17 +41,18 @@ class Mollie_Mpm_Model_Adminhtml_System_Config_Source_Locale
     {
         if (!$this->options) {
             $this->options = array(
-                array('value' => '', 'label' => Mage::helper('mpm')->__('Autodetect')),
-                array('value' => 'store', 'label' => Mage::helper('mpm')->__('Store Locale')),
-                array('value' => 'en_US', 'label' => Mage::helper('mpm')->__('en_US')),
-                array('value' => 'de_AT', 'label' => Mage::helper('mpm')->__('de_AT')),
-                array('value' => 'de_CH', 'label' => Mage::helper('mpm')->__('de_CH')),
-                array('value' => 'de_DE', 'label' => Mage::helper('mpm')->__('de_DE')),
-                array('value' => 'es_ES', 'label' => Mage::helper('mpm')->__('es_ES')),
-                array('value' => 'fr_BE', 'label' => Mage::helper('mpm')->__('fr_BE')),
-                array('value' => 'nl_BE', 'label' => Mage::helper('mpm')->__('nl_BE')),
-                array('value' => 'nl_NL', 'label' => Mage::helper('mpm')->__('nl_NL'))
+                array(
+                    'value' => '',
+                    'label' => $this->mollieHelper->__('Autodetect')
+                ),
+                array(
+                    'value' => 'store',
+                    'label' => $this->mollieHelper->__('Store Locale')
+                )
             );
+            foreach (Mollie_Mpm_Helper_Data::SUPPORTED_LOCAL as $local) {
+                $this->options[] = array('value' => $local, 'label' => $this->mollieHelper->__($local));
+            }
         }
 
         return $this->options;

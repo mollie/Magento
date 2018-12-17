@@ -30,13 +30,14 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  Berkeley Software Distribution License (BSD-License 2)
  **/
 
-.mollie-loading .redirect-block {
-    padding: 10%;
-    text-align: center;
-}
 
 .mollie-loading p {
     margin-top: 20px;
+}
+
+.mollie-loading .redirect-block {
+    padding: 10%;
+    text-align: center;
 }
 
 .mollie-loading .loader {
