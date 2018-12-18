@@ -116,11 +116,11 @@ class Mollie_Mpm_Model_Observer
         /** @var Mollie_Mpm_Helper_Data $mollieHelper */
         $mollieHelper= Mage::helper('mpm');
 
-        /** @var Mage_Sales_Model_Order_Shipment $shipment */
-        $shipment = $observer->getEvent()->getShipment();
-
         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
         $track = $observer->getEvent()->getTrack();
+
+        /** @var Mage_Sales_Model_Order_Shipment $shipment */
+        $shipment = $track->getShipment();
 
         /** @var Mage_Sales_Model_Order $order */
         $order = $shipment->getOrder();
