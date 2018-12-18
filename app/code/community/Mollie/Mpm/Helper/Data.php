@@ -74,6 +74,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_LOCALE = 'payment/mollie/locale';
     const XPATH_IMAGES = 'payment/mollie/payment_images';
     const XPATH_USE_BASE_CURRENCY = 'payment/mollie/currency';
+    const XPATH_PAYMENTLINK_ADD_MESSAGE = 'payment/mollie_paymentlink/add_message';
     const XPATH_ISSUER_LIST_TYPE = 'payment/%method%/issuer_list_type';
     const XPATH_PAYMENTLINK_MESSAGE = 'payment/mollie_paymentlink/message';
     const XPATH_API_METHOD = 'payment/%method%/method';
