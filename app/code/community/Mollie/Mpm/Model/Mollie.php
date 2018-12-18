@@ -295,10 +295,20 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
 
         if ($orderId) {
             return $orderId;
-        } else {
-            $this->mollieHelper->addTolog('error', $this->mollieHelper->__('No order found for transaction id %s', $transactionId));
-            return false;
         }
+
+        /**
+         * Search for OrderId in old deprecated table for transactions created before v5.0
+         */
+        /** @var Mollie_Mpm_Model_Payments $oldPaymentModel */
+        $oldPaymentModel = Mage::getModel('mpm/payments');
+        if ($orderId = $oldPaymentModel->loadByTransactionId($transactionId)) {
+            Mage::getModel('sales/order')->load($orderId)->setMollieTransactionId($transactionId)->save();
+            return $orderId;
+        }
+
+        $this->mollieHelper->addTolog('error', $this->mollieHelper->__('No order found for transaction id %s', $transactionId));
+        return false;
     }
 
 }

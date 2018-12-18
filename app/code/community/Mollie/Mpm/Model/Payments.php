@@ -31,10 +31,76 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
-/**
- * @deprecated since 5.5.0
- */
 class Mollie_Mpm_Model_Payments extends Mage_Core_Model_Abstract
 {
 
+    /**
+     * Mollie Helper
+     *
+     * @var Mollie_Mpm_Helper_Data
+     */
+    public $mollieHelper;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->mollieHelper = Mage::helper('mpm');
+    }
+
+    /**
+     * Constructor.
+     */
+    public function _construct()
+    {
+        parent::_construct();
+        $this->_init('mpm/payments');
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkTable()
+    {
+        $paymentsTable = Mage::getSingleton('core/resource')->getTableName('mollie_payments');
+        return (boolean)Mage::getSingleton('core/resource')->getConnection('core_write')->showTableStatus($paymentsTable);
+    }
+
+    /**
+     * Load Old Payment data by TransactionId.
+     *
+     * @param $transactionId
+     *
+     * @return mixed
+     */
+    public function loadByTransactionId($transactionId)
+    {
+        if (!$this->checkTable()) {
+            return false;
+        }
+
+        if ($transaction = $this->load($transactionId, 'transaction_id')) {
+            return $transaction->getOrderId();
+        }
+    }
+
+    /**
+     * Load Old Payment Title by TransactionId.
+     *
+     * @param $orderId
+     *
+     * @return bool|string
+     */
+    public function getTitleByOrderId($orderId)
+    {
+        if (!$this->checkTable()) {
+            return false;
+        }
+
+        if ($transaction = $this->load($orderId, 'order_id')) {
+            return ucfirst($transaction->getMethod());
+        }
+    }
 }

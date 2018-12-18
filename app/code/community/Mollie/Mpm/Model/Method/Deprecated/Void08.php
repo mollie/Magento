@@ -44,4 +44,25 @@ class Mollie_Mpm_Model_Method_Deprecated_Void08 extends Mollie_Mpm_Model_Api
      */
     protected $_code = "mpm_void_08";
 
+    /**
+     * @return string|void
+     */
+    public function getTitle()
+    {
+        try {
+            $paymentInfo = $this->getInfoInstance();
+            if ($paymentInfo instanceof Mage_Sales_Model_Order_Payment) {
+                $orderId = $paymentInfo->getOrder()->getId();
+                /** @var Mollie_Mpm_Model_Payments $oldPaymentModel */
+                $oldPaymentModel = Mage::getModel('mpm/payments');
+                if ($title = $oldPaymentModel->getTitleByOrderId($orderId)) {
+                    return $title;
+                }
+            }
+        } catch (\Exception $e) {
+            Mage::logException($e);
+        }
+
+        return $this->getConfigData('title');
+    }
 }
