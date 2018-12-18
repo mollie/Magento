@@ -33,7 +33,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>5.0.0</version>
+            <version>5.0.1</version>
         </Mollie_Mpm>
     </modules>
     <global>
@@ -252,15 +252,17 @@
                 <title>iDEAL</title>
                 <model>mpm/method_ideal</model>
                 <group>mollie</group>
+                <issuer_list_type>dropdown</issuer_list_type>
                 <allowspecific>0</allowspecific>
                 <method/>
             </mollie_ideal>
             <mollie_kbc>
                 <active>1</active>
                 <sort_order>60</sort_order>
-                <title>KBC</title>
+                <title>KBC/CBC</title>
                 <model>mpm/method_kbc</model>
                 <group>mollie</group>
+                <issuer_list_type>dropdown</issuer_list_type>
                 <allowspecific>0</allowspecific>
                 <method/>
             </mollie_kbc>
@@ -353,6 +355,7 @@
                 <title>Giftcard</title>
                 <model>mpm/method_giftcard</model>
                 <group>mollie</group>
+                <issuer_list_type>dropdown</issuer_list_type>
                 <allowspecific>0</allowspecific>
                 <method/>
             </mollie_giftcard>

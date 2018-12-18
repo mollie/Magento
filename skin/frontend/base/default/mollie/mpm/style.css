@@ -51,6 +51,13 @@
     margin-right: auto;
 }
 
+.payment-issuer-icon {
+    width: 27px;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 5px 3px 5px 3px;
+}
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -58,8 +65,4 @@
     100% {
         transform: rotate(360deg);
     }
-}
-
-#checkout-payment-method-load input.radio {
-    float: left;
 }

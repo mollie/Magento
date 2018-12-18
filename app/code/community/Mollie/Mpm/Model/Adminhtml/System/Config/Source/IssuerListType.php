@@ -45,14 +45,12 @@ class Mollie_Mpm_Model_Adminhtml_System_Config_Source_IssuerListType extends Mol
                     'value' => 'dropdown',
                     'label' => $this->mollieHelper->__('Dropdown')
                 ),
-                /*
                 array(
                     'value' => 'radio',
                     'label' => $this->mollieHelper->__('List with images')
                 ),
-                */
                 array(
-                    'value' => 'none',
+                    'value' => '',
                     'label' => $this->mollieHelper->__('Don\'t show issuer list')
                 )
             );

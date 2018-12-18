@@ -63,10 +63,10 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
 
             $labelBlock = Mage::app()->getLayout()->createBlock(
                 'core/template', null, array(
-                'template'             => 'mollie/mpm/payment/label.phtml',
-                'payment_method_icon'  => isset($method->image->size2x) ? $method->image->size2x : '',
-                'payment_method_label' => $this->getMethod()->getTitle(),
-                'payment_method_class' => $this->getMethod()->getCode()
+                    'template'             => 'mollie/mpm/payment/label.phtml',
+                    'payment_method_icon'  => isset($method->image->size2x) ? $method->image->size2x : '',
+                    'payment_method_label' => $this->getMethod()->getTitle(),
+                    'payment_method_class' => $this->getMethod()->getCode()
                 )
             );
             $this->setData('_method_label_html', $labelBlock->toHtml());
@@ -84,4 +84,33 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
     {
         return $this->mollieHelper->getMethodByCode($code);
     }
+
+    /**
+     * @param $code
+     *
+     * @return mixed
+     */
+    public function getIssuerListType($code)
+    {
+        return $this->mollieHelper->getIssuerListType($code);
+    }
+
+    /**
+     * @param $code
+     *
+     * @return string
+     */
+    public function getIssuerTitle($code)
+    {
+        if ($code == 'mollie_ideal' || $code == 'mollie_kbc') {
+            return $this->__('Select Bank');
+        }
+
+        if ($code == 'mollie_giftcard') {
+            return $this->__('Select Giftcard');
+        }
+
+        return $this->__('Select Issuer');
+    }
+
 }

@@ -74,9 +74,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_LOCALE = 'payment/mollie/locale';
     const XPATH_IMAGES = 'payment/mollie/payment_images';
     const XPATH_USE_BASE_CURRENCY = 'payment/mollie/currency';
-    const XPATH_IDEAL_ISSUER_LIST_TYPE = 'payment/mollie_ideal/issuer_list_type';
-    const XPATH_GIFTCARD_ISSUER_LIST_TYPE = 'payment/mollie_giftcard/issuer_list_type';
     const XPATH_PAYMENTLINK_ADD_MESSAGE = 'payment/mollie_paymentlink/add_message';
+    const XPATH_ISSUER_LIST_TYPE = 'payment/%method%/issuer_list_type';
     const XPATH_PAYMENTLINK_MESSAGE = 'payment/mollie_paymentlink/message';
     const XPATH_API_METHOD = 'payment/%method%/method';
 
@@ -261,13 +260,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getIssuerListType($method)
     {
-        if ($method == 'mollie_methods_ideal') {
-            return $this->getStoreConfig(self::XPATH_IDEAL_ISSUER_LIST_TYPE);
-        }
-
-        if ($method == 'mollie_methods_giftcard') {
-            return $this->getStoreConfig(self::XPATH_GIFTCARD_ISSUER_LIST_TYPE);
-        }
+        $methodXpath = str_replace('%method%', $method, self::XPATH_ISSUER_LIST_TYPE);
+        return $this->getStoreConfig($methodXpath);
     }
 
     /**

@@ -31,38 +31,15 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
-class Mollie_Mpm_Model_Method_Deprecated_Void01 extends Mollie_Mpm_Model_Api
+class Mollie_Mpm_Model_Resource_Payments_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
 
     /**
-     * @var null
+     * Constructor.
      */
-    protected $_isAvailable = null;
-
-    /**
-     * @var string
-     */
-    protected $_code = "mpm_void_01";
-
-    /**
-     * @return string|void
-     */
-    public function getTitle()
+    public function _construct()
     {
-        try {
-            $paymentInfo = $this->getInfoInstance();
-            if ($paymentInfo instanceof Mage_Sales_Model_Order_Payment) {
-                $orderId = $paymentInfo->getOrder()->getId();
-                /** @var Mollie_Mpm_Model_Payments $oldPaymentModel */
-                $oldPaymentModel = Mage::getModel('mpm/payments');
-                if ($title = $oldPaymentModel->getTitleByOrderId($orderId)) {
-                    return $title;
-                }
-            }
-        } catch (\Exception $e) {
-            Mage::logException($e);
-        }
-
-        return $this->getConfigData('title');
+        parent::_construct();
+        $this->_init('mpm/payments');
     }
 }
