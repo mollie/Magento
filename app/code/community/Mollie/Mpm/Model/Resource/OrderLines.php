@@ -79,6 +79,12 @@ class Mollie_Mpm_Model_Resource_OrderLines extends Mage_Core_Model_Resource_Db_A
             $object->setData('vat_amount', $vatAmountValue);
         }
 
+        $gmtDate = Mage::getModel('core/date')->gmtDate('Y-m-d H:i:s');
+        $object->setData('updated_at', $gmtDate);
+        if (!$object->getId()) {
+            $object->setData('created_at', $gmtDate);
+        }
+
         return parent::_beforeSave($object);
     }
 

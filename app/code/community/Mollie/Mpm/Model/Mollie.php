@@ -243,6 +243,7 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
          */
         $checkoutType = $this->mollieHelper->getCheckoutType($order);
         if ($checkoutType == 'order') {
+            Mage::register('online_refund', true);
             return $this;
         }
 

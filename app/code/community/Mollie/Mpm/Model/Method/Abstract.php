@@ -60,4 +60,16 @@ class Mollie_Mpm_Model_Method_Abstract extends Mollie_Mpm_Model_Mollie
     protected $_canRefundInvoicePartial = true;
     protected $_canCapture = true;
 
+    /**
+     * @param mixed $data
+     *
+     * @return $this|Mage_Payment_Model_Info
+     * @throws Mage_Core_Exception
+     */
+    public function assignData($data)
+    {
+        parent::assignData($data);
+        $this->getInfoInstance()->setAdditionalInformation('selected_issuer', null);
+        return $this;
+    }
 }

@@ -109,7 +109,7 @@
                     </mollie_sales_order_creditmemo_save_after>
                 </observers>
             </sales_order_creditmemo_save_after>
-            <sales_order_shipment_save_after>
+            <sales_order_shipment_save_before>
                 <observers>
                     <mollie_sales_order_shipment_save_after>
                         <type>singleton</type>
@@ -117,7 +117,7 @@
                         <method>salesOrderShipmentSaveBefore</method>
                     </mollie_sales_order_shipment_save_after>
                 </observers>
-            </sales_order_shipment_save_after>
+            </sales_order_shipment_save_before>
             <sales_order_shipment_track_save_after>
                 <observers>
                     <mollie_sales_order_shipment_track_save_after>

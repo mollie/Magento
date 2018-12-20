@@ -249,10 +249,14 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
         if ($status == 'open') {
             if ($paymentData->method == 'banktransfer' && !$order->getEmailSent()) {
                 $order->sendNewOrderEmail()->setEmailSent(true)->save();
-                $defaultStatusPending = $this->mollieHelper->getStatusPendingBanktransfer($storeId);
-                $state = Mage_Sales_Model_Order::STATE_PENDING_PAYMENT;
                 $message = $this->mollieHelper->__('New order email sent');
-                $order->setState($defaultStatusPending, $status, $message, false)->save();
+                if (!$statusPending = $this->mollieHelper->getStatusPendingBanktransfer($storeId)) {
+                    $statusPending = $order->getStatus();
+                }
+
+                $order->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
+                $order->addStatusToHistory($statusPending, $message, true);
+                $order->save();
             }
 
             $msg = array('success' => true, 'status' => 'open', 'order_id' => $orderId, 'type' => $type);
