@@ -36,19 +36,19 @@
  * @see Mollie_Mpm_Block_Payment_Info_Base
  */
 ?>
-<p><?= $this->escapeHtml($this->getMethod()->getTitle()) ?></p>
+<p><?php echo $this->escapeHtml($this->getMethod()->getTitle()) ?></p>
 <?php if ($_specificInfo = $this->getSpecificInformation()): ?>
     <table>
         <tbody>
             <?php foreach ($_specificInfo as $_label => $_value): ?>
                 <tr>
-                    <th><strong><?= $this->escapeHtml($_label) ?>:</strong></th>
+                    <th><strong><?php echo $this->escapeHtml($_label) ?>:</strong></th>
                 </tr>
                 <tr>
-                    <td><?= nl2br(implode($this->getValueAsArray($_value, true), "\n")) ?></td>
+                    <td><?php echo nl2br(implode($this->getValueAsArray($_value, true), "\n")) ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 <?php endif; ?>
-<?= $this->getChildHtml() ?>
+<?php echo $this->getChildHtml() ?>

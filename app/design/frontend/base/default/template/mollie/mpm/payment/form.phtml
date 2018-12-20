@@ -34,18 +34,18 @@ $code = $this->getMethodCode();
 $method = $this->getMethodByCode($code);
 ?>
 <?php if (!empty($method->issuers) && ($listType = $this->getIssuerListType($code))): ?>
-    <ul class="form-list" id="payment_form_<?= $this->escapeHtml($code) ?>" style="display:none">
+    <ul class="form-list" id="payment_form_<?php echo $this->escapeHtml($code) ?>" style="display:none">
         <li>
-            <label for="<?= $code ?>_issuer">
-                <?= $this->getIssuerTitle($code); ?>
+            <label for="<?php echo $code ?>_issuer">
+                <?php echo $this->getIssuerTitle($code); ?>
             </label>
             <span class="input-box">
                 <?php if ($listType == 'dropdown'): ?>
-                    <select name="<?= $code; ?>_issuer" id="<?= $code; ?>_issuer" class="input-text">
-                        <option value=""><?= $this->__('Please select'); ?></option>
+                    <select name="<?php echo $code; ?>_issuer" id="<?php echo $code; ?>_issuer" class="input-text">
+                        <option value=""><?php echo $this->__('Please select'); ?></option>
                         <?php foreach ($method->issuers() as $issuer): ?>
-                            <option value="<?= htmlspecialchars($issuer->id); ?>">
-                                <?= htmlspecialchars($issuer->name); ?>
+                            <option value="<?php echo htmlspecialchars($issuer->id); ?>">
+                                <?php echo htmlspecialchars($issuer->name); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -54,9 +54,9 @@ $method = $this->getMethodByCode($code);
                     <ul>
                     <?php foreach ($method->issuers() as $issuer): ?>
                         <li>
-                            <input type="radio" name="<?= $code; ?>_issuer" value="<?= htmlspecialchars($issuer->id); ?>" id="issuer_<?= htmlspecialchars($issuer->id); ?>" class="radio">
-                            <img src="<?= $issuer->image->size2x; ?>" class="payment-issuer-icon"/>
-                            <?= htmlspecialchars($issuer->name); ?>
+                            <input type="radio" name="<?php echo $code; ?>_issuer" value="<?php echo htmlspecialchars($issuer->id); ?>" id="issuer_<?php echo htmlspecialchars($issuer->id); ?>" class="radio">
+                            <img src="<?php echo $issuer->image->size2x; ?>" class="payment-issuer-icon"/>
+                            <?php echo htmlspecialchars($issuer->name); ?>
                         </li>
                     <?php endforeach; ?>
                     </ul>
