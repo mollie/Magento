@@ -31,7 +31,33 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 ?>
-<?php $_code=$this->getMethodCode() ?>
-<ul id="payment_form_<?php echo $_code ?>" style="display:none">
+<?php $_code = $this->getMethodCode() ?>
+<ul id="payment_form_<?= $_code ?>" style="display:none">
     <?= $this->__('Create a Mollie Payment link and add this to the order email.'); ?>
+    <ul class="inner-form">
+        <li>
+            <label for="<?= $_code ?>_methods"><?= $this->__('Limit to the following method(s)') ?>:</label>
+            <div class="input-box">
+                <select id="<?= $_code ?>_methods" name="limited_methods[]" multiple>
+                    <option value="bancontact">Bancontact</option>
+                    <option value="banktransfer">Banktransfer</option>
+                    <option value="belfius">Belfius</option>
+                    <option value="bitcoin">Bitcoin</option>
+                    <option value="creditcard">Creditcard</option>
+                    <option value="eps">EPS</option>
+                    <option value="giftcard">Giftcard</option>
+                    <option value="giropay">Giropay</option>
+                    <option value="ideal">iDEAL</option>
+                    <option value="inghomepay">ING Homepay</option>
+                    <option value="kbc">KBC/CBC</option>
+                    <option value="klarnapaylater">Klarna Pay Later</option>
+                    <option value="klarnasliceit">Klarna Slice It</option>
+                    <option value="paypal">Paypal</option>
+                    <option value="paysafecard">Paysafecard</option>
+                    <option value="sofort">Sofort</option>
+                </select>
+            </div>
+            <p><?= $this->__('If one method is chosen, it will skip the selection screen and the customer is sent directly to the payment method.'); ?></p>
+        </li>
+    </ul>
 </ul>

@@ -106,6 +106,10 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             $orderData['payment']['dueDate'] = $this->mollieHelper->getBanktransferDueDate($storeId);
         }
 
+        if (isset($additionalData['limited_methods'])) {
+            $orderData['method'] = $additionalData['limited_methods'];
+        }
+
         $orderData = $this->mollieHelper->validateOrderData($orderData);
         $this->mollieHelper->addTolog('request', $orderData);
 
