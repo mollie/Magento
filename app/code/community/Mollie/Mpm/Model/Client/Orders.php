@@ -106,6 +106,10 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             $orderData['payment']['dueDate'] = $this->mollieHelper->getBanktransferDueDate($storeId);
         }
 
+        if (isset($additionalData['limited_methods'])) {
+            $orderData['method'] = $additionalData['limited_methods'];
+        }
+
         $orderData = $this->mollieHelper->validateOrderData($orderData);
         $this->mollieHelper->addTolog('request', $orderData);
 
@@ -248,15 +252,6 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                             ->addObject($invoice)
                             ->addObject($invoice->getOrder())
                             ->save();
-
-
-                        /**
-                         * $transaction = Mage::getModel('core/resource_transaction')
-                         * ->addObject($invoice)
-                         * ->addObject($invoice->getOrder());
-                         *
-                         * $transaction->save();
-                         * **/
                     }
 
                     $order->setState(Mage_Sales_Model_Order::STATE_PROCESSING)->save();
@@ -309,9 +304,12 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             if ($mollieOrder->method == 'banktransfer' && !$order->getEmailSent()) {
                 $order->sendNewOrderEmail()->setEmailSent(true)->save();
                 $message = $this->mollieHelper->__('New order email sent');
-                $defaultStatusPending = $this->mollieHelper->getStatusPendingBanktransfer($storeId);
+                if (!$statusPending = $this->mollieHelper->getStatusPendingBanktransfer($storeId)) {
+                    $statusPending = $order->getStatus();
+                }
+
                 $order->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
-                $order->addStatusToHistory($defaultStatusPending, $message, true);
+                $order->addStatusToHistory($statusPending, $message, true);
                 $order->save();
             }
 
@@ -472,12 +470,11 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
              * Check if Transactions needs to be captures (eg. Klarna methods)
              */
             $payment = $order->getPayment();
-            if (!$payment->getIsTransactionClosed()) {
+            /** @var Mage_Sales_Model_Order_Invoice $invoice */
+            $invoice = $order->getInvoiceCollection()->getLastItem();
+            if ($invoice && $invoice->getState() == 1) {
                 $payment->registerCaptureNotification($order->getBaseGrandTotal(), true);
                 $order->save();
-
-                /** @var Mage_Sales_Model_Order_Invoice $invoice */
-                $invoice = $payment->getCreatedInvoice();
                 $sendInvoice = $this->mollieHelper->sendInvoice($order->getStoreId());
                 if ($invoice && !$invoice->getEmailSent() && $sendInvoice) {
                     $invoice->setEmailSent(true)->sendEmail()->save();
@@ -497,7 +494,6 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
      * @param Mage_Sales_Model_Order                $order
      *
      * @return $this
-     * @throws Mage_Core_Exception
      */
     public function updateShipmentTrack(Mage_Sales_Model_Order_Shipment $shipment, Mage_Sales_Model_Order_Shipment_Track $track, Mage_Sales_Model_Order $order)
     {
@@ -538,7 +534,6 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             }
         } catch (\Exception $e) {
             $this->mollieHelper->addTolog('error', $e->getMessage());
-            Mage::throwException($this->mollieHelper->__('Mollie API: %s', $e->getMessage()));
         }
 
         return $this;
@@ -557,9 +552,26 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         $storeId = $order->getStoreId();
         $orderId = $order->getId();
 
+        /**
+         * Skip the creation of an online refund if an offline refund is used
+         * and add a message to the core/sessions about this workflow.
+         * Registry set at the Mollie_Mpm_Model_Mollie::refund and is set once an online refund is used.
+         */
+        if (!Mage::registry('online_refund')) {
+            Mage::getSingleton('core/session')->addNotice(
+                $this->mollieHelper->__(
+                    'An offline refund has been created, please make sure to also create this 
+                    refund on mollie.com/dashboard or use the online refund option.'
+                )
+            );
+            return $this;
+        }
+
         $methodCode = $this->mollieHelper->getMethodCode($order);
         if (!$order->hasShipments() && ($methodCode == 'klarnapaylater' || $methodCode == 'klarnasliceit')) {
-            $msg = $this->mollieHelper->__('Order can only be refunded after Klara has been captured (after shipment)');
+            $msg = $this->mollieHelper->__(
+                'Order can only be refunded after Klara has been captured (after shipment)'
+            );
             Mage::throwException($msg);
         }
 
@@ -582,7 +594,9 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
          * Throw exception if these are set, as this is not supportef by the orders api.
          */
         if ($creditmemo->getAdjustmentPositive() > 0 || $creditmemo->getAdjustmentNegative() > 0) {
-            $msg = $this->mollieHelper->__('Creating an online refund with adjustment fee\'s is not supported by Mollie');
+            $msg = $this->mollieHelper->__(
+                'Creating an online refund with adjustment fee\'s is not supported by Mollie'
+            );
             $this->mollieHelper->addTolog('error', $msg);
             Mage::throwException($msg);
         }

@@ -145,3 +145,24 @@ a.mollie-tooltip:hover span {
     display: -webkit-inline-box;
     float: left;
 }
+
+#mollie_paymentlink_methods {
+    width: 300px;
+    border: 0px;
+    min-height: 260px;
+    padding: 5px;
+    border: 1px solid #D6D6D6;
+    display: block;
+}
+
+#payment_form_mollie_paymentlink label {
+    color: black;
+    font-weight: normal;
+}
+
+#payment_form_mollie_paymentlink p {
+    margin-top: 10px;
+    color: #333D46;
+    font-weight: lighter;
+    line-height: normal;
+}

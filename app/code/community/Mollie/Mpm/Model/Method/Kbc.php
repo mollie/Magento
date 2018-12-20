@@ -49,4 +49,19 @@ class Mollie_Mpm_Model_Method_Kbc extends Mollie_Mpm_Model_Method_Abstract
      */
     protected $_paymentMethod = self::PAYMENT_METHOD;
 
+    /**
+     * @param mixed $data
+     *
+     * @return $this|Mage_Payment_Model_Info
+     * @throws Mage_Core_Exception
+     */
+    public function assignData($data)
+    {
+        parent::assignData($data);
+
+        $selectedIssuer = Mage::app()->getRequest()->getParam('mollie_kbc_issuer');
+        $this->getInfoInstance()->setAdditionalInformation('selected_issuer', $selectedIssuer);
+
+        return $this;
+    }
 }

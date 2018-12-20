@@ -288,13 +288,18 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
     }
 
     /**
-     * @param $lineId
+     * @param $itemId
      *
      * @return Mollie_Mpm_Model_Resource_OrderLines
      */
     public function getOrderLineByItemId($itemId)
     {
-        return $this->load($itemId, 'item_id');
+        $orderLine = $this->getCollection()
+            ->addFieldToFilter('item_id', array('eq' => $itemId))
+            ->addFieldToFilter('line_id', array('notnull' => true))
+            ->getLastItem();
+
+        return $orderLine;
     }
 
     /**
@@ -353,8 +358,8 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
             ->addFieldToFilter('type', array('eq' => 'physical'))
             ->addExpressionFieldToSelect(
                 'open',
-                'SUM(qty_paid - qty_shipped - qty_refunded)',
-                array('qty_paid', 'qty_shipped', 'qty_refunded')
+                'SUM(qty_ordered - qty_shipped - qty_refunded)',
+                array('qty_ordered', 'qty_shipped', 'qty_refunded')
             );
         $orderLinesCollection->getSelect()->group('order_id');
 
@@ -380,8 +385,8 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
             ->addFieldToFilter('type', array('in' => array('physical', 'digital')))
             ->addExpressionFieldToSelect(
                 'open',
-                'SUM(qty_paid - qty_refunded)',
-                array('qty_paid', 'qty_refunded')
+                'SUM(qty_ordered - qty_refunded)',
+                array('qty_ordered', 'qty_refunded')
             );
         $orderLinesCollection->getSelect()->group('order_id');
 
@@ -394,4 +399,3 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
         return $qty;
     }
 }
-

@@ -85,4 +85,19 @@ class Mollie_Mpm_Model_Method_Paymentlink extends Mollie_Mpm_Model_Method_Abstra
         $this->startTransaction($order);
     }
 
+    /**
+     * @param mixed $data
+     *
+     * @return $this|Mage_Payment_Model_Info
+     * @throws Mage_Core_Exception
+     */
+    public function assignData($data)
+    {
+        parent::assignData($data);
+
+        $limitedMethods = Mage::app()->getRequest()->getParam('limited_methods', null);
+        $this->getInfoInstance()->setAdditionalInformation('limited_methods', $limitedMethods);
+        return $this;
+    }
+
 }
