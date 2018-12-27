@@ -11,9 +11,7 @@ app/locale/fr_FR/Mollie_Mpm.csv            app/locale/fr_FR/Mollie_Mpm.csv
 app/locale/de_DE/Mollie_Mpm.csv            app/locale/de_DE/Mollie_Mpm.csv
 # app/design
 app/design/frontend/base/default/layout/mollie_mpm.xml            app/design/frontend/base/default/layout/mollie_mpm.xml
-app/design/frontend/base/default/template/mollie/mpm/payment/info.phtml            app/design/frontend/base/default/template/mollie/mpm/payment/info.phtml
-app/design/frontend/base/default/template/mollie/mpm/payment/label.phtml            app/design/frontend/base/default/template/mollie/mpm/payment/label.phtml
-app/design/frontend/base/default/template/mollie/mpm/payment/form.phtml            app/design/frontend/base/default/template/mollie/mpm/payment/form.phtml
+app/design/frontend/base/default/template/mollie/mpm/payment            app/design/frontend/base/default/template/mollie/mpm/payment
 app/design/frontend/base/default/template/mollie/mpm/loading.phtml            app/design/frontend/base/default/template/mollie/mpm/loading.phtml
 app/design/adminhtml/default/default/layout/mollie_mpm.xml            app/design/adminhtml/default/default/layout/mollie_mpm.xml
 app/design/adminhtml/default/default/template/mollie/mpm           app/design/adminhtml/default/default/template/mollie/mpm

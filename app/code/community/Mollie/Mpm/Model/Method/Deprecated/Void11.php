@@ -31,7 +31,7 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
-class Mollie_Mpm_Model_Method_Deprecated_Void11 extends Mollie_Mpm_Model_Api
+class Mollie_Mpm_Model_Method_Deprecated_Void11 extends Mollie_Mpm_Model_Method_Deprecated_Abstract
 {
 
     /**
@@ -52,10 +52,10 @@ class Mollie_Mpm_Model_Method_Deprecated_Void11 extends Mollie_Mpm_Model_Api
         try {
             $paymentInfo = $this->getInfoInstance();
             if ($paymentInfo instanceof Mage_Sales_Model_Order_Payment) {
-                $orderId = $paymentInfo->getOrder()->getId();
+                $order = $paymentInfo->getOrder();
                 /** @var Mollie_Mpm_Model_Payments $oldPaymentModel */
                 $oldPaymentModel = Mage::getModel('mpm/payments');
-                if ($title = $oldPaymentModel->getTitleByOrderId($orderId)) {
+                if ($title = $oldPaymentModel->getTitleByOrder($order)) {
                     return $title;
                 }
             }

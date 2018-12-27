@@ -60,15 +60,6 @@ class Mollie_Mpm_Model_Payments extends Mage_Core_Model_Abstract
     }
 
     /**
-     * @return bool
-     */
-    public function checkTable()
-    {
-        $paymentsTable = Mage::getSingleton('core/resource')->getTableName('mollie_payments');
-        return (boolean)Mage::getSingleton('core/resource')->getConnection('core_write')->showTableStatus($paymentsTable);
-    }
-
-    /**
      * Load Old Payment data by TransactionId.
      *
      * @param $transactionId
@@ -87,20 +78,56 @@ class Mollie_Mpm_Model_Payments extends Mage_Core_Model_Abstract
     }
 
     /**
+     * @return bool
+     */
+    public function checkTable()
+    {
+        /** @var Mage_Core_Model_Resource $resource */
+        $resource = Mage::getSingleton('core/resource');
+        $paymentsTable = $resource->getTableName('mollie_payments');
+        return (boolean)$resource->getConnection('core_read')->showTableStatus($paymentsTable);
+    }
+
+    /**
      * Load Old Payment Title by TransactionId.
      *
-     * @param $orderId
+     * @param Mage_Sales_Model_Order $order
      *
      * @return bool|string
+     * @throws Mage_Core_Exception
      */
-    public function getTitleByOrderId($orderId)
+    public function getTitleByOrder(Mage_Sales_Model_Order $order)
     {
+        $method = null;
         if (!$this->checkTable()) {
-            return false;
+            return $method;
         }
 
+        $orderId = $order->getId();
         if ($transaction = $this->load($orderId, 'order_id')) {
-            return ucfirst($transaction->getMethod());
+            $method = $transaction->getMethod();
         }
+
+        if ($method != 'api') {
+            return ucfirst($method);
+        }
+
+        $paymentCode = $order->getPayment()->getMethodInstance()->getCode();
+        $index = str_replace('mpm_void_', '', $paymentCode);
+
+        if (!is_numeric($index)) {
+            return $method;
+        }
+
+        /** @var Mage_Core_Model_Resource $resource */
+        $resource = Mage::getSingleton('core/resource');
+        $readConnection = $resource->getConnection('core_read');
+        $query = sprintf(
+            'SELECT description FROM %s LIMIT %s,1',
+            $resource->getTableName('mollie_methods'),
+            $index);
+        $method = $readConnection->fetchOne($query);
+
+        return $method;
     }
 }
