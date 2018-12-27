@@ -31,38 +31,13 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
-class Mollie_Mpm_Model_Method_Deprecated_Void05 extends Mollie_Mpm_Model_Method_Deprecated_Abstract
+class Mollie_Mpm_Model_Method_Deprecated_Abstract extends Mage_Payment_Model_Method_Abstract
 {
 
     /**
-     * @var null
+     * Availability options
      */
-    protected $_isAvailable = null;
-
-    /**
-     * @var string
-     */
-    protected $_code = "mpm_void_05";
-
-    /**
-     * @return string|void
-     */
-    public function getTitle()
-    {
-        try {
-            $paymentInfo = $this->getInfoInstance();
-            if ($paymentInfo instanceof Mage_Sales_Model_Order_Payment) {
-                $order = $paymentInfo->getOrder();
-                /** @var Mollie_Mpm_Model_Payments $oldPaymentModel */
-                $oldPaymentModel = Mage::getModel('mpm/payments');
-                if ($title = $oldPaymentModel->getTitleByOrder($order)) {
-                    return $title;
-                }
-            }
-        } catch (\Exception $e) {
-            Mage::logException($e);
-        }
-
-        return $this->getConfigData('title');
-    }
+    protected $_canUseInternal = false;
+    protected $_canUseCheckout = false;
+    protected $_canUseForMultishipping = false;
 }
