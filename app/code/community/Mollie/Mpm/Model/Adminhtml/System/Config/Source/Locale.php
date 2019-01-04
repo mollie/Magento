@@ -50,7 +50,7 @@ class Mollie_Mpm_Model_Adminhtml_System_Config_Source_Locale extends Mollie_Mpm_
                     'label' => $this->mollieHelper->__('Store Locale')
                 )
             );
-            foreach (Mollie_Mpm_Helper_Data::SUPPORTED_LOCAL as $local) {
+            foreach ($this->mollieHelper->getSupportedLocale() as $local) {
                 $this->options[] = array('value' => $local, 'label' => $this->mollieHelper->__($local));
             }
         }

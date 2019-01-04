@@ -36,30 +36,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
     const MIN_API_VERSION = '2.1.0';
     const CURRENCIES_WITHOUT_DECIMAL = array('JPY');
-    const SUPPORTED_LOCAL = array(
-        'en_US',
-        'nl_NL',
-        'nl_BE',
-        'fr_FR',
-        'fr_BE',
-        'de_DE',
-        'de_AT',
-        'de_CH',
-        'es_ES',
-        'ca_ES',
-        'pt_PT',
-        'it_IT',
-        'nb_NO',
-        'sv_SE',
-        'fi_FI',
-        'da_DK',
-        'is_IS',
-        'hu_HU',
-        'pl_PL',
-        'lv_LV',
-        'lt_LT'
-    );
-
     const XPATH_MODULE_ACTIVE = 'payment/mollie/active';
     const XPATH_API_MODUS = 'payment/mollie/type';
     const XPATH_LIVE_APIKEY = 'payment/mollie/apikey_live';
@@ -480,7 +456,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
         if ($locale == 'store' || (!$locale && $method == 'order')) {
             $localeCode = Mage::app()->getLocale()->getLocaleCode();
-            if (in_array($localeCode, self::SUPPORTED_LOCAL)) {
+            $supportedLocale = $this->getSupportedLocale();
+            if (in_array($localeCode, $supportedLocale)){
                 $locale = $localeCode;
             }
         }
@@ -873,5 +850,35 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($key !== false) {
             return $this->mollieMethods[$key];
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getSupportedLocale()
+    {
+        return array(
+            'en_US',
+            'nl_NL',
+            'nl_BE',
+            'fr_FR',
+            'fr_BE',
+            'de_DE',
+            'de_AT',
+            'de_CH',
+            'es_ES',
+            'ca_ES',
+            'pt_PT',
+            'it_IT',
+            'nb_NO',
+            'sv_SE',
+            'fi_FI',
+            'da_DK',
+            'is_IS',
+            'hu_HU',
+            'pl_PL',
+            'lv_LV',
+            'lt_LT'
+        );
     }
 }
