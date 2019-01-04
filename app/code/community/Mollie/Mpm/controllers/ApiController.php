@@ -159,7 +159,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             $this->_redirect('checkout/onepage/success?utm_nooverride=1');
             return;
         } else {
-            if (isset($status['status']) && $status['status'] == 'cancel') {
+            if (isset($status['status']) && $status['status'] == 'canceled') {
                 $this->mollieHelper->setError(self::RETURN_CANCEL_MSG);
             } else {
                 $this->mollieHelper->setError(self::RETURN_ERR_MSG);
