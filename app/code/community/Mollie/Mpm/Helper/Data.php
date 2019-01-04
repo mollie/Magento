@@ -35,7 +35,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
     const MIN_API_VERSION = '2.1.0';
-    const CURRENCIES_WITHOUT_DECIMAL = array('JPY');
     const XPATH_MODULE_ACTIVE = 'payment/mollie/active';
     const XPATH_API_MODUS = 'payment/mollie/type';
     const XPATH_LIVE_APIKEY = 'payment/mollie/apikey_live';
@@ -434,11 +433,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function formatCurrencyValue($value, $currency)
     {
-        $decimalPrecision = 2;
-        if (in_array($currency, self::CURRENCIES_WITHOUT_DECIMAL)) {
-            $decimalPrecision = 0;
-        }
-
+        $decimalPrecision = ($currency == 'JPY') ? 0 : 2;
         return number_format($value, $decimalPrecision, '.', '');
     }
 
