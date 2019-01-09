@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2018, Mollie B.V.
+ * Copyright (c) 2012-2019, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2019 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
@@ -159,7 +159,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             $this->_redirect('checkout/onepage/success?utm_nooverride=1');
             return;
         } else {
-            if (isset($status['status']) && $status['status'] == 'cancel') {
+            if (isset($status['status']) && $status['status'] == 'canceled') {
                 $this->mollieHelper->setError(self::RETURN_CANCEL_MSG);
             } else {
                 $this->mollieHelper->setError(self::RETURN_ERR_MSG);

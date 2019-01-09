@@ -30,28 +30,15 @@
  * @copyright   Copyright (c) 2012-2019 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
-?>
-    <script type="text/javascript">
-        //<![CDATA[
-        function checkApikey() {
-            var apiKeyTest = $F('payment_mollie_apikey_test');
-            var apiKeyLive = $F('payment_mollie_apikey_live');
-            new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
-                parameters: {'test_key': apiKeyTest, 'live_key': apiKeyLive, isAjax: 1},
-                method: 'get',
-                onCreate: function () {
-                    $('payment_mollie_apitest_result').hide();
-                },
-                onSuccess: function (transport) {
-                    if (transport.responseText) {
-                        $('payment_mollie_apitest_result').update(transport.responseText);
-                    } else {
-                        $('payment_mollie_apitest_result').update('Unkown error, please check logs');
-                    }
-                    $('payment_mollie_apitest_result').show();
-                }
-            });
-        }
-        //]]>
-    </script>
-<?php echo $this->getButtonHtml() ?>
+
+/** @var Mage_Sales_Model_Resource_Setup $installer */
+$installer = $this;
+$installer->startSetup();
+
+$installer->getConnection()->addIndex(
+    $installer->getTable('sales/order'),
+    $this->getIdxName('sales/order', array('mollie_transaction_id')),
+    array('mollie_transaction_id')
+);
+
+$installer->endSetup();

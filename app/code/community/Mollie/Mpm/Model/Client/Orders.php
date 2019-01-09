@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2018, Mollie B.V.
+ * Copyright (c) 2012-2019, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2019 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
@@ -71,7 +71,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         $additionalData = $order->getPayment()->getAdditionalInformation();
 
         $transactionId = $order->getMollieTransactionId();
-        if (!empty($transactionId) && !preg_match('/^ord_\w+$/', $transactionId)) {
+        if (!empty($transactionId)) {
             $payment = $mollieApi->payments->get($transactionId);
             return $payment->getCheckoutUrl();
         }
@@ -548,7 +548,6 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
      */
     public function createOrderRefund(Mage_Sales_Model_Order_Creditmemo $creditmemo, Mage_Sales_Model_Order $order)
     {
-        $refundAll = false;
         $storeId = $order->getStoreId();
         $orderId = $order->getId();
 
@@ -618,27 +617,10 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             }
         }
 
-        /**
-         * If products ordered qty equals refunded qty,
-         * complete order can be shipped incl. shipping & discount itemLines.
-         */
-        if ((int)$order->getTotalQtyOrdered() == (int)$creditmemo->getTotalQty()) {
-            $refundAll = true;
-        }
-
-        /**
-         * If refunded qty equals total paid physical products count,
-         * all remaining lines can be refunded, incl. shipping & discount itemLines.
-         */
-        $openForRefundQty = $this->orderLines->getOpenForRefundQty($orderId);
-        if ((int)$creditmemo->getTotalQty() == (int)$openForRefundQty) {
-            $refundAll = true;
-        }
-
         try {
             $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
             $mollieOrder = $mollieApi->orders->get($transactionId);
-            if ($refundAll) {
+            if ($order->getState() == Mage_Sales_Model_Order::STATE_CLOSED) {
                 $mollieOrder->refundAll();
             } else {
                 $orderLines = $this->orderLines->getCreditmemoOrderLines($creditmemo, $addShippingToRefund);

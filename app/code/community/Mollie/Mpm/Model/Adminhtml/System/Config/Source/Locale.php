@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2018, Mollie B.V.
+ * Copyright (c) 2012-2019, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2019 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
@@ -50,7 +50,7 @@ class Mollie_Mpm_Model_Adminhtml_System_Config_Source_Locale extends Mollie_Mpm_
                     'label' => $this->mollieHelper->__('Store Locale')
                 )
             );
-            foreach (Mollie_Mpm_Helper_Data::SUPPORTED_LOCAL as $local) {
+            foreach ($this->mollieHelper->getSupportedLocale() as $local) {
                 $this->options[] = array('value' => $local, 'label' => $this->mollieHelper->__($local));
             }
         }

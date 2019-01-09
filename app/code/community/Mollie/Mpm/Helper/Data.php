@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012-2018, Mollie B.V.
+ * Copyright (c) 2012-2019, Mollie B.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * @category    Mollie
  * @package     Mollie_Mpm
  * @author      Mollie B.V. (info@mollie.nl)
- * @copyright   Copyright (c) 2012-2018 Mollie B.V. (https://www.mollie.nl)
+ * @copyright   Copyright (c) 2012-2019 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
@@ -35,31 +35,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
     const MIN_API_VERSION = '2.1.0';
-    const CURRENCIES_WITHOUT_DECIMAL = array('JPY');
-    const SUPPORTED_LOCAL = array(
-        'en_US',
-        'nl_NL',
-        'nl_BE',
-        'fr_FR',
-        'fr_BE',
-        'de_DE',
-        'de_AT',
-        'de_CH',
-        'es_ES',
-        'ca_ES',
-        'pt_PT',
-        'it_IT',
-        'nb_NO',
-        'sv_SE',
-        'fi_FI',
-        'da_DK',
-        'is_IS',
-        'hu_HU',
-        'pl_PL',
-        'lv_LV',
-        'lt_LT'
-    );
-
     const XPATH_MODULE_ACTIVE = 'payment/mollie/active';
     const XPATH_API_MODUS = 'payment/mollie/type';
     const XPATH_LIVE_APIKEY = 'payment/mollie/apikey_live';
@@ -458,11 +433,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function formatCurrencyValue($value, $currency)
     {
-        $decimalPrecision = 2;
-        if (in_array($currency, self::CURRENCIES_WITHOUT_DECIMAL)) {
-            $decimalPrecision = 0;
-        }
-
+        $decimalPrecision = ($currency == 'JPY') ? 0 : 2;
         return number_format($value, $decimalPrecision, '.', '');
     }
 
@@ -480,7 +451,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
         if ($locale == 'store' || (!$locale && $method == 'order')) {
             $localeCode = Mage::app()->getLocale()->getLocaleCode();
-            if (in_array($localeCode, self::SUPPORTED_LOCAL)) {
+            $supportedLocale = $this->getSupportedLocale();
+            if (in_array($localeCode, $supportedLocale)){
                 $locale = $localeCode;
             }
         }
@@ -873,5 +845,35 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         if ($key !== false) {
             return $this->mollieMethods[$key];
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getSupportedLocale()
+    {
+        return array(
+            'en_US',
+            'nl_NL',
+            'nl_BE',
+            'fr_FR',
+            'fr_BE',
+            'de_DE',
+            'de_AT',
+            'de_CH',
+            'es_ES',
+            'ca_ES',
+            'pt_PT',
+            'it_IT',
+            'nb_NO',
+            'sv_SE',
+            'fi_FI',
+            'da_DK',
+            'is_IS',
+            'hu_HU',
+            'pl_PL',
+            'lv_LV',
+            'lt_LT'
+        );
     }
 }
