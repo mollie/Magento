@@ -53,6 +53,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_ISSUER_LIST_TYPE = 'payment/%method%/issuer_list_type';
     const XPATH_PAYMENTLINK_MESSAGE = 'payment/mollie_paymentlink/message';
     const XPATH_API_METHOD = 'payment/%method%/method';
+    const XPATH_PAYMENT_DESCRIPTION = 'payment/%method%/payment_description';
 
     /**
      * @var null
@@ -874,6 +875,33 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             'pl_PL',
             'lv_LV',
             'lt_LT'
+        );
+    }
+
+    /**
+     * @param $method
+     * @param $orderNumber
+     * @param int $storeId
+     * @return string
+     */
+    public function getPaymentDescription($method, $orderNumber, $storeId = 0)
+    {
+        $xpath = str_replace('%method%', 'mollie_' . $method, self::XPATH_PAYMENT_DESCRIPTION);
+        $description = $this->getStoreConfig($xpath);
+
+        if (!trim($description)) {
+            $description = '{ordernumber}';
+        }
+
+        $replacements = [
+            '{ordernumber}' => $orderNumber,
+            '{storename}' => Mage::app()->getStore($storeId)->getFrontendName(),
+        ];
+
+        return str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $description
         );
     }
 }
