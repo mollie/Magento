@@ -349,6 +349,16 @@
                 <allowspecific>0</allowspecific>
                 <message><![CDATA[Click <a href="%link%">here</a> to pay for your purchase.]]></message>
             </mollie_paymentlink>
+            <mollie_przelewy24>
+                <active>1</active>
+                <sort_order>160</sort_order>
+                <title>Przelewy24</title>
+                <model>mpm/method_przelewy24</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_przelewy24>
             <mollie_giftcard>
                 <active>0</active>
                 <sort_order>10</sort_order>
