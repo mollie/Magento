@@ -94,6 +94,10 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
             $paymentData['dueDate'] = $this->mollieHelper->getBanktransferDueDate($storeId);
         }
 
+        if ($method == 'przelewy24') {
+            $paymentData['billingEmail'] = $order->getCustomerEmail();
+        }
+
         if (!$order->getIsVirtual() && $order->hasData('shipping_address_id')) {
             $paymentData['shippingAddress'] = $this->getAddressLine($order->getShippingAddress());
         }
