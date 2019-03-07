@@ -208,6 +208,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_bancontact>
             <mollie_banktransfer>
                 <active>1</active>
@@ -218,6 +219,7 @@
                 <allowspecific>0</allowspecific>
                 <due_days>14</due_days>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_banktransfer>
             <mollie_belfius>
                 <active>1</active>
@@ -227,6 +229,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_belfius>
             <mollie_bitcoin>
                 <active>1</active>
@@ -236,6 +239,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_bitcoin>
             <mollie_creditcard>
                 <active>1</active>
@@ -245,6 +249,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_creditcard>
             <mollie_ideal>
                 <active>1</active>
@@ -255,6 +260,7 @@
                 <issuer_list_type>dropdown</issuer_list_type>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_ideal>
             <mollie_kbc>
                 <active>1</active>
@@ -265,6 +271,7 @@
                 <issuer_list_type>dropdown</issuer_list_type>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_kbc>
             <mollie_paypal>
                 <active>1</active>
@@ -274,6 +281,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_paypal>
             <mollie_paysafecard>
                 <active>1</active>
@@ -283,6 +291,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_paysafecard>
             <mollie_sofort>
                 <active>1</active>
@@ -292,6 +301,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_sofort>
             <mollie_inghomepay>
                 <active>1</active>
@@ -301,6 +311,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_inghomepay>
             <mollie_giropay>
                 <active>1</active>
@@ -310,6 +321,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_giropay>
             <mollie_eps>
                 <active>1</active>
@@ -319,6 +331,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_eps>
             <mollie_klarnapaylater>
                 <active>1</active>
@@ -358,6 +371,7 @@
                 <issuer_list_type>dropdown</issuer_list_type>
                 <allowspecific>0</allowspecific>
                 <method/>
+                <payment_description>{ordernumber}</payment_description>
             </mollie_giftcard>
             <mpm_void_00>
                 <title>Mollie Void 00</title>

@@ -360,6 +360,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -463,10 +480,27 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <due_days translate="label">
                             <label>Due Days</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>4</sort_order>
+                            <sort_order>5</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -479,7 +513,7 @@
                             <label>Status Pending</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status_new</source_model>
-                            <sort_order>4</sort_order>
+                            <sort_order>6</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -491,7 +525,7 @@
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
-                            <sort_order>5</sort_order>
+                            <sort_order>7</sort_order>
                             <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -503,7 +537,7 @@
                         <specificcountry translate="label">
                             <label>Payment from Specific Countries</label>
                             <frontend_type>multiselect</frontend_type>
-                            <sort_order>6</sort_order>
+                            <sort_order>8</sort_order>
                             <source_model>adminhtml/system_config_source_country</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -516,7 +550,7 @@
                         <min_order_total translate="label">
                             <label>Minimum Order Total</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>7</sort_order>
+                            <sort_order>9</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -527,7 +561,7 @@
                         <max_order_total translate="label">
                             <label>Maximum Order Total</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>8</sort_order>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -538,7 +572,7 @@
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>9</sort_order>
+                            <sort_order>11</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -591,6 +625,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -694,6 +745,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -797,6 +865,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -900,11 +985,28 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <issuer_list_type translate="label tooltip">
                             <label>Issuer List Style</label>
                             <frontend_type>select</frontend_type>
                             <source_model>mpm/adminhtml_system_config_source_issuerListType</source_model>
-                            <sort_order>4</sort_order>
+                            <sort_order>5</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -929,7 +1031,7 @@
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
-                            <sort_order>5</sort_order>
+                            <sort_order>6</sort_order>
                             <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -941,7 +1043,7 @@
                         <specificcountry translate="label">
                             <label>Payment from Specific Countries</label>
                             <frontend_type>multiselect</frontend_type>
-                            <sort_order>6</sort_order>
+                            <sort_order>7</sort_order>
                             <source_model>adminhtml/system_config_source_country</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -954,7 +1056,7 @@
                         <min_order_total translate="label">
                             <label>Minimum Order Total</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>7</sort_order>
+                            <sort_order>8</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -965,7 +1067,7 @@
                         <max_order_total translate="label">
                             <label>Maximum Order Total</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>8</sort_order>
+                            <sort_order>6</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -976,7 +1078,7 @@
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>9</sort_order>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -1031,11 +1133,28 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <issuer_list_type translate="label tooltip">
                             <label>Issuer List Style</label>
                             <frontend_type>select</frontend_type>
                             <source_model>mpm/adminhtml_system_config_source_issuerListType</source_model>
-                            <sort_order>4</sort_order>
+                            <sort_order>5</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -1046,7 +1165,7 @@
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
-                            <sort_order>5</sort_order>
+                            <sort_order>6</sort_order>
                             <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -1058,7 +1177,7 @@
                         <specificcountry translate="label">
                             <label>Payment from Specific Countries</label>
                             <frontend_type>multiselect</frontend_type>
-                            <sort_order>6</sort_order>
+                            <sort_order>7</sort_order>
                             <source_model>adminhtml/system_config_source_country</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -1071,7 +1190,7 @@
                         <min_order_total translate="label">
                             <label>Minimum Order Total</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>7</sort_order>
+                            <sort_order>8</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -1082,7 +1201,7 @@
                         <max_order_total translate="label">
                             <label>Maximum Order Total</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>8</sort_order>
+                            <sort_order>9</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -1093,7 +1212,7 @@
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>9</sort_order>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -1146,6 +1265,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -1249,6 +1385,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -1352,6 +1505,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -1455,6 +1625,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -1558,6 +1745,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -1663,6 +1867,23 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <allowspecific translate="label">
                             <label>Payment from Applicable Countries</label>
                             <frontend_type>allowspecific</frontend_type>
@@ -2065,11 +2286,28 @@
                                 <active>1</active>
                             </depends>
                         </method>
+                        <payment_description translate="label">
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                                <method>payment</method>
+                            </depends>
+                            <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
+                            <strong>{storename}</strong>: The name of the store<br><br>
+                            (Note: This only works when the method is set to Payments API)
+                            ]]></comment>
+                        </payment_description>
                         <issuer_list_type translate="label tooltip">
                             <label>Issuer List Style</label>
                             <frontend_type>select</frontend_type>
                             <source_model>mpm/adminhtml_system_config_source_issuerListType</source_model>
-                            <sort_order>4</sort_order>
+                            <sort_order>5</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>

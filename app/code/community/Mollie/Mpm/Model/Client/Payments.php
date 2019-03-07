@@ -75,7 +75,7 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
         $method = $this->mollieHelper->getMethodCode($order);
         $paymentData = array(
             'amount'         => $this->mollieHelper->getOrderAmountByOrder($order),
-            'description'    => $order->getIncrementId(),
+            'description'    => $this->mollieHelper->getPaymentDescription($method, $order->getIncrementId(), $storeId),
             'billingAddress' => $this->getAddressLine($order->getBillingAddress()),
             'redirectUrl'    => $this->mollieHelper->getReturnUrl($orderId, $paymentToken, $storeId),
             'webhookUrl'     => $this->mollieHelper->getWebhookUrl($storeId),
