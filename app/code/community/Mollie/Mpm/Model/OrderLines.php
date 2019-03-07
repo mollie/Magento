@@ -281,7 +281,7 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
 
             $orderItemId = $item->getOrderItemId();
             $lineId = $this->getOrderLineByItemId($orderItemId)->getLineId();
-            $orderLines[] = array('id' => $lineId, 'quantity' => $item->getQty());
+            $orderLines[] = array('id' => $lineId, 'quantity' => round($item->getQty()));
         }
 
         return array('lines' => $orderLines);
@@ -317,7 +317,7 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
             $orderItemId = $item->getOrderItemId();
             $lineId = $this->getOrderLineByItemId($orderItemId)->getLineId();
             if ($lineId) {
-                $orderLines[] = array('id' => $lineId, 'quantity' => $item->getQty());
+                $orderLines[] = array('id' => $lineId, 'quantity' => round($item->getQty()));
             }
         }
 
