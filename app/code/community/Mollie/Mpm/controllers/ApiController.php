@@ -96,6 +96,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
                 $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
                 $this->mollieHelper->addToLog('error', 'Missing Redirect Url');
                 $this->mollieHelper->restoreCart();
+                $this->_cancelUnprocessedOrder($order, 'Missing Redirect Url');
                 $this->_redirect('checkout/cart');
                 return;
             }
@@ -103,8 +104,35 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
             $this->mollieHelper->addToLog('error', $e->getMessage());
             $this->mollieHelper->restoreCart();
+            $this->_cancelUnprocessedOrder($order, $e->getMessage());
             $this->_redirect('checkout/cart');
             return;
+        }
+    }
+
+    /**
+     * Cancel an order that has been sent to Mollie but somehow did not get a transaction id
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message  If provided, add this message to the order status history comment
+     * @return void
+     */
+    protected function _cancelUnprocessedOrder(Mage_Sales_Model_Order $order, $message = null)
+    {
+        if (empty($order->getMollieTransactionId())) {
+            try {
+                $historyMessage = Mage::helper('mpm')->__('Canceled because an error occurred while redirecting the customer to Mollie');
+                if ($message) {
+                    $historyMessage .= ":<br>\n" . Mage::helper('core')->escapeHtml($message);
+                }
+                $order->cancel();
+                $order->addStatusHistoryComment($historyMessage);
+                $order->save();
+                $this->mollieHelper->addToLog('info', sprintf('Canceled order %s', $order->getIncrementId()));
+            } catch (Exception $e) {
+                $this->mollieHelper->addToLog('error', sprintf('Cannot cancel order %s: %s', $order->getIncrementId(), $e->getMessage()));
+                Mage::logException($e);
+            }
         }
     }
 
@@ -127,6 +155,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
                 }
             } catch (\Exception $e) {
                 $this->mollieHelper->addToLog('error', $e->getMessage());
+                Mage::logException($e);
+                $this->getResponse()->setHeader('HTTP/1.1','503 Service Unavailable')->sendResponse();
+                exit;
             }
         }
     }
