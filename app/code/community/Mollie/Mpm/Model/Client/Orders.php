@@ -1,4 +1,7 @@
 <?php
+
+use Mollie\Api\Resources\Payment;
+
 /**
  * Copyright (c) 2012-2019, Mollie B.V.
  * All rights reserved.
@@ -588,16 +591,38 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             return $this;
         }
 
+        try {
+            $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
+        } catch (\Exception $exception) {
+            $this->mollieHelper->addTolog('error', $exception->getMessage());
+            Mage::throwException($this->mollieHelper->__('Mollie API: %s', $exception->getMessage()));
+        }
+
         /**
          * Check for creditmemo adjusment fee's, positive and negative.
-         * Throw exception if these are set, as this is not supportef by the orders api.
          */
-        if ($creditmemo->getAdjustmentPositive() > 0 || $creditmemo->getAdjustmentNegative() > 0) {
-            $msg = $this->mollieHelper->__(
-                'Creating an online refund with adjustment fee\'s is not supported by Mollie'
-            );
-            $this->mollieHelper->addTolog('error', $msg);
-            Mage::throwException($msg);
+        if ($creditmemo->getAdjustment() !== 0.0) {
+            $mollieOrder = $mollieApi->orders->get($order->getMollieTransactionId(), ['embed' => 'payments']);
+            $payments = $mollieOrder->payments();
+
+            try {
+                $payment = new Payment($mollieApi);
+                $payment->id = current($payments)->id;
+
+                $mollieApi->payments->refund($payment, [
+                    'amount' => [
+                        'currency' => $order->getOrderCurrencyCode(),
+                        'value' => money_format('%.2n', $creditmemo->getAdjustment()),
+                    ]
+                ]);
+            } catch (\Exception $exception) {
+                $this->mollieHelper->addTolog('error', $exception->getMessage());
+                Mage::throwException($exception->getMessage());
+            }
+        }
+
+        if (!$creditmemo->getAllItems()) {
+            return $this;
         }
 
         /**
@@ -618,7 +643,6 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         }
 
         try {
-            $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
             $mollieOrder = $mollieApi->orders->get($transactionId);
             if ($order->getState() == Mage_Sales_Model_Order::STATE_CLOSED) {
                 $mollieOrder->refundAll();
