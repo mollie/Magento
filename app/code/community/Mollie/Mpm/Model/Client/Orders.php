@@ -612,7 +612,10 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 $mollieApi->payments->refund($payment, [
                     'amount' => [
                         'currency' => $order->getOrderCurrencyCode(),
-                        'value' => money_format('%.2n', $creditmemo->getAdjustment()),
+                        'value' => $this->mollieHelper->formatCurrencyValue(
+                            $creditmemo->getAdjustment(),
+                            $order->getOrderCurrencyCode()
+                        ),
                     ]
                 ]);
             } catch (\Exception $exception) {
