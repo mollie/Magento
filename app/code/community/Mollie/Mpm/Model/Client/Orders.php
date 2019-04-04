@@ -599,11 +599,11 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         }
 
         /**
-         * Check for creditmemo adjusment fee's, positive and negative.
+         * Check for creditmemo adjustment fee's, positive and negative.
          */
         if ($creditmemo->getAdjustment() !== 0.0) {
             $mollieOrder = $mollieApi->orders->get($order->getMollieTransactionId(), ['embed' => 'payments']);
-            $payments = $mollieOrder->payments();
+            $payments = $mollieOrder->_embedded->payments;
 
             try {
                 $payment = new Payment($mollieApi);
