@@ -92,4 +92,16 @@ class Mollie_Mpm_Test_TestHelpers_TestCase extends \PHPUnit\Framework\TestCase
     {
         return Mollie_Mpm_Test_TestHelpers_FakeLogWriter::getMessages();
     }
+
+    public function getHelper($name)
+    {
+        $helperClass = self::getConfig()->getHelperClassName($name);
+        $mock = $this->createMock($helperClass);
+
+        $registryKey = '_helper/' . $name;
+        Mage::unregister($registryKey);
+        Mage::register($registryKey, $mock);
+
+        return $mock;
+    }
 }

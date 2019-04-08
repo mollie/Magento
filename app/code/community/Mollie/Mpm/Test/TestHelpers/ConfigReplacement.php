@@ -38,4 +38,9 @@ class Mollie_Mpm_Test_TestHelpers_ConfigReplacement extends Mage_Core_Model_Conf
 
         return parent::getNode($path, $scope, $scopeCode);
     }
+
+    public function setConfigValue($path, $value)
+    {
+        $this->nodeMockValues['stores/admin/' . $path] = $value;
+    }
 }

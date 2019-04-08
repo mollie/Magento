@@ -117,22 +117,33 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
      * @param string $message  If provided, add this message to the order status history comment
      * @return void
      */
-    protected function _cancelUnprocessedOrder(Mage_Sales_Model_Order $order, $message = null)
+    protected function _cancelUnprocessedOrder($order, $message = null)
     {
-        if (empty($order->getMollieTransactionId())) {
-            try {
-                $historyMessage = Mage::helper('mpm')->__('Canceled because an error occurred while redirecting the customer to Mollie');
-                if ($message) {
-                    $historyMessage .= ":<br>\n" . Mage::helper('core')->escapeHtml($message);
-                }
-                $order->cancel();
-                $order->addStatusHistoryComment($historyMessage);
-                $order->save();
-                $this->mollieHelper->addToLog('info', sprintf('Canceled order %s', $order->getIncrementId()));
-            } catch (Exception $e) {
-                $this->mollieHelper->addToLog('error', sprintf('Cannot cancel order %s: %s', $order->getIncrementId(), $e->getMessage()));
-                Mage::logException($e);
+        if (empty($order) || empty($order->getMollieTransactionId())) {
+            return;
+        }
+
+        $cancelFailedOrders = Mage::helper('mpm')->getStoreConfig(
+            \Mollie_Mpm_Helper_Data::XPATH_CANCEL_FAILED_ORDERS,
+            $order->getStoreId()
+        );
+
+        if (!$cancelFailedOrders) {
+            return;
+        }
+
+        try {
+            $historyMessage = Mage::helper('mpm')->__('Canceled because an error occurred while redirecting the customer to Mollie');
+            if ($message) {
+                $historyMessage .= ":<br>\n" . Mage::helper('core')->escapeHtml($message);
             }
+            $order->cancel();
+            $order->addStatusHistoryComment($historyMessage);
+            $order->save();
+            $this->mollieHelper->addToLog('info', sprintf('Canceled order %s', $order->getIncrementId()));
+        } catch (Exception $e) {
+            $this->mollieHelper->addToLog('error', sprintf('Cannot cancel order %s: %s', $order->getIncrementId(), $e->getMessage()));
+            Mage::logException($e);
         }
     }
 

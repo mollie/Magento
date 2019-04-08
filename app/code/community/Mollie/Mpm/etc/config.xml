@@ -199,6 +199,7 @@
                 <force_base_currency>1</force_base_currency>
                 <register_autoloader>1</register_autoloader>
                 <autoloader_basepath>lib/Mollie</autoloader_basepath>
+                <cancel_failed_orders>0</cancel_failed_orders>
             </mollie>
             <mollie_bancontact>
                 <active>1</active>
