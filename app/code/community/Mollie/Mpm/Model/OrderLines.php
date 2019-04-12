@@ -112,6 +112,24 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
                 'sku'            => $item->getProduct()->getSku(),
                 'productUrl'     => $item->getProduct()->getProductUrl()
             );
+
+            if ($item->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
+                /** @var Order\Item $childItem */
+                foreach ($item->getChildrenItems() as $childItem) {
+                    $orderLines[] = [
+                        'item_id'        => $childItem->getId(),
+                        'type'           => $childItem->getProduct()->getTypeId() != 'downloadable' ? 'physical' : 'digital',
+                        'name'           => preg_replace("/[^A-Za-z0-9 -]/", "", $childItem->getName()),
+                        'quantity'       => $quantity,
+                        'unitPrice'      => $this->mollieHelper->getAmountArray($currency, 0),
+                        'totalAmount'    => $this->mollieHelper->getAmountArray($currency, 0),
+                        'vatRate'        => sprintf("%.2f", $childItem->getTaxPercent()),
+                        'vatAmount'      => $this->mollieHelper->getAmountArray($currency, 0),
+                        'sku'            => $childItem->getProduct()->getSku(),
+                        'productUrl'     => $childItem->getProduct()->getProductUrl()
+                    ];
+                }
+            }
         }
 
         if (!$order->getIsVirtual()) {
