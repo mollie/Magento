@@ -1,4 +1,7 @@
 <?php
+
+use Mollie\Api\Resources\Payment;
+
 /**
  * Copyright (c) 2012-2019, Mollie B.V.
  * All rights reserved.
@@ -447,10 +450,26 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         try {
             $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
             $mollieOrder = $mollieApi->orders->get($transactionId);
+
+            if ($mollieOrder->status == 'completed') {
+                Mage::getSingleton('adminhtml/session')->addWarning(
+                    __('All items in this order where already marked as shipped in the Mollie dashboard.')
+                );
+                return $this;
+            }
+
             if ($shipAll) {
                 $mollieShipment = $mollieOrder->shipAll();
             } else {
                 $orderLines = $this->orderLines->getShipmentOrderLines($shipment);
+
+                if ($mollieOrder->status == 'shipping' && !$this->itemsAreShippable($mollieOrder, $orderLines)) {
+                    Mage::getSingleton('adminhtml/session')->addWarning(
+                        __('All items in this order where already marked as shipped in the Mollie dashboard.')
+                    );
+                    return $this;
+                }
+
                 $mollieShipment = $mollieOrder->createShipment($orderLines);
             }
 
@@ -579,16 +598,41 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             return $this;
         }
 
+        try {
+            $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
+        } catch (\Exception $exception) {
+            $this->mollieHelper->addTolog('error', $exception->getMessage());
+            Mage::throwException($this->mollieHelper->__('Mollie API: %s', $exception->getMessage()));
+        }
+
         /**
-         * Check for creditmemo adjusment fee's, positive and negative.
-         * Throw exception if these are set, as this is not supportef by the orders api.
+         * Check for creditmemo adjustment fee's, positive and negative.
          */
-        if ($creditmemo->getAdjustmentPositive() > 0 || $creditmemo->getAdjustmentNegative() > 0) {
-            $msg = $this->mollieHelper->__(
-                'Creating an online refund with adjustment fee\'s is not supported by Mollie'
-            );
-            $this->mollieHelper->addTolog('error', $msg);
-            Mage::throwException($msg);
+        if ($creditmemo->getAdjustment() !== 0.0) {
+            $mollieOrder = $mollieApi->orders->get($order->getMollieTransactionId(), ['embed' => 'payments']);
+            $payments = $mollieOrder->_embedded->payments;
+
+            try {
+                $payment = new Payment($mollieApi);
+                $payment->id = current($payments)->id;
+
+                $mollieApi->payments->refund($payment, [
+                    'amount' => [
+                        'currency' => $order->getOrderCurrencyCode(),
+                        'value' => $this->mollieHelper->formatCurrencyValue(
+                            $creditmemo->getAdjustment(),
+                            $order->getOrderCurrencyCode()
+                        ),
+                    ]
+                ]);
+            } catch (\Exception $exception) {
+                $this->mollieHelper->addTolog('error', $exception->getMessage());
+                Mage::throwException($exception->getMessage());
+            }
+        }
+
+        if (!$creditmemo->getAllItems()) {
+            return $this;
         }
 
         /**
@@ -609,7 +653,6 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         }
 
         try {
-            $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
             $mollieOrder = $mollieApi->orders->get($transactionId);
             if ($order->getState() == Mage_Sales_Model_Order::STATE_CLOSED) {
                 $mollieOrder->refundAll();
@@ -692,5 +735,33 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
          * are shipped.
          */
         return array_sum($shippableOrderItems) == 0;
+    }
+
+    /**
+     * When an order line is already marked as shipped in the Mollie dashboard, and we try this action again we get
+     * an exception and the user is unable to create an order. This code checks if the selected lines are already
+     * marked as shipped. If that's the case a warning will be shown, but the order is still created.
+     *
+     * @param \Mollie\Api\Resources\Order $mollieOrder
+     * @param $orderLines
+     * @return bool
+     */
+    private function itemsAreShippable(\Mollie\Api\Resources\Order $mollieOrder, $orderLines)
+    {
+        $lines = [];
+        foreach ($orderLines['lines'] as $line) {
+            $id = $line['id'];
+            $lines[$id] = $line['quantity'];
+        }
+        foreach ($mollieOrder->lines as $line) {
+            if (!isset($lines[$line->id])) {
+                continue;
+            }
+            $quantityToShip = $lines[$line->id];
+            if ($line->shippableQuantity < $quantityToShip) {
+                return false;
+            }
+        }
+        return true;
     }
 }

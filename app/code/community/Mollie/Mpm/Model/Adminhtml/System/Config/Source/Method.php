@@ -42,7 +42,7 @@ class Mollie_Mpm_Model_Adminhtml_System_Config_Source_Method extends Mollie_Mpm_
         if (!$this->options) {
             $this->options = array(
                 array(
-                    'value' => '',
+                    'value' => 'payment',
                     'label' => $this->mollieHelper->__('Payments Api')
                 ),
                 array(
