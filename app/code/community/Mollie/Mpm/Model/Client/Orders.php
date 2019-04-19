@@ -456,10 +456,26 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         try {
             $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
             $mollieOrder = $mollieApi->orders->get($transactionId);
+
+            if ($mollieOrder->status == 'completed') {
+                Mage::getSingleton('adminhtml/session')->addWarning(
+                    __('All items in this order where already marked as shipped in the Mollie dashboard.')
+                );
+                return $this;
+            }
+
             if ($shipAll) {
                 $mollieShipment = $mollieOrder->shipAll();
             } else {
                 $orderLines = $this->orderLines->getShipmentOrderLines($shipment);
+
+                if ($mollieOrder->status == 'shipping' && !$this->itemsAreShippable($mollieOrder, $orderLines)) {
+                    Mage::getSingleton('adminhtml/session')->addWarning(
+                        __('All items in this order where already marked as shipped in the Mollie dashboard.')
+                    );
+                    return $this;
+                }
+
                 $mollieShipment = $mollieOrder->createShipment($orderLines);
             }
 
@@ -632,5 +648,33 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         }
 
         return $this;
+    }
+
+    /**
+     * When an order line is already marked as shipped in the Mollie dashboard, and we try this action again we get
+     * an exception and the user is unable to create an order. This code checks if the selected lines are already
+     * marked as shipped. If that's the case a warning will be shown, but the order is still created.
+     *
+     * @param \Mollie\Api\Resources\Order $mollieOrder
+     * @param $orderLines
+     * @return bool
+     */
+    private function itemsAreShippable(\Mollie\Api\Resources\Order $mollieOrder, $orderLines)
+    {
+        $lines = [];
+        foreach ($orderLines['lines'] as $line) {
+            $id = $line['id'];
+            $lines[$id] = $line['quantity'];
+        }
+        foreach ($mollieOrder->lines as $line) {
+            if (!isset($lines[$line->id])) {
+                continue;
+            }
+            $quantityToShip = $lines[$line->id];
+            if ($line->shippableQuantity < $quantityToShip) {
+                return false;
+            }
+        }
+        return true;
     }
 }
