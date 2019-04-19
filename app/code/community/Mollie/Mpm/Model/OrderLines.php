@@ -109,7 +109,7 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
                 'totalAmount'    => $this->mollieHelper->getAmountArray($currency, $totalAmount),
                 'vatRate'        => sprintf("%.2f", $item->getTaxPercent()),
                 'vatAmount'      => $this->mollieHelper->getAmountArray($currency, $vatAmount),
-                'sku'            => $item->getProduct()->getSku(),
+                'sku'            => trim($item->getProduct()->getSku()),
                 'productUrl'     => $item->getProduct()->getProductUrl()
             );
         }
