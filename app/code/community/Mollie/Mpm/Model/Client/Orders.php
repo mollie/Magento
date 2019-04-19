@@ -443,16 +443,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
          * If products ordered qty equals shipping qty,
          * complete order can be shipped incl. shipping & discount itemLines.
          */
-        if ((int)$order->getTotalQtyOrdered() == (int)$shipment->getTotalQty()) {
-            $shipAll = true;
-        }
-
-        /**
-         * If shipping qty equals open physical products count,
-         * all remaining lines can be shipped, incl. shipping & discount itemLines.
-         */
-        $openForShipmentQty = $this->orderLines->getOpenForShipmentQty($orderId);
-        if ((int)$shipment->getTotalQty() == (int)$openForShipmentQty) {
+        if ($this->isShippingAllItems($order, $shipment)) {
             $shipAll = true;
         }
 
@@ -675,6 +666,75 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         }
 
         return $this;
+    }
+
+    /**
+     * This code checks if all products in the order are going to be shipped. This used the qty_shipped column
+     * so it works with partial shipments as well.
+     * Examples:
+     * - You have an order with 2 items. You are shipping both items. This function will return true.
+     * - You have an order with 2 items. The first shipments contains 1 items, the second shipment also. The first
+     *   time this function returns false, the second time true as it is shipping all remaining items.
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Shipment $shipment
+     * @return bool
+     */
+    private function isShippingAllItems(Mage_Sales_Model_Order $order, Mage_Sales_Model_Order_Shipment $shipment)
+    {
+        /**
+         * First build an array of all products in the order like this:
+         * [item ID => quantiy]
+         * [123 => 2]
+         * [124 => 1]
+         *
+         * The method `getOrigData('qty_shipped')` is used as the value of `getQtyShipped()` is somewhere adjusted
+         * and invalid, so not reliable to use for our case.
+         */
+        $shippableOrderItems = [];
+        /** @var Mage_Sales_Model_Order_Item $item */
+        foreach ($order->getAllVisibleItems() as $item) {
+            if ($item->getProductType() != Mage_Catalog_Model_Product_Type::TYPE_BUNDLE || !$item->isShipSeparately()) {
+                $quantity = $item->getQtyOrdered() - $item->getOrigData('qty_shipped');
+                $shippableOrderItems[$item->getId()] = $quantity;
+                continue;
+            }
+
+            /** @var Mage_Sales_Model_Order_Item $childItem */
+            foreach ($item->getChildrenItems() as $childItem) {
+                if ((float)$childItem->getQtyShipped() === (float)$childItem->getOrigData('qty_shipped')) {
+                    continue;
+                }
+                $quantity = $childItem->getQtyOrdered() - $childItem->getOrigData('qty_shipped');
+                $shippableOrderItems[$childItem->getId()] = $quantity;
+            }
+        }
+        /**
+         * Now subtract the number of items to ship in this shipment.
+         *
+         * Before:
+         * [123 => 2]
+         *
+         * Shipping 1 item
+         *
+         * After:
+         * [123 => 1]
+         */
+        /** @var Mage_Sales_Model_Order_Shipment_Item $item */
+        foreach ($shipment->getAllItems() as $item) {
+            if ($item->getOrderItem()->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE &&
+                $item->getOrderItem()->isShipSeparately()
+            ) {
+                continue;
+            }
+
+            $shippableOrderItems[$item->getOrderItemId()] -= $item->getQty();
+        }
+        /**
+         * Count the total number of items in the array. If it equals 0 then all (remaining) items in the order
+         * are shipped.
+         */
+        return array_sum($shippableOrderItems) == 0;
     }
 
     /**
