@@ -127,6 +127,9 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
                 }
             } catch (\Exception $e) {
                 $this->mollieHelper->addToLog('error', $e->getMessage());
+                Mage::logException($e);
+                $this->getResponse()->setHeader('HTTP/1.1','503 Service Unavailable')->sendResponse();
+                exit;
             }
         }
     }
