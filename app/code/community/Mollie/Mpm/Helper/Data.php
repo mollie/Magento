@@ -42,6 +42,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_DEBUG = 'payment/mollie/debug';
     const XPATH_LOADING_SCREEN = 'payment/mollie/loading_screen';
     const XPATH_STATUS_PENDING = 'payment/mollie/order_status_pending';
+    const XPATH_CANCEL_FAILED_ORDERS = 'payment/mollie/cancel_failed_orders';
     const XPATH_STATUS_PENDING_BANKTRANSFER = 'payment/mollie_banktransfer/order_status_pending';
     const XPATH_STATUS_PROCESSING = 'payment/mollie/order_status_processing';
     const XPATH_BANKTRANSFER_DUE_DAYS = 'payment/mollie_banktransfer/due_days';
