@@ -29,36 +29,26 @@
  * @author      Mollie B.V. (info@mollie.nl)
  * @copyright   Copyright (c) 2012-2019 Mollie B.V. (https://www.mollie.nl)
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
- * @deprecated  5.2.0 The Bitcoin method is no longer support by Mollie.
  */
-class Mollie_Mpm_Model_Method_Bitcoin extends Mollie_Mpm_Model_Method_Abstract
-{
 
-    const METHOD_CODE = 'mollie_bitcoin';
-    const PAYMENT_METHOD = 'Bitcoin';
+/** @var Mage_Sales_Model_Resource_Setup $installer */
+$installer = $this;
+$installer->startSetup();
 
-    /**
-     * Payment method code
-     *
-     * @var string
-     */
-    protected $_code = self::METHOD_CODE;
+$paths = [
+    'payment/mollie_bitcoin/active',
+    'payment/mollie_bitcoin/title',
+    'payment/mollie_bitcoin/method',
+    'payment/mollie_bitcoin/payment_description',
+    'payment/mollie_bitcoin/allowspecific',
+    'payment/mollie_bitcoin/specificcountry',
+    'payment/mollie_bitcoin/min_order_total',
+    'payment/mollie_bitcoin/max_order_total',
+    'payment/mollie_bitcoin/sort_order',
+];
 
-    /**
-     * @var string
-     */
-    protected $_paymentMethod = self::PAYMENT_METHOD;
-
-    /**
-     * Availability options
-     */
-    protected $_canRefund = false;
-    protected $_canRefundInvoicePartial = false;
-
-    public function isAvailable($quote = null)
-    {
-        return false;
-    }
-
-
+foreach ($paths as $path) {
+    $installer->deleteConfigData($path);
 }
+
+$installer->endSetup();
