@@ -75,7 +75,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
         $transactionId = $order->getMollieTransactionId();
         if (!empty($transactionId)) {
-            $payment = $mollieApi->payments->get($transactionId);
+            $payment = $mollieApi->orders->get($transactionId);
             return $payment->getCheckoutUrl();
         }
 
