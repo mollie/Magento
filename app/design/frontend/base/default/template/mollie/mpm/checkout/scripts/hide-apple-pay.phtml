@@ -1,0 +1,5 @@
+$('dt_method_mollie_applepay').hide();
+
+if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+    $('dt_method_mollie_applepay').show();
+}

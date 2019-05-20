@@ -373,6 +373,16 @@
                 <method/>
                 <payment_description>{ordernumber}</payment_description>
             </mollie_przelewy24>
+            <mollie_applepay>
+                <active>1</active>
+                <sort_order>160</sort_order>
+                <title>Apple Pay</title>
+                <model>mpm/method_applepay</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_applepay>
             <mollie_giftcard>
                 <active>0</active>
                 <sort_order>10</sort_order>
