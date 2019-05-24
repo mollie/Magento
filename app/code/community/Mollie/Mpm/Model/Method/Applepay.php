@@ -49,4 +49,11 @@ class Mollie_Mpm_Model_Method_Applepay extends Mollie_Mpm_Model_Method_Abstract
      */
     protected $_paymentMethod = self::PAYMENT_METHOD;
 
+    /**
+     * Type of block that generates method form
+     *
+     * @var string
+     */
+    protected $_formBlockType = 'mpm/payment_form_applepay';
+
 }
