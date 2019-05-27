@@ -2394,7 +2394,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment><![CDATA[<strong>Please note:</strong> This payment method is only visible when the users device has Apple Pay enabled.]]></comment>
+                            <comment><![CDATA[<strong>Please note:</strong> This payment method is only visible when the device of the user Apple Pay has enabled and the checkout is served over HTTPS.]]></comment>
                         </active>
                         <title translate="label">
                             <label>Title</label>
