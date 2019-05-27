@@ -4,8 +4,13 @@ if (elements) {
     var parent = elements[0].up();
 
     parent.hide();
-    if (window.ApplePaySession) {
-        parent.show();
+
+    try {
+        if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+            parent.show();
+        }
+    } catch (error) {
+        console.warn('Error when trying to check Apple Pay:', error);
     }
 }
 </script>

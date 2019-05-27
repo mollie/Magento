@@ -54,7 +54,12 @@ class Mollie_Mpm_Helper_Test extends Mollie_Mpm_Helper_Data
                     $availableMethods = array();
 
                     $mollieApi = $this->getMollieAPI($testKey);
-                    $methods = $mollieApi->methods->all(array("resource" => "orders"));
+                    $methods = $mollieApi->methods->all(
+                        array(
+                            'resource' => 'orders',
+                            'includeWallets' => 'applepay',
+                        )
+                    );
 
                     foreach ($methods as $apiMethod) {
                         $availableMethods[] = ucfirst($apiMethod->id);
@@ -87,7 +92,12 @@ class Mollie_Mpm_Helper_Test extends Mollie_Mpm_Helper_Data
                 try {
                     $availableMethods = array();
                     $mollieApi = $this->getMollieAPI($liveKey);
-                    $methods = $mollieApi->methods->all(array("resource" => "orders"));
+                    $methods = $mollieApi->methods->all(
+                        array(
+                            'resource' => 'orders',
+                            'includeWallets' => 'applepay',
+                        )
+                    );
                     foreach ($methods as $apiMethod) {
                         $availableMethods[] = ucfirst($apiMethod->id);
                     }
