@@ -748,17 +748,19 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             if ($amount !== null && $amount['value'] > 0) {
                 $this->mollieMethods = $mollieApi->methods->all(
                     array(
-                        "resource"         => $resource,
-                        "include"          => $include,
-                        "amount[value]"    => $amount['value'],
-                        "amount[currency]" => $amount['currency']
+                        'resource'         => $resource,
+                        'include'          => $include,
+                        'amount[value]'    => $amount['value'],
+                        'amount[currency]' => $amount['currency'],
+                        'includeWallets'   => 'applepay',
                     )
                 );
             } else {
                 $this->mollieMethods = $mollieApi->methods->all(
                     array(
-                        "resource" => $resource,
-                        "include"  => $include
+                        'resource' => $resource,
+                        'include'  => $include,
+                        'includeWallets' => 'applepay',
                     )
                 );
             }

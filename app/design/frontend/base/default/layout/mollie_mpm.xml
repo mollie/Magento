@@ -60,4 +60,9 @@
             </block>
         </reference>
     </mpm_api_redirect>
+    <checkout_onepage_paymentmethod>
+        <reference name="checkout.onepage.payment.methods.scripts">
+            <block type="core/template" template="mollie/mpm/checkout/scripts/hide-apple-pay.phtml" />
+        </reference>
+    </checkout_onepage_paymentmethod>
 </layout>
