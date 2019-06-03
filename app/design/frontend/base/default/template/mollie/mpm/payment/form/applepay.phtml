@@ -1,0 +1,16 @@
+<script>
+var elements = $$('[value="mollie_applepay"]');
+if (elements) {
+    var parent = elements[0].up();
+
+    parent.hide();
+
+    try {
+        if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+            parent.show();
+        }
+    } catch (error) {
+        console.warn('Error when trying to check Apple Pay:', error);
+    }
+}
+</script>

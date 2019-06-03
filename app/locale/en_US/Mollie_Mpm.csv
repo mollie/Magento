@@ -120,3 +120,4 @@
 "Api Test","Api Test"
 "An error occured while processing your payment request, please try again later.","An error occured while processing your payment request, please try again later."
 "An error occured while processing your payment, please try again with other method.","An error occured while processing your payment, please try again with other method."
+"<strong>Please note:</strong> This payment method is only visible when the device of the user Apple Pay has enabled and the checkout is served over HTTPS.","<strong>Please note:</strong> This payment method is only visible when the device of the user Apple Pay has enabled and the checkout is served over HTTPS."
