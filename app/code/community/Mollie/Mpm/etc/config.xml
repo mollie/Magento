@@ -33,7 +33,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>5.3.0</version>
+            <version>5.4.0</version>
         </Mollie_Mpm>
     </modules>
     <global>
@@ -128,6 +128,105 @@
                 </observers>
             </sales_order_shipment_track_save_after>
         </events>
+        <sales>
+            <quote>
+                <totals>
+                    <mollie_mpm_payment_fee>
+                        <class>mpm/totals_paymentFee_quote</class>
+                        <after>subtotal,discount</after>
+                        <before>grand_total,tax</before>
+                        <renderer>mpm/checkout_paymentFee</renderer>
+                        <admin_renderer>mpm/adminhtml_sales_order_create_paymentFee</admin_renderer>
+                    </mollie_mpm_payment_fee>
+                    <mollie_mpm_payment_fee_tax>
+                        <class>mpm/totals_paymentFee_quoteTax</class>
+                        <after>subtotal,discount,shipping,tax</after>
+                        <before>grand_total</before>
+                    </mollie_mpm_payment_fee_tax>
+                </totals>
+            </quote>
+            <order_invoice>
+                <totals>
+                    <mollie_mpm_payment_fee>
+                        <class>mpm/totals_paymentFee_invoice</class>
+                        <after>subtotal,discount</after>
+                        <before>grand_total,tax</before>
+                    </mollie_mpm_payment_fee>
+                    <mollie_mpm_payment_fee_tax>
+                        <class>mpm/totals_paymentFee_invoiceTax</class>
+                        <after>subtotal,discount,shipping,tax</after>
+                        <before>grand_total</before>
+                    </mollie_mpm_payment_fee_tax>
+                </totals>
+            </order_invoice>
+            <order_creditmemo>
+                <totals>
+                    <mollie_mpm_payment_fee>
+                        <class>mpm/totals_paymentFee_creditmemo</class>
+                        <after>subtotal,discount</after>
+                        <before>grand_total,tax</before>
+                    </mollie_mpm_payment_fee>
+                    <mollie_mpm_payment_fee_tax>
+                        <class>mpm/totals_paymentFee_creditmemoTax</class>
+                        <after>subtotal,discount,shipping,tax</after>
+                        <before>grand_total</before>
+                    </mollie_mpm_payment_fee_tax>
+                </totals>
+            </order_creditmemo>
+        </sales>
+        <fieldsets>
+            <sales_convert_quote_address>
+                <mollie_mpm_payment_fee>
+                    <to_order>*</to_order>
+                </mollie_mpm_payment_fee>
+                <base_mollie_mpm_payment_fee>
+                    <to_order>*</to_order>
+                </base_mollie_mpm_payment_fee>
+                <mollie_mpm_payment_fee_tax>
+                    <to_order>*</to_order>
+                </mollie_mpm_payment_fee_tax>
+                <base_mollie_mpm_payment_fee_tax>
+                    <to_order>*</to_order>
+                </base_mollie_mpm_payment_fee_tax>
+            </sales_convert_quote_address>
+            <sales_convert_order>
+                <mollie_mpm_payment_fee>
+                    <to_invoice>*</to_invoice>
+                </mollie_mpm_payment_fee>
+                <base_mollie_mpm_payment_fee>
+                    <to_invoice>*</to_invoice>
+                </base_mollie_mpm_payment_fee>
+                <mollie_mpm_payment_fee_tax>
+                    <to_invoice>*</to_invoice>
+                </mollie_mpm_payment_fee_tax>
+                <base_mollie_mpm_payment_fee_tax>
+                    <to_invoice>*</to_invoice>
+                </base_mollie_mpm_payment_fee_tax>
+                <mollie_mpm_payment_fee>
+                    <to_cm>*</to_cm>
+                </mollie_mpm_payment_fee>
+                <base_mollie_mpm_payment_fee>
+                    <to_cm>*</to_cm>
+                </base_mollie_mpm_payment_fee>
+                <mollie_mpm_payment_fee_tax>
+                    <to_cm>*</to_cm>
+                </mollie_mpm_payment_fee_tax>
+                <base_mollie_mpm_payment_fee_tax>
+                    <to_cm>*</to_cm>
+                </base_mollie_mpm_payment_fee_tax>
+            </sales_convert_order>
+        </fieldsets>
+        <pdf>
+            <totals>
+                <payment_fee translate="title">
+                    <title>Mollie payment fee</title>
+                    <font_size>7</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>100</sort_order>
+                    <model>mpm/totals_paymentFee_invoicePdf</model>
+                </payment_fee>
+            </totals>
+        </pdf>
     </global>
     <frontend>
         <routers>
