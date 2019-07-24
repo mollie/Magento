@@ -883,11 +883,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * @param $method
-     * @param $orderNumber
+     * @param $order
      * @param int $storeId
      * @return string
      */
-    public function getPaymentDescription($method, $orderNumber, $storeId = 0)
+    public function getPaymentDescription($method, Mage_Sales_Model_Order $order, $storeId = 0)
     {
         $xpath = str_replace('%method%', 'mollie_' . $method, self::XPATH_PAYMENT_DESCRIPTION);
         $description = $this->getStoreConfig($xpath);
@@ -896,9 +896,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             $description = '{ordernumber}';
         }
 
+        $address = $order->getBillingAddress();
+        $customerNameParts = array_filter([$address->getFirstname(), $address->getMiddlename(), $address->getLastname()]);
+
         $replacements = [
-            '{ordernumber}' => $orderNumber,
+            '{ordernumber}' => $order->getIncrementId(),
             '{storename}' => Mage::app()->getStore($storeId)->getFrontendName(),
+            '{customerCompany}' => $address->getCompany(),
+            '{customerName}' => implode(' ', $customerNameParts),
         ];
 
         return str_replace(
