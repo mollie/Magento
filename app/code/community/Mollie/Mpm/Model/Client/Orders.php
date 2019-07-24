@@ -276,11 +276,21 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 $sendInvoice = $this->mollieHelper->sendInvoice($storeId);
 
                 if (!$order->getEmailSent()) {
-                    $order->sendNewOrderEmail()->setEmailSent(true)->save();
+                    try {
+                        $order->sendNewOrderEmail()->setEmailSent(true)->save();
+                    } catch (\Exception $exception) {
+                        $message = __('Unable to send the new order email: %1', $exception->getMessage());
+                        $order->addStatusHistoryComment($message)->save();
+                    }
                 }
 
                 if ($invoice && !$invoice->getEmailSent() && $sendInvoice) {
-                    $invoice->setEmailSent(true)->sendEmail()->save();
+                    try {
+                        $invoice->setEmailSent(true)->sendEmail()->save();
+                    } catch (\Exception $exception) {
+                        $message = __('Unable to send the invoice: %1', $exception->getMessage());
+                        $order->addStatusHistoryComment($message)->save();
+                    }
                 }
 
                 if (!$order->getIsVirtual()) {
@@ -305,7 +315,12 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
         if ($mollieOrder->isCreated()) {
             if ($mollieOrder->method == 'banktransfer' && !$order->getEmailSent()) {
-                $order->sendNewOrderEmail()->setEmailSent(true)->save();
+                try {
+                    $order->sendNewOrderEmail()->setEmailSent(true)->save();
+                } catch (\Exception $exception) {
+                    $message = __('Unable to send the new order email: %1', $exception->getMessage());
+                    $order->addStatusHistoryComment($message)->save();
+                }
                 $message = $this->mollieHelper->__('New order email sent');
                 if (!$statusPending = $this->mollieHelper->getStatusPendingBanktransfer($storeId)) {
                     $statusPending = $order->getStatus();

@@ -155,11 +155,21 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
         }
 
         $method = $this->mollieHelper->getApiMethod($order);
+        $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
 
-        if ($method == 'order' && preg_match('/^ord_\w+$/', $transactionId)) {
-            return $this->ordersApi->processTransaction($order, $type, $paymentToken);
-        } else {
-            return $this->paymentsApi->processTransaction($order, $type, $paymentToken);
+        try {
+            $connection->beginTransaction();
+
+            if ($method == 'order' && preg_match('/^ord_\w+$/', $transactionId)) {
+                return $this->ordersApi->processTransaction($order, $type, $paymentToken);
+            } else {
+                return $this->paymentsApi->processTransaction($order, $type, $paymentToken);
+            }
+        } catch (\Exception $exception) {
+            $connection->rollback();
+            throw $exception;
+        } finally {
+            $connection->commit();
         }
     }
 
