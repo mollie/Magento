@@ -11,10 +11,10 @@
 
     <filter>
         <whitelist>
-            <directory>../../Mpm/Block</directory>
-            <directory>../../Mpm/controllers</directory>
-            <directory>../../Mpm/Helper</directory>
-            <directory>../../Mpm/Model</directory>
+            <directory>../Mpm/Block</directory>
+            <directory>../Mpm/controllers</directory>
+            <directory>../Mpm/Helper</directory>
+            <directory>../Mpm/Model</directory>
         </whitelist>
     </filter>
 </phpunit>
