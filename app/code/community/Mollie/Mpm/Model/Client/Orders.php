@@ -728,7 +728,9 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 continue;
             }
 
-            $shippableOrderItems[$item->getOrderItemId()] -= $item->getQty();
+            if ($shippableOrderItems[$item->getOrderItemId()]) {
+                $shippableOrderItems[$item->getOrderItemId()] -= $item->getQty();
+            }
         }
         /**
          * Count the total number of items in the array. If it equals 0 then all (remaining) items in the order
