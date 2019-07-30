@@ -385,8 +385,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -505,8 +507,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -650,8 +654,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -770,8 +776,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -890,8 +898,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -1038,8 +1048,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -1170,8 +1182,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -1290,8 +1304,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -1410,8 +1426,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -1530,8 +1548,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -1650,8 +1670,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -1772,8 +1794,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -2243,8 +2267,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -2364,8 +2390,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
@@ -2484,8 +2512,10 @@
                                 <method>payment</method>
                             </depends>
                             <comment><![CDATA[The description to be used for this transaction. These variables are available:<br><br>
-                            <strong>{ordernumber}</strong>: The order number for this transaction<br>
-                            <strong>{storename}</strong>: The name of the store<br><br>
+                            <strong>{ordernumber}</strong>: The order number for this transaction.<br>
+                            <strong>{storename}</strong>: The name of the store.<br>
+                            <strong>{customerCompany}</strong>: The name of the company of the customer. Can be empty.<br>
+                            <strong>{customerName}</strong>: The name on the billing address. Includes first, middle and last when available.<br><br>
                             (Note: This only works when the method is set to Payments API)
                             ]]></comment>
                         </payment_description>
