@@ -40,4 +40,52 @@
             </action>
         </reference>
     </default>
+
+    <adminhtml_sales_order_create>
+        <reference name="order_totals">
+            <block type="mpm/adminhtml_sales_order_paymentFee" before="tax" name="mollie_mpm_payment_fee_total_renderer"/>
+        </reference>
+    </adminhtml_sales_order_create>
+
+    <adminhtml_sales_order_view>
+        <reference name="order_totals">
+            <block type="mpm/adminhtml_sales_order_paymentFee" before="tax" name="mollie_mpm_payment_fee"/>
+        </reference>
+    </adminhtml_sales_order_view>
+
+    <adminhtml_sales_order_invoice_view>
+        <reference name="invoice_totals">
+            <block type="mpm/adminhtml_sales_invoice_paymentFee" before="tax" name="mollie_mpm_payment_fee" />
+        </reference>
+    </adminhtml_sales_order_invoice_view>
+
+    <adminhtml_sales_order_invoice_print>
+        <reference name="invoice_totals">
+            <block type="mpm/adminhtml_sales_invoice_paymentFee" before="tax" name="mollie_mpm_payment_fee" />
+        </reference>
+    </adminhtml_sales_order_invoice_print>
+
+    <adminhtml_sales_order_invoice_new>
+        <reference name="invoice_totals">
+            <block type="mpm/adminhtml_sales_invoice_paymentFee" before="tax" name="mollie_mpm_payment_fee" />
+        </reference>
+    </adminhtml_sales_order_invoice_new>
+
+    <adminhtml_sales_order_creditmemo_view>
+        <reference name="creditmemo_totals">
+            <block type="mpm/adminhtml_sales_creditmemo_paymentFee" before="tax" name="mollie_mpm_payment_fee"/>
+        </reference>
+    </adminhtml_sales_order_creditmemo_view>
+
+    <adminhtml_sales_order_creditmemo_new>
+        <reference name="creditmemo_totals">
+            <block type="mpm/adminhtml_sales_creditmemo_paymentFee" before="tax" name="mollie_mpm_payment_fee"/>
+        </reference>
+    </adminhtml_sales_order_creditmemo_new>
+
+    <adminhtml_sales_order_creditmemo_updateqty>
+        <reference name="creditmemo_totals">
+            <block type="mpm/adminhtml_sales_creditmemo_paymentFee" before="tax" name="mollie_mpm_payment_fee"/>
+        </reference>
+    </adminhtml_sales_order_creditmemo_updateqty>
 </layout>

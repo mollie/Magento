@@ -1940,10 +1940,36 @@
                                 <active>1</active>
                             </depends>
                         </max_order_total>
+                        <payment_surcharge>
+                            <label>Klarna Payment Surcharge</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <comment><![CDATA[Enter the extra costs for a Klarna Pay Later payment with a maximum of € 1.95]]></comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <backend_model>mpm/adminhtml_system_config_backend_surchargeValidation</backend_model>
+                        </payment_surcharge>
+                        <payment_surcharge_tax_class>
+                            <label>Klarna Payment Surcharge Tax Class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_shipping_taxclass</source_model>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </payment_surcharge_tax_class>
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>100</sort_order>
+                            <sort_order>102</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -2032,10 +2058,36 @@
                                 <active>1</active>
                             </depends>
                         </max_order_total>
+                        <payment_surcharge>
+                            <label>Klarna Payment Surcharge</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <comment><![CDATA[Enter the extra costs for a Klarna Slice It payment with a maximum of € 1.95]]></comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <backend_model>mpm/adminhtml_system_config_backend_surchargeValidation</backend_model>
+                        </payment_surcharge>
+                        <payment_surcharge_tax_class>
+                            <label>Klarna Payment Surcharge Tax Class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_shipping_taxclass</source_model>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </payment_surcharge_tax_class>
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>100</sort_order>
+                            <sort_order>102</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>

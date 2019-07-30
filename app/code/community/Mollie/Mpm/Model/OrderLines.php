@@ -166,6 +166,12 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
             );
         }
 
+        /** @var Mollie_Mpm_Helper_OrderLines_PaymentFee $paymentFeeHelper */
+        $paymentFeeHelper = Mage::helper('mpm/orderLines_paymentFee');
+        if ($paymentFeeHelper->orderHasPaymentFee($order)) {
+            $orderLines[] = $paymentFeeHelper->getOrderLine($order);
+        }
+
         $this->saveOrderLines($orderLines, $order);
         foreach ($orderLines as &$orderLine) {
             unset($orderLine['item_id']);
@@ -339,6 +345,17 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
             }
         }
 
+        /** @var Mollie_Mpm_Helper_PaymentFee $paymentFeeHelper */
+        $paymentFeeHelper = Mage::helper('mpm/paymentFee');
+
+        /** @var Mollie_Mpm_Helper_OrderLines_PaymentFee $orderlinesPaymentFeeHelper */
+        $orderlinesPaymentFeeHelper = Mage::helper('mpm/orderLines_paymentFee');
+        if ($orderlinesPaymentFeeHelper->creditmemoHasPaymentFee($creditmemo) &&
+            !$paymentFeeHelper->hasItemsLeftToRefund($creditmemo)
+        ) {
+            $orderLines[] = $orderlinesPaymentFeeHelper->getCreditmemoOrderLine($creditmemo);
+        }
+
         if ($addShipping) {
             $orderId = $creditmemo->getOrderId();
             $shippingFeeItemLine = $this->getShippingFeeItemLineOrder($orderId);
@@ -358,6 +375,21 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
         $shippingLine = $this->getCollection()
             ->addFieldToFilter('order_id', array('eq' => $orderId))
             ->addFieldToFilter('type', array('eq' => 'shipping_fee'))
+            ->getLastItem();
+
+        return $shippingLine;
+    }
+
+    /**
+     * @param $orderId
+     *
+     * @return mixed
+     */
+    public function getSurchargeItemLineOrder($orderId)
+    {
+        $shippingLine = $this->getCollection()
+            ->addFieldToFilter('order_id', array('eq' => $orderId))
+            ->addFieldToFilter('type', array('eq' => 'surcharge'))
             ->getLastItem();
 
         return $shippingLine;
