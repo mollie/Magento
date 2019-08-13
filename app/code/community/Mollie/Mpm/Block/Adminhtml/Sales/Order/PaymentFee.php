@@ -13,7 +13,7 @@ class Mollie_Mpm_Block_Adminhtml_Sales_Order_PaymentFee extends Mage_Adminhtml_B
         $tax = $order->getMollieMpmPaymentFeeTax();
         $baseTax = $order->getBaseMollieMpmPaymentFeeTax();
 
-        if (!$fee || !$baseFee) {
+        if (!(float)$fee || !(float)$baseFee) {
             return $this;
         }
 

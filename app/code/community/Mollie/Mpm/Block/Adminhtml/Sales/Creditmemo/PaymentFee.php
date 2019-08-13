@@ -13,6 +13,10 @@ class Mollie_Mpm_Block_Adminhtml_Sales_Creditmemo_PaymentFee extends Mage_Adminh
         $tax = $order->getMollieMpmPaymentFeeTax();
         $baseTax = $order->getBaseMollieMpmPaymentFeeTax();
 
+        if (!(float)$fee) {
+            return $this;
+        }
+
         if (!Mage::helper('mpm/paymentFee')->isFullOrLastPartialCreditmemo($this->getCreditmemo())) {
             return $this;
         }

@@ -104,4 +104,9 @@ class Mollie_Mpm_Test_TestHelpers_TestCase extends \PHPUnit\Framework\TestCase
 
         return $mock;
     }
+
+    public function getBlock($name)
+    {
+        return Mage::app()->getLayout()->createBlock($name);
+    }
 }
