@@ -6,8 +6,6 @@ class Mollie_Mpm_Model_Totals_PaymentFee_QuoteTax extends Mage_Sales_Model_Quote
 
     public function collect(Mage_Sales_Model_Quote_Address $address)
     {
-        parent::collect($address);
-
         if (!$this->_getAddressItems($address)) {
             return $this;
         }
@@ -34,9 +32,16 @@ class Mollie_Mpm_Model_Totals_PaymentFee_QuoteTax extends Mage_Sales_Model_Quote
 
         $address->setMollieMpmPaymentFeeTax($quote->getStore()->convertPrice($paymentFeeTax));
         $address->setBaseMollieMpmPaymentFeeTax($paymentFeeTax);
+        $address->setTaxAmount($address->getTaxAmount() + + $address->getMollieMpmPaymentFeeTax());
+        $address->setBaseTaxAmount($address->getBaseTaxAmount() + $address->getBaseMollieMpmPaymentFeeTax());
         $address->setGrandTotal($address->getGrandTotal() + $address->getMollieMpmPaymentFeeTax());
-        $address->setBaseGrandTotal($address->getBaseGrandTotal() + $address->getMollieMpmPaymentFeeTax());
+        $address->setBaseGrandTotal($address->getBaseGrandTotal() + $address->getBaseMollieMpmPaymentFeeTax());
 
+        return $this;
+    }
+
+    public function fetch(Mage_Sales_Model_Quote_Address $address)
+    {
         return $this;
     }
 }
