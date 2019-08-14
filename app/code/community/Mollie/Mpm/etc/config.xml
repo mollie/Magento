@@ -33,7 +33,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>5.4.0</version>
+            <version>5.5.0</version>
         </Mollie_Mpm>
     </modules>
     <global>
@@ -482,6 +482,16 @@
                 <method/>
                 <payment_description>{ordernumber}</payment_description>
             </mollie_applepay>
+            <mollie_mybank>
+                <active>1</active>
+                <sort_order>170</sort_order>
+                <title>MyBank</title>
+                <model>mpm/method_mybank</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method/>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_mybank>
             <mollie_giftcard>
                 <active>0</active>
                 <sort_order>10</sort_order>
