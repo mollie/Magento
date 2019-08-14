@@ -193,6 +193,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         $mollieOrder = $mollieApi->orders->get($transactionId, array("embed" => "payments"));
         $this->mollieHelper->addTolog($type, $mollieOrder);
         $status = $mollieOrder->status;
+        $isRefund = $mollieOrder->amountRefunded && $mollieOrder->amountRefunded->value;
 
         $this->orderLines->updateOrderLinesByWebhook($mollieOrder->lines, $mollieOrder->isPaid());
 
@@ -211,7 +212,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
         $order->getPayment()->setAdditionalInformation('payment_status', $status)->save();
 
-        if ($mollieOrder->isPaid() || $mollieOrder->isAuthorized()) {
+        if (!$isRefund && ($mollieOrder->isPaid() || $mollieOrder->isAuthorized())) {
             $amount = $mollieOrder->amount->value;
             $currency = $mollieOrder->amount->currency;
             $orderAmount = $this->mollieHelper->getOrderAmountByOrder($order);
@@ -307,7 +308,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             return $msg;
         }
 
-        if ($mollieOrder->isRefunded()) {
+        if ($isRefund) {
             $msg = array('success' => true, 'status' => $status, 'order_id' => $orderId, 'type' => $type);
             $this->mollieHelper->addTolog('success', $msg);
             return $msg;
