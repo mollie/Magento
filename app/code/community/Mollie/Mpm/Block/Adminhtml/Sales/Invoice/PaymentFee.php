@@ -13,6 +13,10 @@ class Mollie_Mpm_Block_Adminhtml_Sales_Invoice_PaymentFee extends Mage_Sales_Blo
         $tax = $order->getMollieMpmPaymentFeeTax();
         $baseTax = $order->getBaseMollieMpmPaymentFeeTax();
 
+        if (!(float)$fee) {
+            return $this;
+        }
+
         $total = new Varien_Object();
         $total->setLabel(__('Mollie Payment Fee'));
         $total->setValue($fee + $tax);
