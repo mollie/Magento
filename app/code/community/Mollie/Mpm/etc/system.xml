@@ -1966,10 +1966,23 @@
                                 <active>1</active>
                             </depends>
                         </payment_surcharge_tax_class>
+                        <invoice_moment translate="label comment">
+                            <label>When to create the invoice?</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>mpm/adminhtml_system_config_source_invoiceMoment</source_model>
+                            <comment><![CDATA[When do we create the invoice?<br><strong>On Authorize</strong>: Create a full invoice when the order is authorized.<br><strong>On Shipment</strong>: Create a (partial) invoice when a shipment is created.]]></comment>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </invoice_moment>
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>102</sort_order>
+                            <sort_order>103</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -2084,10 +2097,23 @@
                                 <active>1</active>
                             </depends>
                         </payment_surcharge_tax_class>
+                        <invoice_moment translate="label comment">
+                            <label>When to create the invoice?</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>mpm/adminhtml_system_config_source_invoiceMoment</source_model>
+                            <comment><![CDATA[When do we create the invoice?<br><strong>On Authorize</strong>: Create a full invoice when the order is authorized.<br><strong>On Shipment</strong>: Create a (partial) invoice when a shipment is created.]]></comment>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </invoice_moment>
                         <sort_order translate="label">
                             <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
-                            <sort_order>102</sort_order>
+                            <sort_order>103</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>

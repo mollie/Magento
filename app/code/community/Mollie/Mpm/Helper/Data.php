@@ -55,6 +55,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_PAYMENTLINK_MESSAGE = 'payment/mollie_paymentlink/message';
     const XPATH_API_METHOD = 'payment/%method%/method';
     const XPATH_PAYMENT_DESCRIPTION = 'payment/%method%/payment_description';
+    const XPATH_INVOICE_MOMENT = 'payment/%method%/invoice_moment';
 
     /**
      * @var null
@@ -911,5 +912,17 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             array_values($replacements),
             $description
         );
+    }
+
+    public function getInvoiceMoment(Mage_Sales_Model_Order $order)
+    {
+        $method = $this->getMethodCode($order);
+
+        if (!in_array($method, array('klarnasliceit', 'klarnapaylater'))) {
+            return 'authorize';
+        }
+
+        $path = str_replace('%method%', 'mollie_' . $method, static::XPATH_INVOICE_MOMENT);
+        return $this->getStoreConfig($path, $order->getStoreId());
     }
 }
