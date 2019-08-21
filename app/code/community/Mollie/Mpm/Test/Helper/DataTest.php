@@ -127,7 +127,7 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
         $address->setFirstname($names[0]);
         $address->setMiddlename($names[1]);
         $address->setLastname($names[2]);
-        
+
         $addressList = $order->getAddressesCollection();
         $addressList->addItem($address);
 
@@ -136,5 +136,39 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
         $result = $instance->getPaymentDescription('ideal', $order);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testGetInvoiceMomentReturnsAuthorizeForNonKlarnaMethods()
+    {
+        /** @var Mollie_Mpm_Helper_data $instance */
+        $instance = Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Payment $payment */
+        $payment = Mage::getModel('sales/order_payment');
+        $payment->setMethod('mollie_ideal');
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = Mage::getModel('sales/order');
+        $order->setPayment($payment);
+
+        $this->assertEquals('authorize', $instance->getInvoiceMoment($order));
+    }
+
+    public function testGetInvoiceMomentReturnsTheSettingIfTheMethodIsKlarna()
+    {
+        Mage::app()->getStore()->setConfig('payment/mollie_klarnasliceit/invoice_moment', 'authorize');
+
+        /** @var Mollie_Mpm_Helper_data $instance */
+        $instance = Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Payment $payment */
+        $payment = Mage::getModel('sales/order_payment');
+        $payment->setMethod('mollie_klarnasliceit');
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = Mage::getModel('sales/order');
+        $order->setPayment($payment);
+
+        $this->assertEquals('authorize', $instance->getInvoiceMoment($order));
     }
 }
