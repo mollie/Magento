@@ -62,7 +62,7 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
     /**
      * Get Order lines of Order
      *
-     * @param Order $order
+     * @param Mage_Sales_Model_Order $order
      *
      * @return array
      */
@@ -74,22 +74,24 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
 
         /** @var Mage_Sales_Model_Order_Item $item */
         foreach ($order->getAllVisibleItems() as $item) {
-            $quantity = round($item->getQtyOrdered());
-            $rowTotalInclTax = $forceBaseCurrency ? $item->getBaseRowTotalInclTax() : $item->getRowTotalInclTax();
-            $discountAmount = $forceBaseCurrency ? $item->getBaseDiscountAmount() : $item->getDiscountAmount();
-
-            /**
-             * The price of a single item including VAT in the order line.
-             * Calculated back from the $rowTotalInclTax to overcome rounding issues.
-             */
-            $unitPrice = round($rowTotalInclTax / $quantity, 2);
 
             /**
              * The total amount of the line, including VAT and discounts
              * Should Match: (unitPrice × quantity) - discountAmount
              * NOTE: TotalAmount can differ from actutal Total Amount due to rouding in tax or exchange rate
              */
-            $totalAmount = $rowTotalInclTax - $discountAmount;
+            $totalAmount = $this->_getTotalAmountOrderItem($item, $forceBaseCurrency);
+
+            /**
+             * The total discount amount of the line.
+             */
+            $discountAmount = $this->_getDiscountAmountOrderItem($item, $forceBaseCurrency);
+
+            /**
+             * The price of a single item including VAT in the order line.
+             * Calculated back from the totalAmount + discountAmount to overcome rounding issues.
+             */
+            $unitPrice = round(($totalAmount + $discountAmount) / $item->getQtyOrdered(), 2);
 
             /**
              * The amount of VAT on the line.
@@ -99,71 +101,73 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
              */
             $vatAmount = round($totalAmount * ($item->getTaxPercent() / (100 + $item->getTaxPercent())), 2);
 
-            $orderLines[] = array(
-                'item_id'        => $item->getId(),
-                'type'           => $item->getProduct()->getTypeId() != 'downloadable' ? 'physical' : 'digital',
-                'name'           => preg_replace("/[^A-Za-z0-9 -]/", "", $item->getName()),
-                'quantity'       => $quantity,
-                'unitPrice'      => $this->mollieHelper->getAmountArray($currency, $unitPrice),
-                'discountAmount' => $this->mollieHelper->getAmountArray($currency, $discountAmount),
-                'totalAmount'    => $this->mollieHelper->getAmountArray($currency, $totalAmount),
-                'vatRate'        => sprintf("%.2f", $item->getTaxPercent()),
-                'vatAmount'      => $this->mollieHelper->getAmountArray($currency, $vatAmount),
-                'sku'            => trim($item->getProduct()->getSku()),
-                'productUrl'     => $item->getProduct()->getProductUrl()
+            $orderLine = array(
+                'item_id'     => $item->getId(),
+                'type'        => $item->getProduct()->getTypeId() != 'downloadable' ? 'physical' : 'digital',
+                'name'        => preg_replace("/[^A-Za-z0-9 -]/", "", $item->getName()),
+                'quantity'    => round($item->getQtyOrdered()),
+                'unitPrice'   => $this->mollieHelper->getAmountArray($currency, $unitPrice),
+                'totalAmount' => $this->mollieHelper->getAmountArray($currency, $totalAmount),
+                'vatRate'     => sprintf("%.2f", $item->getTaxPercent()),
+                'vatAmount'   => $this->mollieHelper->getAmountArray($currency, $vatAmount),
+                'sku'         => $item->getProduct()->getSku(),
+                'productUrl'  => $item->getProduct()->getProductUrl()
             );
 
+            if ($discountAmount) {
+                $orderLine['discountAmount'] = $this->mollieHelper->getAmountArray($currency, $discountAmount);
+            }
+
+            $orderLines[] = $orderLine;
+
             if ($item->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
-                /** @var Order\Item $childItem */
+                /** @var Mage_Sales_Model_Order_Item $childItem */
                 foreach ($item->getChildrenItems() as $childItem) {
                     $orderLines[] = [
-                        'item_id'        => $childItem->getId(),
-                        'type'           => $childItem->getProduct()->getTypeId() != 'downloadable' ? 'physical' : 'digital',
-                        'name'           => preg_replace("/[^A-Za-z0-9 -]/", "", $childItem->getName()),
-                        'quantity'       => $quantity,
-                        'unitPrice'      => $this->mollieHelper->getAmountArray($currency, 0),
-                        'totalAmount'    => $this->mollieHelper->getAmountArray($currency, 0),
-                        'vatRate'        => sprintf("%.2f", $childItem->getTaxPercent()),
-                        'vatAmount'      => $this->mollieHelper->getAmountArray($currency, 0),
-                        'sku'            => $childItem->getProduct()->getSku(),
-                        'productUrl'     => $childItem->getProduct()->getProductUrl()
+                        'item_id'     => $childItem->getId(),
+                        'type'        => $childItem->getProduct()->getTypeId() != 'downloadable' ? 'physical' : 'digital',
+                        'name'        => preg_replace("/[^A-Za-z0-9 -]/", "", $childItem->getName()),
+                        'quantity'    => round($item->getQtyOrdered()),
+                        'unitPrice'   => $this->mollieHelper->getAmountArray($currency, 0),
+                        'totalAmount' => $this->mollieHelper->getAmountArray($currency, 0),
+                        'vatRate'     => sprintf("%.2f", $childItem->getTaxPercent()),
+                        'vatAmount'   => $this->mollieHelper->getAmountArray($currency, 0),
+                        'sku'         => $childItem->getProduct()->getSku(),
+                        'productUrl'  => $childItem->getProduct()->getProductUrl()
                     ];
                 }
             }
         }
 
         if (!$order->getIsVirtual()) {
-            $rowTotalInclTax = $forceBaseCurrency ? $order->getBaseShippingInclTax() : $order->getShippingInclTax();
-            $discountAmount = $forceBaseCurrency ? $order->getBaseShippingDiscountAmount() : $order->getShippingDiscountAmount();
-
             /**
              * The total amount of the line, including VAT and discounts
-             * Should Match: (unitPrice × quantity) - discountAmount
              * NOTE: TotalAmount can differ from actutal Total Amount due to rouding in tax or exchange rate
              */
-            $totalAmount = $rowTotalInclTax - $discountAmount;
+            $totalAmount = $this->_getTotalAmountShipping($order, $forceBaseCurrency);
+
+            $vatRate = $this->_getShippingVatRate($order);
 
             /**
              * The amount of VAT on the line.
              * Should Match: totalAmount × (vatRate / (100 + vatRate)).
-             * Due to Mollie API requirements, we calculate this instead of using $item->getTaxAmount() to overcome
-             * any rouding issues.
+             * Due to Mollie API requirements, we recalculare this from totalAmount
              */
-            $vatRate = $this->getShippingVatRate($order);
             $vatAmount = round($totalAmount * ($vatRate / (100 + $vatRate)), 2);
 
-            $orderLines[] = array(
-                'item_id'        => '',
-                'type'           => 'shipping_fee',
-                'name'           => preg_replace("/[^A-Za-z0-9 -]/", "", $order->getShippingDescription()),
-                'quantity'       => 1,
-                'unitPrice'      => $this->mollieHelper->getAmountArray($currency, $rowTotalInclTax),
-                'totalAmount'    => $this->mollieHelper->getAmountArray($currency, $totalAmount),
-                'discountAmount' => $this->mollieHelper->getAmountArray($currency, $discountAmount),
-                'vatRate'        => sprintf("%.2f", $vatRate),
-                'vatAmount'      => $this->mollieHelper->getAmountArray($currency, $vatAmount),
-                'sku'            => $order->getShippingMethod()
+            $orderLine = array(
+                'item_id'     => '',
+                'type'        => 'shipping_fee',
+                'name'        => preg_replace("/[^A-Za-z0-9 -]/", "", $order->getShippingDescription()),
+                'quantity'    => 1,
+                'unitPrice'   => $this->mollieHelper->getAmountArray($currency, $totalAmount),
+                'totalAmount' => $this->mollieHelper->getAmountArray($currency, $totalAmount),
+                'vatRate'     => sprintf("%.2f", $vatRate),
+                'vatAmount'   => $this->mollieHelper->getAmountArray($currency, $vatAmount),
+                'sku'         => $order->getShippingMethod()
             );
+
+            $orderLines[] = $orderLine;
         }
 
         /** @var Mollie_Mpm_Helper_OrderLines_PaymentFee $paymentFeeHelper */
@@ -181,19 +185,70 @@ class Mollie_Mpm_Model_OrderLines extends Mage_Core_Model_Abstract
     }
 
     /**
+     * @param Mage_Sales_Model_Order_Item $item
+     * @param                             $forceBaseCurrency
+     *
+     * @return float
+     */
+    protected function _getTotalAmountOrderItem(Mage_Sales_Model_Order_Item $item, $forceBaseCurrency)
+    {
+        if ($forceBaseCurrency) {
+            return $item->getBaseRowTotal()
+                - $item->getBaseDiscountAmount()
+                + $item->getBaseTaxAmount()
+                + $item->getBaseHiddenTaxAmount();
+        }
+
+        return $item->getRowTotal()
+            - $item->getDiscountAmount()
+            + $item->getTaxAmount()
+            + $item->getHiddenTaxAmount();
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order_Item $item
+     * @param                             $forceBaseCurrency
+     *
+     * @return float
+     */
+    protected function _getDiscountAmountOrderItem(Mage_Sales_Model_Order_Item $item, $forceBaseCurrency)
+    {
+        if ($forceBaseCurrency) {
+            return $item->getBaseDiscountAmount();
+        }
+
+        return $item->getDiscountAmount();
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param                        $forceBaseCurrency
+     *
+     * @return float
+     */
+    protected function _getTotalAmountShipping(Mage_Sales_Model_Order $order, $forceBaseCurrency)
+    {
+        if ($forceBaseCurrency) {
+            return $order->getBaseShippingAmount()
+                + $order->getBaseShippingTaxAmount()
+                + $order->getBaseShippingHiddenTaxAmount();
+        }
+
+        return $order->getShippingAmount()
+            + $order->getShippingTaxAmount()
+            + $order->getShippingHiddenTaxAmount();
+    }
+
+    /**
      * @param Mage_Sales_Model_Order $order
      *
      * @return double
      */
-    public function getShippingVatRate(Mage_Sales_Model_Order $order)
+    protected function _getShippingVatRate(Mage_Sales_Model_Order $order)
     {
-        $taxPercentage = '0.00';
-        $taxItems = $order->getFullTaxInfo();
-        if (is_array($taxItems)) {
-            $key = array_search('shipping', array_column($taxItems, 'taxable_item_type'));
-            if ($key !== false && isset($taxItems[$key]['tax_percent'])) {
-                $taxPercentage = $taxItems[$key]['tax_percent'];
-            }
+        $taxPercentage = 0;
+        if ($order->getShippingAmount() > 0) {
+            $taxPercentage = ($order->getShippingTaxAmount() / $order->getShippingAmount()) * 100;
         }
 
         return $taxPercentage;
