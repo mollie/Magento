@@ -130,4 +130,24 @@ class Mollie_Mpm_Model_Payments extends Mage_Core_Model_Abstract
 
         return $method;
     }
+
+    /**
+     * Get TransactionId by OrderId from mollie_payments table.
+     *
+     * The mollie_payments was removed in v5.0, but this function
+     * is restored to enable online refunds for orders placed before v5.0
+     *
+     * @param $orderId
+     *
+     * @return mixed
+     * @deprecated
+     */
+    public function getTransactionIdByOrderId($orderId)
+    {
+        if (!$this->checkTable()) {
+            return;
+        }
+
+        return $this->load($orderId, 'order_id')->getTransactionId();
+    }
 }
