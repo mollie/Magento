@@ -1,6 +1,7 @@
 <?php
 
 use Mollie\Api\Resources\Payment;
+use Mollie_Mpm_Model_Adminhtml_System_Config_Source_InvoiceMoment as InvoiceMoment;
 
 /**
  * Copyright (c) 2012-2019, Mollie B.V.
@@ -276,9 +277,9 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 }
 
                 /** @var Mage_Sales_Model_Order_Invoice $invoice */
-                $invoice = $payment->getCreatedInvoice();
+                $invoice = isset($invoice) ? $invoice : $payment->getCreatedInvoice();
                 $sendInvoice = $this->mollieHelper->sendInvoice($storeId) &&
-                    $this->mollieHelper->isInvoiceMomentOnAuthorize($order);
+                    $this->mollieHelper->getInvoiceMoment($order) == \Mollie_Mpm_Model_Adminhtml_System_Config_Source_InvoiceMoment::ON_AUTHORIZE_PAID_BEFORE_SHIPMENT;
 
                 if (!$order->getEmailSent()) {
                     try {
@@ -519,6 +520,10 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 if ($invoice && !$invoice->getEmailSent() && $sendInvoice) {
                     $invoice->setEmailSent(true)->sendEmail()->save();
                 }
+            }
+
+            if ($shipAll) {
+                $this->markOrderAsCompleted($order);
             }
         } catch (\Exception $e) {
             $this->mollieHelper->addTolog('error', $e->getMessage());
@@ -817,10 +822,16 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
         $invoice = $order->prepareInvoice($quantities);
         $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_ONLINE);
-        $invoice->setState(Mage_Sales_Model_Order_Invoice::STATE_PAID);
         $invoice->setTransactionId($transactionId);
         $invoice->register();
+
+        $invoice->setState(Mage_Sales_Model_Order_Invoice::STATE_PAID);
         $invoice->save();
+
+        $sendInvoice = $this->mollieHelper->sendInvoice($order->getStoreId());
+        if ($invoice && !$invoice->getEmailSent() && $sendInvoice) {
+            $invoice->setEmailSent(true)->sendEmail()->save();
+        }
 
         return $invoice;
     }
@@ -837,5 +848,16 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         }
 
         return $order->getBaseGrandTotal();
+    }
+
+    private function markOrderAsCompleted(Mage_Sales_Model_Order $order)
+    {
+        $methodCode = $this->mollieHelper->getMethodCode($order);
+        if ($methodCode != 'klarnapaylater' && $methodCode != 'klarnasliceit') {
+            return;
+        }
+
+        $order->addStatusToHistory(Mage_Sales_Model_Order::STATE_COMPLETE);
+        $order->save();
     }
 }
