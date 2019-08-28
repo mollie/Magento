@@ -246,11 +246,12 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                         /**
                          * Create pending invoice, as order has not been paid.
                          */
-                        if ($this->mollieHelper->getInvoiceMoment($order) == 'authorize') {
+                        if ($this->mollieHelper->isInvoiceMomentOnAuthorize($order)) {
                             /** @var Mage_Sales_Model_Service_Order $service */
                             $invoice = $order->prepareInvoice();
                             $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::NOT_CAPTURE);
                             $invoice->setTransactionId($transactionId);
+                            $invoice->setState($this->mollieHelper->getInvoiceMomentPaidStatus($order));
                             $invoice->register();
 
                             Mage::getModel('core/resource_transaction')
@@ -277,7 +278,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 /** @var Mage_Sales_Model_Order_Invoice $invoice */
                 $invoice = $payment->getCreatedInvoice();
                 $sendInvoice = $this->mollieHelper->sendInvoice($storeId) &&
-                    $this->mollieHelper->getInvoiceMoment($order) == 'authorize';
+                    $this->mollieHelper->isInvoiceMomentOnAuthorize($order);
 
                 if (!$order->getEmailSent()) {
                     try {
@@ -501,7 +502,15 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
             /** @var Mage_Sales_Model_Order_Invoice $invoice */
             $invoice = $this->createPartialInvoice($shipment, $transactionId);
-            if ($invoice && $invoice->getState() == 1) {
+
+            /**
+             * If there is no invoice created try to receive the last invoice.
+             */
+            if (!$invoice) {
+                $invoice = $order->getInvoiceCollection()->getLastItem();
+            }
+
+            if ($invoice && $invoice->getState() == Mage_Sales_Model_Order_Invoice::STATE_OPEN) {
                 $captureAmount = $this->getCaptureAmount($order, $invoice);
                 $payment->registerCaptureNotification($captureAmount, true);
 

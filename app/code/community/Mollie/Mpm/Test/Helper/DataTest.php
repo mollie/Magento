@@ -77,6 +77,7 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
             ['{customerName} Order', 'John I. Doe Order'],
         ];
     }
+
     /**
      * @dataProvider generatesTheCorrectPaymentDescriptionProvider
      */
@@ -151,12 +152,12 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
         $order = Mage::getModel('sales/order');
         $order->setPayment($payment);
 
-        $this->assertEquals('authorize', $instance->getInvoiceMoment($order));
+        $this->assertEquals('authorize_paid_after_shipment', $instance->getInvoiceMoment($order));
     }
 
     public function testGetInvoiceMomentReturnsTheSettingIfTheMethodIsKlarna()
     {
-        Mage::app()->getStore()->setConfig('payment/mollie_klarnasliceit/invoice_moment', 'authorize');
+        Mage::app()->getStore()->setConfig('payment/mollie_klarnasliceit/invoice_moment', 'authorize_paid_after_shipment');
 
         /** @var Mollie_Mpm_Helper_data $instance */
         $instance = Mage::helper('mpm');
@@ -169,6 +170,78 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
         $order = Mage::getModel('sales/order');
         $order->setPayment($payment);
 
-        $this->assertEquals('authorize', $instance->getInvoiceMoment($order));
+        $this->assertEquals('authorize_paid_after_shipment', $instance->getInvoiceMoment($order));
+    }
+
+    /**
+     * @param $invoiceMoment
+     * @param $expected
+     * @throws Mage_Core_Model_Store_Exception
+     *
+     * @testWith ["shipment", false]
+     *           ["authorize_paid_before_shipment", true]
+     *           ["authorize_paid_after_shipment", true]
+     */
+    public function testIsInvoiceMomentOnAuthorize($invoiceMoment, $expected)
+    {
+        Mage::app()->getStore()->setConfig('payment/mollie_klarnasliceit/invoice_moment', $invoiceMoment);
+
+        /** @var Mollie_Mpm_Helper_data $instance */
+        $instance = Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Payment $payment */
+        $payment = Mage::getModel('sales/order_payment');
+        $payment->setMethod('mollie_klarnasliceit');
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = Mage::getModel('sales/order');
+        $order->setPayment($payment);
+
+        $this->assertEquals($expected, $instance->isInvoiceMomentOnAuthorize($order));
+    }
+
+    /**
+     * @testWith ["authorize_paid_before_shipment", "2"]
+     *           ["authorize_paid_after_shipment", "1"]
+     */
+    public function testGetInvoiceMomentPaidStatus($invoiceMoment, $expected)
+    {
+        Mage::app()->getStore()->setConfig('payment/mollie_klarnasliceit/invoice_moment', $invoiceMoment);
+
+        /** @var Mollie_Mpm_Helper_data $instance */
+        $instance = Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Payment $payment */
+        $payment = Mage::getModel('sales/order_payment');
+        $payment->setMethod('mollie_klarnasliceit');
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = Mage::getModel('sales/order');
+        $order->setPayment($payment);
+
+        $this->assertEquals($expected, $instance->getInvoiceMomentPaidStatus($order));
+    }
+
+    public function testGetInvoiceMomentPaidStatusThrowsAnExceptionWhenAWrongMomentIsSet()
+    {
+        Mage::app()->getStore()->setConfig('payment/mollie_klarnasliceit/invoice_moment', 'shipment');
+
+        /** @var Mollie_Mpm_Helper_data $instance */
+        $instance = Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order_Payment $payment */
+        $payment = Mage::getModel('sales/order_payment');
+        $payment->setMethod('mollie_klarnasliceit');
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = Mage::getModel('sales/order');
+        $order->setPayment($payment);
+
+        try {
+            $instance->getInvoiceMomentPaidStatus($order);
+            $this->fail('We expected an exception but got none');
+        } catch (Exception $exception) {
+            $this->assertEquals('Invoice moment not supported: shipment', $exception->getMessage());
+        }
     }
 }
