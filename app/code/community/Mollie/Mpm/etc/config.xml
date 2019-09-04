@@ -441,7 +441,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method>order</method>
-                <invoice_moment>authorize</invoice_moment>
+                <invoice_moment>shipment</invoice_moment>
             </mollie_klarnapaylater>
             <mollie_klarnasliceit>
                 <active>1</active>
@@ -451,7 +451,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method>order</method>
-                <invoice_moment>authorize</invoice_moment>
+                <invoice_moment>shipment</invoice_moment>
             </mollie_klarnasliceit>
             <mollie_paymentlink>
                 <active>1</active>
