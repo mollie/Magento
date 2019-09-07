@@ -46,6 +46,10 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
      * Visible error message for cancelled transaction.
      */
     const RETURN_CANCEL_MSG = 'Payment cancelled, please try again.';
+    /**
+     * Klarna rejection message
+     */
+    const KLARNA_REJECTION_ERR_MSG = 'Payment rejected. Klarna cannot be used as a Payment Method on this order, please try another Payment Method.';
 
     /**
      * Mollie API Helper.
@@ -100,6 +104,13 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
                 $this->_redirect('checkout/cart');
                 return;
             }
+        } catch (Mollie_Mpm_Exceptions_KlarnaException $exception) {
+            $this->mollieHelper->setError(self::KLARNA_REJECTION_ERR_MSG);
+            $this->mollieHelper->addToLog('error', $exception->getMessage());
+            $this->mollieHelper->restoreCart();
+            $this->_cancelUnprocessedOrder($order, $exception->getMessage());
+            $this->_redirect('checkout/cart');
+            return;
         } catch (\Exception $e) {
             $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
             $this->mollieHelper->addToLog('error', $e->getMessage());

@@ -125,3 +125,4 @@ Mollie Payment Fee,Mollie Payment Fee
 Klarna Payment Surcharge,Klarna Payment Surcharge
 "Enter the extra costs for a Klarna Slice It payment with a maximum of € 1.95","Enter the extra costs for a Klarna Slice It payment with a maximum of € 1.95"
 "Enter the extra costs for a Klarna Pay Later payment with a maximum of € 1.95","Enter the extra costs for a Klarna Pay Later payment with a maximum of € 1.95"
+"Payment rejected. Klarna cannot be used as a Payment Method on this order, please try another Payment Method.","Payment rejected. Klarna cannot be used as a Payment Method on this order, please try another Payment Method."
