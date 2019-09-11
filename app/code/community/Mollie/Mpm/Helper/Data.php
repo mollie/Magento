@@ -1,4 +1,7 @@
 <?php
+
+use Mollie\Api\Resources\Order as MollieOrder;
+
 /**
  * Copyright (c) 2012-2019, Mollie B.V.
  * All rights reserved.
@@ -911,5 +914,27 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             array_values($replacements),
             $description
         );
+    }
+
+    /**
+     * If one of the payments has the status 'paid', return that status. Otherwise return the last status.
+     *
+     * @param MollieOrder $order
+     * @return string|null
+     */
+    public function getLastRelevantStatus(MollieOrder $order)
+    {
+        if (!isset($order->_embedded->payments)) {
+            return null;
+        }
+
+        $payments = $order->_embedded->payments;
+        foreach ($payments as $payment) {
+            if ($payment->status == 'paid') {
+                return 'paid';
+            }
+        }
+
+        return end($payments)->status;
     }
 }

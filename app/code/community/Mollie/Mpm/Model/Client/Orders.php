@@ -200,8 +200,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         /**
          * Check if last payment was canceled, failed or expired and redirect customer to cart for retry.
          */
-        $lastPayment = isset($mollieOrder->_embedded->payments) ? end($mollieOrder->_embedded->payments) : null;
-        $lastPaymentStatus = isset($lastPayment) ? $lastPayment->status : null;
+        $lastPaymentStatus = $this->mollieHelper->getLastRelevantStatus($mollieOrder);
         if ($lastPaymentStatus == 'canceled' || $lastPaymentStatus == 'failed' || $lastPaymentStatus == 'expired') {
             $order->getPayment()->setAdditionalInformation('payment_status', $lastPaymentStatus)->save();
             $this->mollieHelper->registerCancellation($order, $status);

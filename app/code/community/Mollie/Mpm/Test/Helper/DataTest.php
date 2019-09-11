@@ -1,5 +1,8 @@
 <?php
 
+use Mollie\Api\MollieApiClient;
+use Mollie\Api\Resources\Order;
+
 class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCase
 {
     protected function setUp()
@@ -127,7 +130,7 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
         $address->setFirstname($names[0]);
         $address->setMiddlename($names[1]);
         $address->setLastname($names[2]);
-        
+
         $addressList = $order->getAddressesCollection();
         $addressList->addItem($address);
 
@@ -136,5 +139,46 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
         $result = $instance->getPaymentDescription('ideal', $order);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function getLastRelevantStatusProvider()
+    {
+        return [
+            [['expired'], 'expired'],
+            [['expired', 'paid'], 'paid'],
+            [['paid', 'expired'], 'paid'],
+            [['authorized', 'paid', 'expired'], 'paid'],
+        ];
+    }
+
+    /**
+     * @param $statuses
+     * @param $expected
+     * @dataProvider getLastRelevantStatusProvider
+     */
+    public function testGetLastRelevantStatus($statuses, $expected)
+    {
+        /** @var Mollie_Mpm_Helper_Data $instance */
+        $instance = Mage::helper('mpm');
+        $order = new Order($this->createMock(MollieApiClient::class));
+        $order->_embedded = new \stdClass;
+        $order->_embedded->payments = [];
+        foreach ($statuses as $status) {
+            $payment = new \stdClass;
+            $payment->status = $status;
+            $order->_embedded->payments[] = $payment;
+        }
+
+        $status = $instance->getLastRelevantStatus($order);
+        $this->assertEquals($expected, $status);
+    }
+
+    public function testReturnsNullIfNoPaymentsAreAvailable()
+    {
+        /** @var Mollie_Mpm_Helper_Data $instance */
+        $instance = Mage::helper('mpm');
+        $order = new Order($this->createMock(MollieApiClient::class));
+        $status = $instance->getLastRelevantStatus($order);
+        $this->assertNull($status);
     }
 }
