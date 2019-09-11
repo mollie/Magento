@@ -199,6 +199,12 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
 
         try {
             $status = $this->mollieModel->processTransaction($orderId, 'success', $paymentToken);
+        } catch (Mollie_Mpm_Exceptions_KlarnaException $exception) {
+            $this->mollieHelper->setError(static::KLARNA_REJECTION_ERR_MSG);
+            $this->mollieHelper->addToLog('error', $exception->getMessage());
+            $this->mollieHelper->restoreCart();
+            $this->_redirect('checkout/cart');
+            return;
         } catch (\Exception $e) {
             $this->mollieHelper->setError(self::RETURN_ERR_MSG);
             $this->mollieHelper->addToLog('error', $e->getMessage());

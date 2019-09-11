@@ -207,6 +207,12 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             $this->mollieHelper->registerCancellation($order, $status);
             $msg = array('success' => false, 'status' => $lastPaymentStatus, 'order_id' => $orderId, 'type' => $type);
             $this->mollieHelper->addTolog('success', $msg);
+
+            $methodCode = $this->mollieHelper->getMethodCode($order);
+            if ($methodCode == 'klarnapaylater' || $methodCode == 'klarnasliceit') {
+                throw new Mollie_Mpm_Exceptions_KlarnaException;
+            }
+
             return $msg;
         }
 
