@@ -33,7 +33,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>5.5.0</version>
+            <version>5.5.1</version>
         </Mollie_Mpm>
     </modules>
     <global>
@@ -441,6 +441,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method>order</method>
+                <invoice_moment>shipment</invoice_moment>
             </mollie_klarnapaylater>
             <mollie_klarnasliceit>
                 <active>1</active>
@@ -450,6 +451,7 @@
                 <group>mollie</group>
                 <allowspecific>0</allowspecific>
                 <method>order</method>
+                <invoice_moment>shipment</invoice_moment>
             </mollie_klarnasliceit>
             <mollie_paymentlink>
                 <active>1</active>
