@@ -40,4 +40,63 @@ class Mollie_Mpm_Model_Method_Deprecated_Abstract extends Mage_Payment_Model_Met
     protected $_canUseInternal = false;
     protected $_canUseCheckout = false;
     protected $_canUseForMultishipping = false;
+    protected $_canRefund = true;
+    protected $_canRefundInvoicePartial = true;
+
+    /**
+     * Refund Pre-v5.x Orders.
+     *
+     * This function is restored to create online refunds for old orders.
+     * See Mollie_Mpm_Model_Mollie for current implemenation.
+     *
+     * @param Varien_Object $payment
+     * @param float         $amount
+     *
+     * @return $this
+     * @throws Mage_Core_Exception
+     */
+    public function refund(Varien_Object $payment, $amount)
+    {
+        /** @var Mollie_Mpm_Model_Payments $payments */
+        $payments = Mage::getModel('mpm/payments');
+
+        /** @var Mollie_Mpm_Helper_Data $helper */
+        $helper = Mage::helper('mpm');
+
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $payment->getOrder();
+
+        $transactionId = $payments->getTransactionIdByOrderId($order->getId());
+
+        if (empty($transactionId)) {
+            $msg = array('error' => true, 'msg' => $helper->__('Transaction ID not found'));
+            $helper->addTolog('error', $msg);
+            return $this;
+        }
+
+        $apiKey = $helper->getApiKey($order->getStoreId());
+        if (empty($apiKey)) {
+            $msg = array('error' => true, 'msg' => $helper->__('Api key not found'));
+            $helper->addTolog('error', $msg);
+            return $this;
+        }
+
+        try {
+            $mollieApi = $helper->getMollieAPI($apiKey);
+            $payment = $mollieApi->payments->get($transactionId);
+            $payment->refund(
+                array(
+                    "amount" => array(
+                        "currency" => $order->getOrderCurrencyCode(),
+                        "value"    => $helper->formatCurrencyValue($amount, $order->getOrderCurrencyCode())
+                    )
+                )
+            );
+        } catch (\Exception $e) {
+            $helper->addTolog('error', $e->getMessage());
+            Mage::throwException($helper->__('Error: not possible to create an online refund: %s', $e->getMessage()));
+        }
+
+        return $this;
+    }
 }

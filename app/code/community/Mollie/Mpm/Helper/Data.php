@@ -1,6 +1,7 @@
 <?php
 
 use Mollie\Api\Resources\Order as MollieOrder;
+use Mollie_Mpm_Model_Adminhtml_System_Config_Source_InvoiceMoment as InvoiceMoment;
 
 /**
  * Copyright (c) 2012-2019, Mollie B.V.
@@ -58,6 +59,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_PAYMENTLINK_MESSAGE = 'payment/mollie_paymentlink/message';
     const XPATH_API_METHOD = 'payment/%method%/method';
     const XPATH_PAYMENT_DESCRIPTION = 'payment/%method%/payment_description';
+    const XPATH_INVOICE_MOMENT = 'payment/%method%/invoice_moment';
 
     /**
      * @var null
@@ -936,5 +938,40 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         return end($payments)->status;
+    }
+
+    public function getInvoiceMoment(Mage_Sales_Model_Order $order)
+    {
+        $method = $this->getMethodCode($order);
+
+        if (!in_array($method, array('klarnasliceit', 'klarnapaylater'))) {
+            return InvoiceMoment::ON_AUTHORIZE_PAID_AFTER_SHIPMENT;
+        }
+
+        $path = str_replace('%method%', 'mollie_' . $method, static::XPATH_INVOICE_MOMENT);
+        return $this->getStoreConfig($path, $order->getStoreId());
+    }
+
+    public function isInvoiceMomentOnAuthorize(Mage_Sales_Model_Order $order)
+    {
+        $moment = $this->getInvoiceMoment($order);
+
+        return $moment == InvoiceMoment::ON_AUTHORIZE_PAID_AFTER_SHIPMENT ||
+            $moment == InvoiceMoment::ON_AUTHORIZE_PAID_BEFORE_SHIPMENT;
+    }
+
+    public function getInvoiceMomentPaidStatus(Mage_Sales_Model_Order $order)
+    {
+        $moment = $this->getInvoiceMoment($order);
+
+        if ($moment == InvoiceMoment::ON_AUTHORIZE_PAID_AFTER_SHIPMENT) {
+            return Mage_Sales_Model_Order_Invoice::STATE_OPEN;
+        }
+
+        if ($moment == InvoiceMoment::ON_AUTHORIZE_PAID_BEFORE_SHIPMENT) {
+            return Mage_Sales_Model_Order_Invoice::STATE_PAID;
+        }
+
+        throw new \Exception('Invoice moment not supported: ' . $moment);
     }
 }
