@@ -255,10 +255,11 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                         if ($this->mollieHelper->isInvoiceMomentOnAuthorize($order)) {
                             /** @var Mage_Sales_Model_Service_Order $service */
                             $invoice = $order->prepareInvoice();
-                            $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::NOT_CAPTURE);
+                            $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_ONLINE);
                             $invoice->setTransactionId($transactionId);
-                            $invoice->setState($this->mollieHelper->getInvoiceMomentPaidStatus($order));
                             $invoice->register();
+
+                            $invoice->setState($this->mollieHelper->getInvoiceMomentPaidStatus($order));
 
                             Mage::getModel('core/resource_transaction')
                                 ->addObject($invoice)
@@ -518,6 +519,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
             if ($invoice && $invoice->getState() == Mage_Sales_Model_Order_Invoice::STATE_OPEN) {
                 $captureAmount = $this->getCaptureAmount($order, $invoice);
+                $payment->setTransactionId($transactionId);
                 $payment->registerCaptureNotification($captureAmount, true);
 
                 $order->save();
