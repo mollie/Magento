@@ -110,6 +110,8 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
                 if (self::RETRY_FLAG && $methodCode != 'klarnapaylater' && $methodCode != 'klarnasliceit') {
                     $this->mollieHelper->addTolog('error', $e->getMessage());
                     $transactionResult = $this->paymentsApi->startTransaction($order);
+                } elseif ($methodCode == 'klarnapaylater' || $methodCode == 'klarnasliceit') {
+                    throw new Mollie_Mpm_Exceptions_KlarnaException($e->getMessage());
                 } else {
                     Mage::throwException($e->getMessage());
                 }
