@@ -111,11 +111,11 @@
             </sales_order_creditmemo_save_after>
             <sales_order_shipment_save_before>
                 <observers>
-                    <mollie_sales_order_shipment_save_after>
+                    <mollie_sales_order_shipment_save_before>
                         <type>singleton</type>
                         <class>Mollie_Mpm_Model_Observer</class>
                         <method>salesOrderShipmentSaveBefore</method>
-                    </mollie_sales_order_shipment_save_after>
+                    </mollie_sales_order_shipment_save_before>
                 </observers>
             </sales_order_shipment_save_before>
             <sales_order_shipment_track_save_after>
@@ -127,6 +127,24 @@
                     </mollie_sales_order_shipment_track_save_after>
                 </observers>
             </sales_order_shipment_track_save_after>
+            <controller_action_predispatch_onestepcheckout_index_index>
+                <observers>
+                    <mollie_controller_action_predispatch_onestepcheckout_index_index>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>restoreQuoteWhenReturningFromMollie</method>
+                    </mollie_controller_action_predispatch_onestepcheckout_index_index>
+                </observers>
+            </controller_action_predispatch_onestepcheckout_index_index>
+            <controller_action_predispatch_checkout_onepage_index>
+                <observers>
+                    <mollie_controller_action_predispatch_onestepcheckout_index_index>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>restoreQuoteWhenReturningFromMollie</method>
+                    </mollie_controller_action_predispatch_onestepcheckout_index_index>
+                </observers>
+            </controller_action_predispatch_checkout_onepage_index>
         </events>
         <sales>
             <quote>
