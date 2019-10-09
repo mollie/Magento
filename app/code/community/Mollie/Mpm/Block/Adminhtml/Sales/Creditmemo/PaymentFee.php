@@ -22,7 +22,7 @@ class Mollie_Mpm_Block_Adminhtml_Sales_Creditmemo_PaymentFee extends Mage_Adminh
         }
 
         $total = new Varien_Object();
-        $total->setLabel(__('Mollie Payment Fee'))
+        $total->setLabel(__('Payment Fee'))
             ->setValue($fee + $tax)
             ->setBaseValue($baseFee + $baseTax)
             ->setCode('mollie_mpm_payment_fee');
