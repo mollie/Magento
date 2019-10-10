@@ -129,4 +129,23 @@ class Mollie_Mpm_Model_Observer
             $mollieModel->updateShipmentTrack($shipment, $track, $order);
         }
     }
+
+    public function restoreQuoteWhenReturningFromMollie(Varien_Event_Observer $observer)
+    {
+        $quoteId = Mage::getSingleton('checkout/session')->getLastQuoteId();
+
+        if (!$quoteId) {
+            return;
+        }
+
+        try {
+            $quote = Mage::getModel('sales/quote')->load($quoteId);
+
+            if (!$quote->getIsActive()) {
+                $quote->setIsActive(true)->save();
+            }
+        } catch (Exception $e) {
+            Mage::logException($e);
+        }
+    }
 }
