@@ -32,7 +32,7 @@ class Mollie_Mpm_Model_Totals_PaymentFee_QuoteTax extends Mage_Sales_Model_Quote
 
         $address->setMollieMpmPaymentFeeTax($quote->getStore()->convertPrice($paymentFeeTax));
         $address->setBaseMollieMpmPaymentFeeTax($paymentFeeTax);
-        $address->setTaxAmount($address->getTaxAmount() + + $address->getMollieMpmPaymentFeeTax());
+        $address->setTaxAmount($address->getTaxAmount() + $address->getMollieMpmPaymentFeeTax());
         $address->setBaseTaxAmount($address->getBaseTaxAmount() + $address->getBaseMollieMpmPaymentFeeTax());
         $address->setGrandTotal($address->getGrandTotal() + $address->getMollieMpmPaymentFeeTax());
         $address->setBaseGrandTotal($address->getBaseGrandTotal() + $address->getBaseMollieMpmPaymentFeeTax());
