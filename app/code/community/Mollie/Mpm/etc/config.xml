@@ -33,7 +33,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>5.5.1</version>
+            <version>5.5.2</version>
         </Mollie_Mpm>
     </modules>
     <global>
@@ -111,11 +111,11 @@
             </sales_order_creditmemo_save_after>
             <sales_order_shipment_save_before>
                 <observers>
-                    <mollie_sales_order_shipment_save_after>
+                    <mollie_sales_order_shipment_save_before>
                         <type>singleton</type>
                         <class>Mollie_Mpm_Model_Observer</class>
                         <method>salesOrderShipmentSaveBefore</method>
-                    </mollie_sales_order_shipment_save_after>
+                    </mollie_sales_order_shipment_save_before>
                 </observers>
             </sales_order_shipment_save_before>
             <sales_order_shipment_track_save_after>
@@ -127,6 +127,24 @@
                     </mollie_sales_order_shipment_track_save_after>
                 </observers>
             </sales_order_shipment_track_save_after>
+            <controller_action_predispatch_onestepcheckout_index_index>
+                <observers>
+                    <mollie_controller_action_predispatch_onestepcheckout_index_index>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>restoreQuoteWhenReturningFromMollie</method>
+                    </mollie_controller_action_predispatch_onestepcheckout_index_index>
+                </observers>
+            </controller_action_predispatch_onestepcheckout_index_index>
+            <controller_action_predispatch_checkout_onepage_index>
+                <observers>
+                    <mollie_controller_action_predispatch_onestepcheckout_index_index>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>restoreQuoteWhenReturningFromMollie</method>
+                    </mollie_controller_action_predispatch_onestepcheckout_index_index>
+                </observers>
+            </controller_action_predispatch_checkout_onepage_index>
         </events>
         <sales>
             <quote>
@@ -219,7 +237,7 @@
         <pdf>
             <totals>
                 <payment_fee translate="title">
-                    <title>Mollie payment fee</title>
+                    <title>Payment Fee</title>
                     <font_size>7</font_size>
                     <display_zero>0</display_zero>
                     <sort_order>100</sort_order>

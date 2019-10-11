@@ -43,7 +43,7 @@ class Mollie_Mpm_Helper_OrderLines_PaymentFee
 
         return [
             'type' => 'surcharge',
-            'name' => Mage::helper('mpm')->__('Mollie Payment Fee'),
+            'name' => Mage::helper('mpm')->__('Payment Fee'),
             'quantity' => 1,
             'unitPrice' => $mollieHelper->getAmountArray($order->getOrderCurrencyCode(), $totalPaymentFee),
             'totalAmount' => $mollieHelper->getAmountArray($order->getOrderCurrencyCode(), $totalPaymentFee),
