@@ -74,7 +74,7 @@ class PaymentFeeTest extends Mollie_Mpm_Test_TestHelpers_TestCase
         $result = $instance->getOrderLine($order);
 
         $this->assertEquals('surcharge', $result['type']);
-        $this->assertEquals(Mage::helper('mpm')->__('Mollie Payment Fee'), $result['name']);
+        $this->assertEquals(Mage::helper('mpm')->__('Payment Fee'), $result['name']);
         $this->assertEquals(1, $result['quantity']);
         $this->assertEquals('EUR', $result['unitPrice']['currency']);
         $this->assertEquals($paymentFeeIncludingTax, $result['unitPrice']['value']);

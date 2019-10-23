@@ -11,7 +11,7 @@ class Mollie_Mpm_Model_Totals_PaymentFee_Adminhtml_Quote extends Mollie_Mpm_Mode
             $address->addTotal(
                 array(
                     'code' => $this->getCode(),
-                    'title' => Mage::helper('mpm')->__('Mollie Payment Fee'),
+                    'title' => Mage::helper('mpm')->__('Payment Fee'),
                     'value' => $amount + $tax,
                 )
             );

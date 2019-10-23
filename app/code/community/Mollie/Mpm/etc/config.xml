@@ -219,7 +219,7 @@
         <pdf>
             <totals>
                 <payment_fee translate="title">
-                    <title>Mollie payment fee</title>
+                    <title>Payment Fee</title>
                     <font_size>7</font_size>
                     <display_zero>0</display_zero>
                     <sort_order>100</sort_order>
