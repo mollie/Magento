@@ -33,7 +33,7 @@
 <config>
     <modules>
         <Mollie_Mpm>
-            <version>5.5.2</version>
+            <version>5.5.3</version>
         </Mollie_Mpm>
     </modules>
     <global>

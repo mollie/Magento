@@ -342,9 +342,13 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
      */
     private function commitOrder(Mage_Sales_Model_Order $order)
     {
+        $systemLogIsDisabled = false;
+        if (defined('Mage_Log_Helper_Data::XML_PATH_LOG_ENABLED')) {
+            $systemLogIsDisabled = $this->mollieHelper->getStoreConfig(Mage_Log_Helper_Data::XML_PATH_LOG_ENABLED) == '0';
+        }
+
         $logObserver = Mage::getConfig()->getNode('frontend/events/controller_action_postdispatch/observers/log');
         $logObserverIsDisabled = $logObserver && $logObserver->type == 'disabled';
-        $systemLogIsDisabled = $this->mollieHelper->getStoreConfig(Mage_Log_Helper_Data::XML_PATH_LOG_ENABLED) == '0';
 
         if (!$logObserverIsDisabled && !$systemLogIsDisabled) {
             return;
