@@ -628,10 +628,11 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
     /**
      * @param Mage_Sales_Model_Order $order
-     * @param null                   $status
+     * @param null $status
      *
      * @return bool
      * @throws Mage_Core_Exception
+     * @throws Exception
      */
     public function registerCancellation(Mage_Sales_Model_Order $order, $status = null)
     {
@@ -642,7 +643,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             }
 
             $this->addTolog('info', $order->getIncrementId() . ' ' . $comment);
-            $order->registerCancellation($comment)->save();
+            $order->cancel();
+
+            if ($status !== null) {
+                $order->addStatusHistoryComment($comment);
+            }
+
+            $order->save();
             return true;
         }
 

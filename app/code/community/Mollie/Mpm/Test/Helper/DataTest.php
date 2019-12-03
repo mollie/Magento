@@ -288,4 +288,34 @@ class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCa
             $this->assertEquals('Invoice moment not supported: shipment', $exception->getMessage());
         }
     }
+
+    public function testRegisterCancellation()
+    {
+        $order = $this->createMock(Mage::getConfig()->getModelClassName('sales/order'));
+        $order->expects($this->once())->method('cancel');
+        $order->expects($this->never())->method('addStatusHistoryComment');
+        $order->method('getId')->willReturn(-999);
+
+        /** @var Mollie_Mpm_Helper_data $instance */
+        $instance = Mage::helper('mpm');
+
+        $instance->registerCancellation($order);
+    }
+
+    public function testRegisterCancellationWithStatus()
+    {
+        $order = $this->createMock(Mage::getConfig()->getModelClassName('sales/order'));
+        $order->expects($this->once())->method('cancel');
+        $order->method('getId')->willReturn(-999);
+
+        /** @var Mollie_Mpm_Helper_data $instance */
+        $instance = Mage::helper('mpm');
+
+        $status = 'my custom status';
+        $order->expects($this->once())->method('addStatusHistoryComment')->with(
+            $instance->__('The order was canceled, reason: payment %s', $status)
+        );
+
+        $instance->registerCancellation($order, $status);
+    }
 }
