@@ -171,6 +171,7 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
             $connection->rollback();
             throw $exception;
         } finally {
+            $order->save();
             $this->commitOrder($order);
             $connection->commit();
         }
