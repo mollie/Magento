@@ -105,7 +105,7 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
         $paymentData = $this->mollieHelper->validatePaymentData($paymentData);
         $this->mollieHelper->addTolog('request', $paymentData);
 
-        $payment = $mollieApi->payments->create($paymentData, array('include' => 'details.qrCode'));
+        $payment = $mollieApi->payments->create($paymentData);
         $this->processResponse($order, $payment);
 
         return $payment->getCheckoutUrl();
