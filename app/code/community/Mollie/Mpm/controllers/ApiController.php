@@ -108,7 +108,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             $this->mollieHelper->setError(self::KLARNA_REJECTION_ERR_MSG);
             $this->mollieHelper->addToLog('error', $exception->getMessage());
             $this->mollieHelper->restoreCart();
-            $this->_cancelUnprocessedOrder($order, $exception->getMessage());
+            $this->_cancelUnprocessedOrder($order, $exception->getMessage(), true);
             $this->_redirect('checkout/cart');
             return;
         } catch (\Exception $e) {
@@ -126,11 +126,12 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
      *
      * @param Mage_Sales_Model_Order $order
      * @param string $message  If provided, add this message to the order status history comment
+     * @param bool $forceCancel
      * @return void
      */
-    protected function _cancelUnprocessedOrder($order, $message = null)
+    protected function _cancelUnprocessedOrder($order, $message = null, $forceCancel = false)
     {
-        if (empty($order) || empty($order->getMollieTransactionId())) {
+        if (empty($order) || (empty($order->getMollieTransactionId()) && !$forceCancel)) {
             return;
         }
 
@@ -139,7 +140,7 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             $order->getStoreId()
         );
 
-        if (!$cancelFailedOrders) {
+        if (!$forceCancel && !$cancelFailedOrders) {
             return;
         }
 
