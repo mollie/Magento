@@ -31,6 +31,8 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
+use Mage_Sales_Model_Order as Order;
+
 class Mollie_Mpm_Model_Observer
 {
 
@@ -132,9 +134,18 @@ class Mollie_Mpm_Model_Observer
 
     public function restoreQuoteWhenReturningFromMollie(Varien_Event_Observer $observer)
     {
-        $quoteId = Mage::getSingleton('checkout/session')->getLastQuoteId();
+        $session = Mage::getSingleton('checkout/session');
+        $quoteId = $session->getLastQuoteId();
+        $orderId = $session->getLastOrderId();
 
-        if (!$quoteId) {
+        /** @var Order $order */
+        $order = Mage::getModel('sales/order')->load($orderId);
+
+        if (!$quoteId || !in_array($order->getState(), array(Order::STATE_NEW, Order::STATE_PENDING_PAYMENT))) {
+            return;
+        }
+
+        if (!$order->getPayment() || stripos($order->getPayment()->getMethod(), 'mollie') === false) {
             return;
         }
 
