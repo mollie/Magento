@@ -31,14 +31,12 @@
   ~ @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
   -->
 <layout version="0.1.0">
-    <default>
+    <mpm_api_redirect>
         <reference name="head">
             <action method="addCss" ifconfig="payment/mollie/active">
                 <stylesheet>mollie/mpm/style.css</stylesheet>
             </action>
         </reference>
-    </default>
-    <mpm_api_redirect>
         <reference name="root">
             <action method="setTemplate">
                 <template>page/empty.phtml</template>
