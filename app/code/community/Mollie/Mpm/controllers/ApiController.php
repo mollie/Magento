@@ -98,9 +98,10 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
                 return;
             } else {
                 $this->mollieHelper->setError(self::REDIRECT_ERR_MSG);
-                $this->mollieHelper->addToLog('error', 'Missing Redirect Url');
+                $error = sprintf('Missing Redirect Url, increment ID: #%s', $order->getIncrementId());
+                $this->mollieHelper->addToLog('error', $error);
                 $this->mollieHelper->restoreCart();
-                $this->_cancelUnprocessedOrder($order, 'Missing Redirect Url');
+                $this->_cancelUnprocessedOrder($order, $error);
                 $this->_redirect('checkout/cart');
                 return;
             }
