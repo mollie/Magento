@@ -103,6 +103,7 @@
 
 .mollie-method .form-list td.label {
     font-weight: bold;
+    min-width: 120px;
 }
 
 .mollie-method img {
