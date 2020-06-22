@@ -112,4 +112,20 @@
             <block type="mpm/adminhtml_sales_creditmemo_paymentFee" before="tax" name="mollie_mpm_payment_fee" />
         </reference>
     </sales_email_order_creditmemo_items>
+
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/mollie/mpm/creditcard-components.js</name>
+            </action>
+            <action method="addCss" ifconfig="payment/mollie/active">
+                <stylesheet>mollie/mpm/style.css</stylesheet>
+            </action>
+        </reference>
+
+        <reference name="after_body_start">
+            <block type="core/template" name="mollie_components_initialize" template="mollie/mpm/payment/after_body_start.phtml" />
+        </reference>
+    </checkout_onepage_index>
 </layout>

@@ -110,6 +110,10 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             $orderData['payment']['dueDate'] = $this->mollieHelper->getBanktransferDueDate($storeId);
         }
 
+        if ($method == 'creditcard' && isset($additionalData['card_token'])) {
+            $orderData['payment']['cardToken'] = $additionalData['card_token'];
+        }
+
         if (isset($additionalData['limited_methods'])) {
             $orderData['method'] = $additionalData['limited_methods'];
         }

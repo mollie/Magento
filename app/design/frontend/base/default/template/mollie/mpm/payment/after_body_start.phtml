@@ -1,0 +1,13 @@
+<?php
+if (!Mage::getStoreConfigFlag('payment/mollie_creditcard/use_components')) {
+    return;
+}
+?>
+
+<script>
+    var mollieComponentsInstance = new MollieComponents(
+        '<?php echo Mage::getStoreConfig('payment/mollie/profile_id'); ?>',
+        <?php echo Mage::helper('mpm')->getModus() == 'test' ? 'true' : 'false'; ?>,
+        '<?php echo Mage::app()->getLocale()->getLocaleCode(); ?>'
+    );
+</script>

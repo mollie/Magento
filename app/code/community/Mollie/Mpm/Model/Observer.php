@@ -159,4 +159,28 @@ class Mollie_Mpm_Model_Observer
             Mage::logException($e);
         }
     }
+
+    /**
+     * The Mollie javascript library conflicts with he ancient prototype.js library, that's why we load the library
+     * as soon as possible. When adding the script using xml it is always added to late. That's why we do it by
+     * manipulating the html.
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function injectMollieComponentsJs(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Core_Block_Template $block */
+        $block = $observer->getBlock();
+
+        if (!$block instanceof Mage_Page_Block_Html_Head) {
+            return;
+        }
+
+        /** @var \Varient_Object $transport */
+        $transport = $observer->getData('transport');
+        $html = $transport->getHtml();
+        $html = preg_replace('#</title>#', '</title>' . PHP_EOL . '<script type="text/javascript" src="https://js.mollie.com/v1/mollie.js"></script>', $html, 1);
+
+        $transport->setHtml($html);
+    }
 }

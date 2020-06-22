@@ -92,8 +92,8 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             }
 
             $methodInstance = $order->getPayment()->getMethodInstance();
-            $redirectUrl = $methodInstance->startTransaction($order);
-            if (!empty($redirectUrl)) {
+            $redirectUrl = $this->getRedirectUrl($methodInstance, $order);
+            if ($redirectUrl) {
                 $this->_redirectUrl($redirectUrl);
                 return;
             } else {
@@ -238,5 +238,21 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
     {
         $this->loadLayout();
         $this->renderLayout();
+    }
+
+    /**
+     * @param Mage_Payment_Model_Method_Abstract $methodInstance
+     * @param Mage_Sales_Model_Order $order
+     * @return string|null
+     */
+    private function getRedirectUrl(Mage_Payment_Model_Method_Abstract $methodInstance, Mage_Sales_Model_Order $order)
+    {
+        $redirectUrl = $methodInstance->startTransaction($order);
+
+        if (!$redirectUrl && $methodInstance instanceof Mollie_Mpm_Model_Method_Creditcard) {
+            $redirectUrl = Mage::getUrl('checkout/onepage/success');
+        }
+
+        return $redirectUrl;
     }
 }
