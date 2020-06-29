@@ -33,7 +33,8 @@
 ?>
 <?php
 /**
- * @see Mollie_Mpm_Block_Payment_Info_Paymentlink
+ * @see Mollie_Mpm_Block_Payment_Info_Base
+ * @var Mollie_Mpm_Block_Payment_Info_Base $this
  */
 $status = $this->getPaymentStatus();
 ?>
@@ -43,6 +44,9 @@ $status = $this->getPaymentStatus();
                 <img src="<?= $img ?>"/>
             <?php endif; ?>
             <?php echo $this->escapeHtml($this->getMethod()->getTitle()) ?>
+            <?php if ($cardlabel = $this->getcardLabel()): ?>
+                (<?php echo $this->escapeHtml($cardlabel) ?>)
+            <?php endif; ?>
         </p>
         <table class="form-list">
             <?php if ($checkoutType = $this->getCheckoutType()): ?>
