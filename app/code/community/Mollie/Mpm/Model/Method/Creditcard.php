@@ -49,4 +49,26 @@ class Mollie_Mpm_Model_Method_Creditcard extends Mollie_Mpm_Model_Method_Abstrac
      */
     protected $_paymentMethod = self::PAYMENT_METHOD;
 
+    /**
+     * Type of block that generates method form
+     *
+     * @var string
+     */
+    protected $_formBlockType = 'mpm/payment_form_creditcardComponents';
+
+    /**
+     * @param mixed $data
+     *
+     * @return $this|Mage_Payment_Model_Info
+     * @throws Mage_Core_Exception
+     */
+    public function assignData($data)
+    {
+        parent::assignData($data);
+
+        $cardToken = Mage::app()->getRequest()->getParam('cardToken');
+        $this->getInfoInstance()->setAdditionalInformation('card_token', $cardToken);
+
+        return $this;
+    }
 }

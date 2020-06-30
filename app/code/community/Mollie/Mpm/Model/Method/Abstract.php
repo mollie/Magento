@@ -70,6 +70,7 @@ class Mollie_Mpm_Model_Method_Abstract extends Mollie_Mpm_Model_Mollie
     {
         parent::assignData($data);
         $this->getInfoInstance()->setAdditionalInformation('selected_issuer', null);
+        $this->getInfoInstance()->setAdditionalInformation('card_token', null);
         return $this;
     }
 }

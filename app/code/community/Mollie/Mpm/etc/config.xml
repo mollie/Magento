@@ -145,6 +145,15 @@
                     </mollie_controller_action_predispatch_onestepcheckout_index_index>
                 </observers>
             </controller_action_predispatch_checkout_onepage_index>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <mollie_core_layout_block_create_after>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>injectMollieComponentsJs</method>
+                    </mollie_core_layout_block_create_after>
+                </observers>
+            </core_block_abstract_to_html_after>
         </events>
         <sales>
             <quote>

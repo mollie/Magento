@@ -19,4 +19,5 @@ app/design/adminhtml/default/default/template/mollie/mpm           app/design/ad
 lib/Mollie            lib/Mollie
 # skin
 skin/frontend/base/default/mollie          skin/frontend/base/default/mollie
+skin/frontend/base/default/js/mollie          skin/frontend/base/default/js/mollie
 skin/adminhtml/default/default/mollie           skin/adminhtml/default/default/mollie

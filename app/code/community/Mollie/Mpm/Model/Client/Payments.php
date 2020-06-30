@@ -98,6 +98,10 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
             $paymentData['billingEmail'] = $order->getCustomerEmail();
         }
 
+        if ($method == 'creditcard' && isset($additionalData['card_token'])) {
+            $paymentData['cardToken'] = $additionalData['card_token'];
+        }
+
         if (!$order->getIsVirtual() && $order->hasData('shipping_address_id')) {
             $paymentData['shippingAddress'] = $this->getAddressLine($order->getShippingAddress());
         }
