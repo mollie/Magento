@@ -145,4 +145,17 @@ class Mollie_Mpm_Block_Payment_Info_Base extends Mage_Payment_Block_Info
 
         return $this->getSkinUrl('mollie/mpm/images/' . $code . '.png');
     }
+
+    public function getcardLabel()
+    {
+        try {
+            $details = json_decode($this->getInfo()->getAdditionalInformation('details'));
+            if ($details->cardLabel) {
+                return $details->cardLabel;
+            }
+        } catch (\Exception $e) {
+            $this->mollieHelper->addTolog('error', $e->getMessage());
+            return '';
+        }
+    }
 }
