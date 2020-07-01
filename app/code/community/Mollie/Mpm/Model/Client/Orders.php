@@ -198,7 +198,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
         $this->orderLines->updateOrderLinesByWebhook($mollieOrder->lines, $mollieOrder->isPaid());
 
-        $order->getPayment()->setAdditionalInformation('details', json_encode($mollieOrder->payments()[0]->details))->save();
+        $order->getPayment()->setAdditionalInformation('details', json_encode($mollieOrder->_embedded->payments[0]->details))->save();
 
         /**
          * Check if last payment was canceled, failed or expired and redirect customer to cart for retry.
