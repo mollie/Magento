@@ -155,7 +155,8 @@ class Mollie_Mpm_Block_Payment_Info_Base extends Mage_Payment_Block_Info
             }
         } catch (\Exception $e) {
             $this->mollieHelper->addTolog('error', $e->getMessage());
-            return '';
         }
+
+        return '';
     }
 }
