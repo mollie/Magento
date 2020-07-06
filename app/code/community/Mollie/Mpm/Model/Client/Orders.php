@@ -654,6 +654,13 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             $mollieOrder = $mollieApi->orders->get($order->getMollieTransactionId(), ['embed' => 'payments']);
             $payments = $mollieOrder->_embedded->payments;
 
+            $return = false;
+            $refundAmount = $creditmemo->getAdjustment();
+            if ($creditmemo->getAdjustment() < 0.0) {
+                $return = true;
+                $refundAmount = $creditmemo->getBaseGrandTotal();
+            }
+
             try {
                 $payment = new Payment($mollieApi);
                 $payment->id = current($payments)->id;
@@ -662,11 +669,15 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                     'amount' => [
                         'currency' => $order->getOrderCurrencyCode(),
                         'value' => $this->mollieHelper->formatCurrencyValue(
-                            $creditmemo->getAdjustment(),
+                            $refundAmount,
                             $order->getOrderCurrencyCode()
                         ),
                     ]
                 ]);
+
+                if ($return) {
+                    return $this;
+                }
             } catch (\Exception $exception) {
                 $this->mollieHelper->addTolog('error', $exception->getMessage());
                 Mage::throwException($exception->getMessage());
