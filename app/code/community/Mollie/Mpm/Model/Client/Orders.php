@@ -202,7 +202,10 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
         $this->orderLines->updateOrderLinesByWebhook($mollieOrder->lines, $mollieOrder->isPaid());
 
-        $order->getPayment()->setAdditionalInformation('details', json_encode($mollieOrder->_embedded->payments[0]->details))->save();
+        if ($mollieOrder->_embedded->payments && isset($mollieOrder->_embedded->payments[0]->details)) {
+            $details = $mollieOrder->_embedded->payments[0]->details;
+            $order->getPayment()->setAdditionalInformation('details', json_encode($details))->save();
+        }
 
         /**
          * Check if last payment was canceled, failed or expired and redirect customer to cart for retry.
@@ -660,6 +663,13 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
             $mollieOrder = $mollieApi->orders->get($order->getMollieTransactionId(), ['embed' => 'payments']);
             $payments = $mollieOrder->_embedded->payments;
 
+            $return = false;
+            $refundAmount = $creditmemo->getAdjustment();
+            if ($creditmemo->getAdjustment() < 0.0) {
+                $return = true;
+                $refundAmount = $creditmemo->getBaseGrandTotal();
+            }
+
             try {
                 $payment = new Payment($mollieApi);
                 $payment->id = current($payments)->id;
@@ -668,11 +678,15 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                     'amount' => [
                         'currency' => $order->getOrderCurrencyCode(),
                         'value' => $this->mollieHelper->formatCurrencyValue(
-                            $creditmemo->getAdjustment(),
+                            $refundAmount,
                             $order->getOrderCurrencyCode()
                         ),
                     ]
                 ]);
+
+                if ($return) {
+                    return $this;
+                }
             } catch (\Exception $exception) {
                 $this->mollieHelper->addTolog('error', $exception->getMessage());
                 Mage::throwException($exception->getMessage());
