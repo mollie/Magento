@@ -174,7 +174,7 @@
                          This is to fix calculation errors when there are multiple custom totals -->
                     <tax_subtotal>
                         <after>nominal,subtotal,msrp,freeshipping</after>
-                        <before>tax_subtotal,weee,shipping,tax_shipping,discount,tax,grand_total</before>
+                        <before>weee,shipping,tax_shipping,discount,tax,grand_total</before>
                     </tax_subtotal>
                 </totals>
             </quote>
