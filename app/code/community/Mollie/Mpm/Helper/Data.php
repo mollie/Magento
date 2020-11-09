@@ -66,9 +66,9 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public $debug = null;
     /**
-     * @var
+     * @var array
      */
-    public $apiKey = null;
+    public $apiKey = [];
     /**
      * @var
      */
@@ -146,8 +146,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getApiKey($storeId = null)
     {
-        if ($this->apiKey !== null) {
-            return $this->apiKey;
+        if (array_key_exists($storeId, $this->apiKey)) {
+            return $this->apiKey[$storeId];
         }
 
         $modus = $this->getModus($storeId);
@@ -161,7 +161,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
                 $this->addTolog('error', 'Mollie set to test modus, but API key does not start with "test_"');
             }
 
-            $this->apiKey = $apiKey;
+            $this->apiKey[$storeId] = $apiKey;
         } else {
             $apiKey = trim($this->getStoreConfig(self::XPATH_LIVE_APIKEY, $storeId));
             if (empty($apiKey)) {
@@ -172,10 +172,10 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
                 $this->addTolog('error', 'Mollie set to live modus, but API key does not start with "live_"');
             }
 
-            $this->apiKey = $apiKey;
+            $this->apiKey[$storeId] = $apiKey;
         }
 
-        return $this->apiKey;
+        return $this->apiKey[$storeId];
     }
 
     /**
