@@ -78,9 +78,9 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public $mollieMethods = null;
     /**
-     * @var \Mollie\Api\MollieApiClient
+     * @var \Mollie\Api\MollieApiClient[]
      */
-    public $mollieApi = null;
+    public $mollieApi = [];
 
     /**
      * @deprecated
@@ -794,8 +794,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getMollieAPI($apiKey)
     {
-        if ($this->mollieApi !== null) {
-            return $this->mollieApi;
+        if (array_key_exists($apiKey, $this->mollieApi)) {
+            return $this->mollieApi[$apiKey];
         }
 
         if (class_exists('Mollie\Api\MollieApiClient')) {
@@ -803,8 +803,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             $mollieApiClient->setApiKey($apiKey);
             $mollieApiClient->addVersionString('Magento/' . $this->getMagentoVersion());
             $mollieApiClient->addVersionString('MollieMagento/' . $this->getExtensionVersion());
-            $this->mollieApi = $mollieApiClient;
-            return $this->mollieApi;
+            $this->mollieApi[$apiKey] = $mollieApiClient;
+            return $this->mollieApi[$apiKey];
         } else {
             $msg = $this->__('Could not load Mollie Api.');
             Mage::throwException($msg);
