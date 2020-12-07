@@ -798,6 +798,10 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
             return $this->mollieApi[$apiKey];
         }
 
+        if (!class_exists('Mollie\Api\MollieApiClient')) {
+            (new Mollie_Mpm_Helper_Autoloader)->createAndRegister();
+        }
+
         if (class_exists('Mollie\Api\MollieApiClient')) {
             $mollieApiClient = new \Mollie\Api\MollieApiClient();
             $mollieApiClient->setApiKey($apiKey);
