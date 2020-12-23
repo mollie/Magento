@@ -294,7 +294,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 /** @var Mage_Sales_Model_Order_Invoice $invoice */
                 $invoice = isset($invoice) ? $invoice : $payment->getCreatedInvoice();
                 $sendInvoice = $this->mollieHelper->sendInvoice($storeId) &&
-                    $this->mollieHelper->getInvoiceMoment($order) == \Mollie_Mpm_Model_Adminhtml_System_Config_Source_InvoiceMoment::ON_AUTHORIZE_PAID_BEFORE_SHIPMENT;
+                    $this->mollieHelper->getInvoiceMoment($order) == \Mollie_Mpm_Model_Adminhtml_System_Config_Source_InvoiceMoment::ON_AUTHORIZE_PAID_AFTER_SHIPMENT;
 
                 if (!$order->getEmailSent()) {
                     try {
