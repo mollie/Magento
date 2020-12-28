@@ -176,6 +176,10 @@ class Mollie_Mpm_Model_Observer
             return;
         }
 
+        if (stripos(Mage::app()->getRequest()->getControllerModule(), 'checkout') === false) {
+            return;
+        }
+
         /** @var \Varient_Object $transport */
         $transport = $observer->getData('transport');
         $html = $transport->getHtml();
