@@ -266,9 +266,13 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                             $invoice = $order->prepareInvoice();
                             $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_ONLINE);
                             $invoice->setTransactionId($transactionId);
-                            $invoice->register();
 
-                            $invoice->setState($this->mollieHelper->getInvoiceMomentPaidStatus($order));
+                            $invoiceStatus = $this->mollieHelper->getInvoiceMomentPaidStatus($order);
+                            if ($invoiceStatus == \Mage_Sales_Model_Order_Invoice::STATE_PAID) {
+                                $invoice->register();
+                            }
+
+                            $invoice->setState($invoiceStatus);
 
                             Mage::getModel('core/resource_transaction')
                                 ->addObject($invoice)
