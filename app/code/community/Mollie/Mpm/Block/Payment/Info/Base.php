@@ -150,7 +150,7 @@ class Mollie_Mpm_Block_Payment_Info_Base extends Mage_Payment_Block_Info
     {
         try {
             $details = json_decode($this->getInfo()->getAdditionalInformation('details'));
-            if ($details->cardLabel) {
+            if (isset($details->cardLabel)) {
                 return $details->cardLabel;
             }
         } catch (\Exception $e) {
