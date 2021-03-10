@@ -123,3 +123,7 @@
 "An error occured while processing your payment request, please try again later.","Er is iets fout gegaan bij het verwerken van uw betaling. Probeer het alstublieft later opnieuw."
 "An error occured while processing your payment, please try again with other method.","Er is iets fout gegaan bij het verwerken van uw betaling. Probeer het alstublieft later opnieuw met een andere betaalmethode."
 "Payment rejected. Klarna cannot be used as a Payment Method on this order, please try another Payment Method.","Betaling geweigerd. Klarna kan niet worden gebruikt als betaalmethode voor deze bestelling. Probeer een andere betaalmethode."
+"Card Holder","Kaarthouder"
+"Card Number","Kaartnummer"
+"Expiry Date","Vervaldatum"
+"Verification Code","Verificatie code"
