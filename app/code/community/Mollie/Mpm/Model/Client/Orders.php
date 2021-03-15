@@ -535,6 +535,12 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 $payment->setTransactionId($transactionId);
                 $payment->registerCaptureNotification($captureAmount, true);
 
+                foreach ($invoice->getAllItems() as $item) {
+                    if ($item->getQty() > 0) {
+                        $item->register();
+                    }
+                }
+
                 $order->save();
                 $sendInvoice = $this->mollieHelper->sendInvoice($order->getStoreId());
                 if ($invoice && !$invoice->getEmailSent() && $sendInvoice) {
