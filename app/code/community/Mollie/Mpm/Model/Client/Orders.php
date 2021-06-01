@@ -535,6 +535,11 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 $payment->setTransactionId($transactionId);
                 $payment->registerCaptureNotification($captureAmount, true);
 
+                // Set the tax_invoiced and base_tax_invoiced. Normally this is done by calling $invoice->register(),
+                // but because the invoice is already exists this does not work. So, set it manually.
+                $order->setTaxInvoiced($order->getTaxInvoiced() + $invoice->getTaxAmount());
+                $order->setBaseTaxInvoiced($order->getBaseTaxInvoiced() + $invoice->getBaseTaxAmount());
+
                 foreach ($invoice->getAllItems() as $item) {
                     if ($item->getQty() > 0) {
                         $item->register();
