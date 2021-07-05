@@ -255,6 +255,8 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
             $msg = array('success' => true, 'status' => 'paid', 'order_id' => $orderId, 'type' => $type);
             $this->mollieHelper->addTolog('success', $msg);
             $this->checkCheckoutSession($order, $paymentToken, $paymentData, $type);
+            $order->save();
+
             return $msg;
         }
 
