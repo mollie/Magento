@@ -78,6 +78,32 @@ $status = $this->getPaymentStatus();
                     </td>
                 </tr>
             <?php endif; ?>
+            <?php if (Mage::getStoreConfig('payment/mollie/transaction_details') == 1): ?>
+                <?php if ($issuer = $this->getIssuer()): ?>
+                    <tr>
+                        <td class="label"><?= __('Issuer'); ?></td>
+                        <td class="value"> <?=$issuer; ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($consumerName = $this->getConsumerName()): ?>
+                    <tr>
+                        <td class="label"><?= __('Consumer name'); ?></td>
+                        <td class="value"> <?=$consumerName; ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($iban = $this->getIban()): ?>
+                    <tr>
+                        <td class="label"><?= __('IBAN'); ?></td>
+                        <td class="value"> <?=$iban; ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($bic = $this->getBic()): ?>
+                    <tr>
+                        <td class="label"><?= __('BIC'); ?></td>
+                        <td class="value"> <?=$bic; ?></td>
+                    </tr>
+                <?php endif; ?>
+            <?php endif; ?>
         </table>
     </div>
 <?php echo $this->getChildHtml() ?>
