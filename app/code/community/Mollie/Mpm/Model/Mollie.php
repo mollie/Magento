@@ -167,6 +167,9 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
             } else {
                 return $this->paymentsApi->processTransaction($order, $type, $paymentToken);
             }
+        } catch (Mollie_Mpm_Exceptions_KlarnaException $exception) {
+            // No rollback, save is done in the finally.
+            throw $exception;
         } catch (\Exception $exception) {
             $connection->rollback();
             throw $exception;
