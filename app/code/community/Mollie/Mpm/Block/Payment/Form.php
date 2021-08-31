@@ -113,4 +113,16 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
         return $this->__('Select Issuer');
     }
 
+    /**
+     * @param \Mollie\Api\Resources\IssuerCollection $issuers
+     */
+    public function sortIssuers($issuers)
+    {
+        $issuers->uasort(function($a, $b) {
+            return strcmp(strtolower($a->name), strtolower($b->name));
+        });
+
+        return $issuers;
+    }
+
 }

@@ -52,7 +52,7 @@ $method = $this->getMethodByCode($code);
                 <?php endif; ?>
                 <?php if ($listType == 'radio'): ?>
                     <ul>
-                    <?php foreach ($method->issuers() as $issuer): ?>
+                    <?php foreach ($this->sortIssuers($method->issuers()) as $issuer): ?>
                         <li>
                             <label>
                                 <input type="radio" name="<?php echo $code; ?>_issuer" value="<?php echo htmlspecialchars($issuer->id); ?>" id="issuer_<?php echo htmlspecialchars($issuer->id); ?>" class="radio">
