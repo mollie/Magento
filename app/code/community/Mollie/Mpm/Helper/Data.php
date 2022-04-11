@@ -727,7 +727,12 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
         $storeId = $quote ? $quote->getStoreId() : null;
         $availableMethods = $this->getAvailableMethods($storeId, $quote, 'orders', 'issuers');
+
         $availableMethodsArray = json_decode(json_encode($availableMethods), true);
+        if (!is_array($availableMethodsArray)) {
+            return false;
+        }
+
         $available = array_search($methodCode, array_column($availableMethodsArray, 'id'));
         if ($available === false) {
             return false;
