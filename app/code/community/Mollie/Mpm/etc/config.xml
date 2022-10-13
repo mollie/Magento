@@ -486,9 +486,19 @@
                 <method>order</method>
                 <invoice_moment>shipment</invoice_moment>
             </mollie_klarnapaylater>
-            <mollie_klarnasliceit>
+            <mollie_klarnapaynow>
                 <active>1</active>
                 <sort_order>150</sort_order>
+                <title>Klarna Pay Now</title>
+                <model>mpm/method_klarnapaynow</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>order</method>
+                <invoice_moment>shipment</invoice_moment>
+            </mollie_klarnapaynow>
+            <mollie_klarnasliceit>
+                <active>1</active>
+                <sort_order>160</sort_order>
                 <title>Klarna Slice</title>
                 <model>mpm/method_klarnasliceit</model>
                 <group>mollie</group>
@@ -498,7 +508,7 @@
             </mollie_klarnasliceit>
             <mollie_paymentlink>
                 <active>1</active>
-                <sort_order>160</sort_order>
+                <sort_order>170</sort_order>
                 <title>Payment Link / Admin Payment</title>
                 <model>mpm/method_paymentlink</model>
                 <group>mollie</group>
@@ -509,7 +519,7 @@
             </mollie_paymentlink>
             <mollie_przelewy24>
                 <active>1</active>
-                <sort_order>170</sort_order>
+                <sort_order>180</sort_order>
                 <title>Przelewy24</title>
                 <model>mpm/method_przelewy24</model>
                 <group>mollie</group>
@@ -519,7 +529,7 @@
             </mollie_przelewy24>
             <mollie_applepay>
                 <active>1</active>
-                <sort_order>180</sort_order>
+                <sort_order>190</sort_order>
                 <title>Apple Pay</title>
                 <model>mpm/method_applepay</model>
                 <group>mollie</group>
@@ -529,7 +539,7 @@
             </mollie_applepay>
             <mollie_mybank>
                 <active>1</active>
-                <sort_order>190</sort_order>
+                <sort_order>200</sort_order>
                 <title>MyBank</title>
                 <model>mpm/method_mybank</model>
                 <group>mollie</group>
