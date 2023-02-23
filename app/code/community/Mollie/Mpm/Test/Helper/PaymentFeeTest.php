@@ -57,6 +57,7 @@ class Mollie_Mpm_Test_Helper_PaymentFeeTest extends Mollie_Mpm_Test_TestHelpers_
     {
         return [
             ['mollie_klarnapaylater', true],
+            ['mollie_klarnapaynow', true],
             ['mollie_klarnasliceit', true],
             ['doesnotexists', false],
         ];
