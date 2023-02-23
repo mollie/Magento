@@ -2149,10 +2149,141 @@
                         </model>
                     </fields>
                 </mollie_klarnapaylater>
+				<mollie_klarnapaynow translate="label" module="mpm">
+                    <label>Mollie - Klarna Pay Now</label>
+                    <expanded>0</expanded>
+                    <sort_order>220</sort_order>
+                    <frontend_type>text</frontend_type>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </title>
+                        <allowspecific translate="label">
+                            <label>Payment from Applicable Countries</label>
+                            <frontend_type>allowspecific</frontend_type>
+                            <sort_order>50</sort_order>
+                            <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </allowspecific>
+                        <specificcountry translate="label">
+                            <label>Payment from Specific Countries</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <sort_order>51</sort_order>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </specificcountry>
+                        <min_order_total translate="label">
+                            <label>Minimum Order Total</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>98</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </min_order_total>
+                        <max_order_total translate="label">
+                            <label>Maximum Order Total</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>99</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </max_order_total>
+                        <payment_surcharge>
+                            <label>Klarna Payment Surcharge</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <comment><![CDATA[Enter the extra costs for a Klarna Pay Now payment with a maximum of € 1.95]]></comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                            <backend_model>mpm/adminhtml_system_config_backend_surchargeValidation</backend_model>
+                        </payment_surcharge>
+                        <payment_surcharge_tax_class>
+                            <label>Klarna Payment Surcharge Tax Class</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>101</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_shipping_taxclass</source_model>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </payment_surcharge_tax_class>
+                        <invoice_moment translate="label comment">
+                            <label>When to create the invoice?</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>mpm/adminhtml_system_config_source_invoiceMoment</source_model>
+                            <comment><![CDATA[When do we create the invoice?<br><strong>On Authorize and set status Paid before shipment:</strong><br>Create a full invoice with the status Paid after the order is authorized and not shipped yet.<br><br><strong>On Authorize and set payment status Paid after shipment:</strong><br>Create a full invoice with the payment status Pending after the order is authorized and set payment status to Paid after a shipment.<br><br><strong>On Shipment (recommended):</strong><br>Create a (partial) invoice for shipped item(s).</span>]]></comment>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </invoice_moment>
+                        <sort_order translate="label">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>103</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>validate-number</frontend_class>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </sort_order>
+                        <model>
+                        </model>
+                    </fields>
+                </mollie_klarnapaynow>
                 <mollie_klarnasliceit translate="label" module="mpm">
                     <label>Mollie - Klarna Slice</label>
                     <expanded>0</expanded>
-                    <sort_order>220</sort_order>
+                    <sort_order>230</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2281,7 +2412,7 @@
 				<mollie_paymentlink translate="label" module="mpm">
                     <label>Mollie - Payment Link / Admin Payment</label>
                     <expanded>0</expanded>
-                    <sort_order>230</sort_order>
+                    <sort_order>240</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2396,7 +2527,7 @@
                 <mollie_przelewy24 translate="label" module="mpm">
                     <label>Mollie - Przelewy24</label>
                     <expanded>0</expanded>
-                    <sort_order>240</sort_order>
+                    <sort_order>250</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2518,7 +2649,7 @@
                 <mollie_applepay translate="label" module="mpm">
                     <label>Mollie - Apple Pay</label>
                     <expanded>0</expanded>
-                    <sort_order>250</sort_order>
+                    <sort_order>260</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2641,7 +2772,7 @@
                 <mollie_mybank translate="label" module="mpm">
                     <label>Mollie - MyBank</label>
                     <expanded>0</expanded>
-                    <sort_order>260</sort_order>
+                    <sort_order>270</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2763,7 +2894,7 @@
 				<mollie_giftcard translate="label" module="mpm">
                     <label>Mollie - Giftcard</label>
                     <expanded>0</expanded>
-                    <sort_order>270</sort_order>
+                    <sort_order>280</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>

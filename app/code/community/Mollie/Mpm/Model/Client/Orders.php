@@ -850,7 +850,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         $payment = $order->getPayment();
 
         if (
-            !in_array($payment->getMethod(), array('mollie_klarnapaylater', 'mollie_klarnasliceit')) ||
+            !in_array($payment->getMethod(), array('mollie_klarnapaylater', 'mollie_klarnapaynow', 'mollie_klarnasliceit')) ||
             $this->mollieHelper->getInvoiceMoment($order) != 'shipment'
         ) {
             return null;
