@@ -162,7 +162,7 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
         try {
             $connection->beginTransaction();
 
-            if ($method == 'order' && preg_match('/^ord_\w+$/', $transactionId)) {
+            if ($method == 'order' && substr($transactionId, 0, 4) == 'ord_') {
                 return $this->ordersApi->processTransaction($order, $type, $paymentToken);
             } else {
                 return $this->paymentsApi->processTransaction($order, $type, $paymentToken);
