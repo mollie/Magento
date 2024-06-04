@@ -83,23 +83,6 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     public $mollieApi = [];
 
     /**
-     * @deprecated
-     *
-     * @param null $storeId
-     * @param null $websiteId
-     *
-     * @return bool
-     */
-    public function isModuleEnabled($storeId = null, $websiteId = null)
-    {
-        if (!is_numeric($storeId)) {
-            $storeId = Mage::app()->getStore()->getId();
-        }
-
-        return $this->isAvailable($storeId);
-    }
-
-    /**
      * Availabiliy check, on Active, API Client & API Key
      *
      * @param $storeId
