@@ -390,7 +390,6 @@
                 <title>iDEAL</title>
                 <model>mpm/method_ideal</model>
                 <group>mollie</group>
-                <issuer_list_type>dropdown</issuer_list_type>
                 <allowspecific>0</allowspecific>
                 <method/>
                 <payment_description>{ordernumber}</payment_description>
