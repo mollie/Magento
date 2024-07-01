@@ -788,6 +788,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
                 );
             }
 
+            // Remove issuers for iDEAL 2.0
+            foreach ($this->mollieMethods as $method) {
+                if ($method->id == 'ideal') {
+                    $method->issuers = [];
+                    break;
+                }
+            }
+
             return $this->mollieMethods;
         } catch (\Exception $e) {
             $this->addTolog('error', $e->getMessage());
