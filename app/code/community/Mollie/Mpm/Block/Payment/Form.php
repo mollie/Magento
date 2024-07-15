@@ -102,7 +102,7 @@ class Mollie_Mpm_Block_Payment_Form extends Mage_Payment_Block_Form
      */
     public function getIssuerTitle($code)
     {
-        if ($code == 'mollie_ideal' || $code == 'mollie_kbc') {
+        if ($code == 'mollie_kbc') {
             return $this->__('Select Bank');
         }
 

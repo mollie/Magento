@@ -92,6 +92,10 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isModuleEnabled($storeId = null, $websiteId = null)
     {
+        if (!is_numeric($storeId)) {
+            $storeId = Mage::app()->getStore()->getId();
+        }
+
         return $this->isAvailable($storeId);
     }
 
@@ -128,7 +132,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getStoreConfig($path, $storeId = null)
     {
-        if ($storeId > 0) {
+        if (is_numeric($storeId)) {
             $value = Mage::getStoreConfig($path, $storeId);
         } else {
             $value = Mage::getStoreConfig($path);
@@ -782,6 +786,14 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
                         'includeWallets' => 'applepay',
                     )
                 );
+            }
+
+            // Remove issuers for iDEAL 2.0
+            foreach ($this->mollieMethods as $method) {
+                if ($method->id == 'ideal') {
+                    $method->issuers = [];
+                    break;
+                }
             }
 
             return $this->mollieMethods;

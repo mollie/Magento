@@ -163,27 +163,7 @@ class Mollie_Mpm_Block_Payment_Info_Base extends Mage_Payment_Block_Info
     public function getIssuer()
     {
         try {
-            $issuerCodeToName = [
-                'ideal_ABNANL2A' => 'ABN AMRO',
-                'ideal_INGBNL2A' => 'ING',
-                'ideal_RABONL2U' => 'Rabobank',
-                'ideal_ASNBNL21' => 'ASN Bank',
-                'ideal_BUNQNL2A' => 'Bunq',
-                'ideal_HANDNL2A' => 'Handelsbanken',
-                'ideal_KNABNL2H' => 'Knab',
-                'ideal_RBRBNL21' => 'Regiobank',
-                'ideal_REVOLT21' => 'Revolut',
-                'ideal_SNSBNL2A' => 'SNS Bank',
-                'ideal_TRIONL2U' => 'Triodos',
-                'ideal_FVLBNL22' => 'Van Lanschot',
-            ];
-
-            $issuer = $this->getInfo()->getAdditionalInformation('selected_issuer');
-            if (array_key_exists($issuer, $issuerCodeToName)) {
-                return $issuerCodeToName[$issuer];
-            }
-
-            return $issuer;
+            return $this->getInfo()->getAdditionalInformation('selected_issuer');
         } catch (\Exception $exception) {
             return null;
         }
