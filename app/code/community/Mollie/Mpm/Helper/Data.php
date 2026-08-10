@@ -132,13 +132,13 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getStoreConfig($path, $storeId = null)
     {
-        if (is_numeric($storeId)) {
+        if (is_numeric($storeId) && $storeId > 0) {
             $value = Mage::getStoreConfig($path, $storeId);
         } else {
             $value = Mage::getStoreConfig($path);
         }
 
-        return trim($value);
+        return trim((string) $value);
     }
 
     /**
@@ -487,7 +487,7 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     public function getBankTransferDueDate($storeId = null)
     {
         $offset = $this->getStoreConfig(self::XPATH_BANKTRANSFER_DUE_DAYS, $storeId);
-        if ($offset > 0) {
+        if (is_numeric($offset) && $offset > 0) {
             return date("Y-m-d", strtotime("+" . $offset . " day"));
         } else {
             return date("Y-m-d", strtotime("+14 days"));
