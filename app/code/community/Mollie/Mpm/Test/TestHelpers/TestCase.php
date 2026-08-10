@@ -1,7 +1,7 @@
 <?php
 class Mollie_Mpm_Test_TestHelpers_TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
