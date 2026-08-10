@@ -145,6 +145,19 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
             return;
         }
 
+        if ($this->hasPaidTransaction($order)) {
+            $this->mollieHelper->addToLog(
+                'info',
+                sprintf(
+                    'Not cancelling order %s: transaction %s was already paid',
+                    $order->getIncrementId(),
+                    $order->getMollieTransactionId()
+                )
+            );
+
+            return;
+        }
+
         try {
             $historyMessage = Mage::helper('mpm')->__('Canceled because an error occurred while redirecting the customer to Mollie');
             if ($message) {
@@ -249,10 +262,69 @@ class Mollie_Mpm_ApiController extends Mage_Core_Controller_Front_Action
     {
         $redirectUrl = $methodInstance->startTransaction($order);
 
+        if (!$redirectUrl && $this->hasPaidTransaction($order)) {
+            return Mage::getUrl('checkout/onepage/success');
+        }
+
         if (!$redirectUrl && $methodInstance instanceof Mollie_Mpm_Model_Method_Creditcard) {
             $redirectUrl = Mage::getUrl('checkout/onepage/success');
         }
 
         return $redirectUrl;
+    }
+
+    /**
+     * Mollie stops returning a checkout url once a transaction is paid, so a missing redirect url is not
+     * necessarily a failure. Ask Mollie for the actual status before treating it as one.
+     *
+     * Only a positive answer counts. If the status cannot be established we report false, so that the
+     * existing "cancel the order when the connection fails" behaviour is left intact.
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @return bool
+     */
+    protected function hasPaidTransaction(Mage_Sales_Model_Order $order)
+    {
+        $transactionId = $order->getMollieTransactionId();
+        if (empty($transactionId)) {
+            return false;
+        }
+
+        try {
+            $apiKey = $this->mollieHelper->getApiKey($order->getStoreId());
+            if (empty($apiKey)) {
+                return false;
+            }
+
+            $mollieApi = $this->mollieHelper->getMollieAPI($apiKey);
+            if (!is_object($mollieApi)) {
+                return false;
+            }
+
+            if (substr($transactionId, 0, 4) === 'ord_') {
+                $status = $mollieApi->orders->get($transactionId)->status;
+            } else {
+                $status = $mollieApi->payments->get($transactionId)->status;
+            }
+        } catch (Exception $e) {
+            $this->mollieHelper->addToLog(
+                'error',
+                sprintf('Could not determine status of %s: %s', $transactionId, $e->getMessage())
+            );
+
+            return false;
+        }
+
+        return in_array($status, $this->getPaidTransactionStatuses(), true);
+    }
+
+    /**
+     * Statuses that mean the customer has either paid or committed to paying, so the order must not be cancelled.
+     *
+     * @return string[]
+     */
+    protected function getPaidTransactionStatuses()
+    {
+        return array('paid', 'authorized', 'pending', 'completed', 'shipping');
     }
 }

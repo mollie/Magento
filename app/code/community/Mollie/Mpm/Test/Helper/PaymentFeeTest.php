@@ -7,7 +7,7 @@ class Mollie_Mpm_Test_Helper_PaymentFeeTest extends Mollie_Mpm_Test_TestHelpers_
      */
     private $address;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
