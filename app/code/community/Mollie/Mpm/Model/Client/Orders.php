@@ -878,7 +878,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
         return $invoice;
     }
 
-    private function getCaptureAmount(Mage_Sales_Model_Order $order, Mage_Sales_Model_Order_Invoice $invoice = null)
+    private function getCaptureAmount(Mage_Sales_Model_Order $order, ?Mage_Sales_Model_Order_Invoice $invoice = null)
     {
         if ($invoice) {
             return $invoice->getBaseGrandTotal();

@@ -5,7 +5,7 @@ use Mollie\Api\Resources\Order;
 
 class Mollie_Mpm_Test_Helper_DataTest extends Mollie_Mpm_Test_TestHelpers_TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
