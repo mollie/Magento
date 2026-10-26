@@ -135,7 +135,7 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
     public function processTransaction($orderId, $type = 'webhook', $paymentToken = null)
     {
         /** @var $order Mage_Sales_Model_Order */
-        $order = Mage::getModel('sales/order')->load($orderId);
+        $order = $this->loadOrder($orderId);
         if (empty($order)) {
             $msg = array('error' => true, 'msg' => 'Order not found');
             $this->mollieHelper->addTolog('error', $msg);
@@ -157,10 +157,18 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
         }
 
         $method = $this->mollieHelper->getApiMethod($order);
-        $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+        $connection = $this->getConnection();
 
         try {
             $connection->beginTransaction();
+
+            /**
+             * The webhook and the customer returning from Mollie often arrive at the same time, and both save the
+             * complete order and payment rows. Lock the order row and reload the order once the lock is acquired, so
+             * a request never writes back stale values (like empty paid amounts) over the changes of the other one.
+             */
+            $this->lockOrder($connection, $order->getId());
+            $order = $this->loadOrder($order->getId());
 
             if ($method == 'order' && substr($transactionId, 0, 4) == 'ord_') {
                 return $this->ordersApi->processTransaction($order, $type, $paymentToken);
@@ -330,6 +338,40 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
     }
 
     /**
+     * @param int $orderId
+     *
+     * @return Mage_Sales_Model_Order
+     */
+    protected function loadOrder($orderId)
+    {
+        return Mage::getModel('sales/order')->load($orderId);
+    }
+
+    /**
+     * @return Varien_Db_Adapter_Interface
+     */
+    protected function getConnection()
+    {
+        return Mage::getSingleton('core/resource')->getConnection('core_write');
+    }
+
+    /**
+     * Lock the order row until the current transaction ends. Blocks while another request holds the lock.
+     *
+     * @param Varien_Db_Adapter_Interface $connection
+     * @param int                         $orderId
+     */
+    protected function lockOrder($connection, $orderId)
+    {
+        $select = $connection->select()
+            ->from(Mage::getSingleton('core/resource')->getTableName('sales/order'), array('entity_id'))
+            ->where('entity_id = ?', (int) $orderId)
+            ->forUpdate(true);
+
+        $connection->fetchOne($select);
+    }
+
+    /**
      * When wrapping a $order->save() in a transaction, the update of the grid is postponed to a later action.
      * This function fixes 2 edge cases which prevents that the order grid is updated. Both are caused due to the fact
      * that we update the order in a transaction.
@@ -344,7 +386,7 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
      *
      * @param Mage_Sales_Model_Order $order
      */
-    private function commitOrder(Mage_Sales_Model_Order $order)
+    protected function commitOrder(Mage_Sales_Model_Order $order)
     {
         $systemLogIsDisabled = false;
         if (defined('Mage_Log_Helper_Data::XML_PATH_LOG_ENABLED')) {
