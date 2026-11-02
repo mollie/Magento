@@ -44,6 +44,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_LIVE_APIKEY = 'payment/mollie/apikey_live';
     const XPATH_TEST_APIKEY = 'payment/mollie/apikey_test';
     const XPATH_DEBUG = 'payment/mollie/debug';
+    const XPATH_USE_WEBHOOKS = 'payment/mollie/use_webhooks';
+    const XPATH_CUSTOM_WEBHOOK_URL = 'payment/mollie/custom_webhook_url';
     const XPATH_LOADING_SCREEN = 'payment/mollie/loading_screen';
     const XPATH_STATUS_PENDING = 'payment/mollie/order_status_pending';
     const XPATH_CANCEL_FAILED_ORDERS = 'payment/mollie/cancel_failed_orders';
@@ -293,6 +295,60 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      * @return string
      */
     public function getWebhookUrl($storeId = null)
+    {
+        if ($this->isWebhookDisabled($storeId)) {
+            return '';
+        }
+
+        $customWebhookUrl = $this->getCustomWebhookUrl($storeId);
+        if ($customWebhookUrl !== '') {
+            return $customWebhookUrl;
+        }
+
+        return $this->getDefaultWebhookUrl($storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return bool
+     */
+    private function isWebhookDisabled($storeId)
+    {
+        return $this->getModus($storeId) === 'test'
+            && $this->getWebhookOption($storeId) === Mollie_Mpm_Model_Adminhtml_System_Config_Source_WebhookUrlOptions::DISABLED;
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    private function getCustomWebhookUrl($storeId)
+    {
+        if ($this->getWebhookOption($storeId) !== Mollie_Mpm_Model_Adminhtml_System_Config_Source_WebhookUrlOptions::CUSTOM_URL) {
+            return '';
+        }
+
+        return $this->getStoreConfig(self::XPATH_CUSTOM_WEBHOOK_URL, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    private function getWebhookOption($storeId)
+    {
+        return $this->getStoreConfig(self::XPATH_USE_WEBHOOKS, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    private function getDefaultWebhookUrl($storeId)
     {
         if ($storeId !== null) {
             return Mage::getUrl('mpm/api/webhook', array('_store' => $storeId));
@@ -569,6 +625,20 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @param Mage_Sales_Model_Order $order
      *
+     * @return bool
+     */
+    public function isAwaitingManualCapture(Mage_Sales_Model_Order $order)
+    {
+        $payment = $order->getPayment();
+
+        return $payment->getAdditionalInformation('checkout_type') == Mollie_Mpm_Model_Client_Payments::CHECKOUT_TYPE
+            && $payment->getAdditionalInformation('capture_mode') == Mollie_Mpm_Model_Client_Payments::CAPTURE_MODE_MANUAL
+            && $payment->getAdditionalInformation('payment_status') == 'authorized';
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
      * @return mixed
      */
     public function getCheckoutType(Mage_Sales_Model_Order $order)
@@ -731,6 +801,39 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @param Mage_Sales_Model_Quote|null $quote
+     *
+     * @return array
+     */
+    private function getAmountFilter($quote)
+    {
+        $amount = $quote !== null ? $this->getOrderAmountByQuote($quote) : null;
+        if ($amount === null || $amount['value'] <= 0) {
+            return array();
+        }
+
+        return array(
+            'amount[value]'    => $amount['value'],
+            'amount[currency]' => $amount['currency'],
+        );
+    }
+
+    /**
+     * @param Mage_Sales_Model_Quote|null $quote
+     *
+     * @return array
+     */
+    private function getBillingCountryFilter($quote)
+    {
+        $countryId = $quote !== null ? (string)$quote->getBillingAddress()->getCountryId() : '';
+        if ($countryId === '') {
+            return array();
+        }
+
+        return array('billingCountry' => $countryId);
+    }
+
+    /**
      * @param        $storeId
      * @param null   $quote
      * @param string $resource
@@ -750,26 +853,17 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
         try {
             $mollieApi = $this->getMollieAPI($apiKey);
-            $amount = $quote !== null ? $this->getOrderAmountByQuote($quote) : null;
-            if ($amount !== null && $amount['value'] > 0) {
-                $this->mollieMethods = $mollieApi->methods->all(
+            $this->mollieMethods = $mollieApi->methods->all(
+                array_merge(
                     array(
-                        'resource'         => $resource,
-                        'include'          => $include,
-                        'amount[value]'    => $amount['value'],
-                        'amount[currency]' => $amount['currency'],
-                        'includeWallets'   => 'applepay',
-                    )
-                );
-            } else {
-                $this->mollieMethods = $mollieApi->methods->all(
-                    array(
-                        'resource' => $resource,
-                        'include'  => $include,
+                        'resource'       => $resource,
+                        'include'        => $include,
                         'includeWallets' => 'applepay',
-                    )
-                );
-            }
+                    ),
+                    $this->getAmountFilter($quote),
+                    $this->getBillingCountryFilter($quote)
+                )
+            );
 
             // Remove issuers for iDEAL 2.0
             foreach ($this->mollieMethods as $method) {

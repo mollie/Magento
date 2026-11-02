@@ -156,7 +156,6 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
             return $msg;
         }
 
-        $method = $this->mollieHelper->getApiMethod($order);
         $connection = $this->getConnection();
 
         try {
@@ -170,7 +169,7 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
             $this->lockOrder($connection, $order->getId());
             $order = $this->loadOrder($order->getId());
 
-            if ($method == 'order' && substr($transactionId, 0, 4) == 'ord_') {
+            if ($this->isOrdersApiTransaction($transactionId)) {
                 return $this->ordersApi->processTransaction($order, $type, $paymentToken);
             } else {
                 return $this->paymentsApi->processTransaction($order, $type, $paymentToken);
@@ -186,6 +185,16 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
             $this->commitOrder($order);
             $connection->commit();
         }
+    }
+
+    /**
+     * @param string $transactionId
+     *
+     * @return bool
+     */
+    private function isOrdersApiTransaction($transactionId)
+    {
+        return strpos($transactionId, 'ord_') === 0;
     }
 
     /**
@@ -212,6 +221,24 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
     public function createShipment(Mage_Sales_Model_Order_Shipment $shipment, Mage_Sales_Model_Order $order)
     {
         return $this->ordersApi->createShipment($shipment, $order);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @throws \Mollie\Api\Exceptions\ApiException
+     */
+    public function captureAuthorizedPayment(Mage_Sales_Model_Order $order)
+    {
+        $this->paymentsApi->captureAuthorizedPayment($order);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     */
+    public function releaseAuthorization(Mage_Sales_Model_Order $order)
+    {
+        $this->paymentsApi->releaseAuthorization($order);
     }
 
     /**
