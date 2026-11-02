@@ -303,6 +303,32 @@
                                 <active>1</active>
                             </depends>
                         </debug>
+                        <use_webhooks translate="label comment">
+                            <label>Use webhooks</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mpm/adminhtml_system_config_source_webhookUrlOptions</source_model>
+                            <sort_order>42</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[<strong>Note:</strong> Mollie calls this URL when an order has an update (paid, canceled, etc.). Only change this setting when you are working in a local environment or use a tunnel. Disabled only applies in test mode.]]></comment>
+                            <depends>
+                                <active>1</active>
+                            </depends>
+                        </use_webhooks>
+                        <custom_webhook_url translate="label comment">
+                            <label>Custom webhook url</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>43</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[The full URL, for example https://your-tunnel.example.com/mpm/api/webhook/]]></comment>
+                            <depends>
+                                <active>1</active>
+                                <use_webhooks>custom_url</use_webhooks>
+                            </depends>
+                        </custom_webhook_url>
                         <heading_compatibility translate="label">
                             <label>Compatibility</label>
                             <frontend_model>mpm/adminhtml_render_heading</frontend_model>

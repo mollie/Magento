@@ -328,6 +328,7 @@
                 <loading_screen>0</loading_screen>
                 <invoice_notify>1</invoice_notify>
                 <debug>1</debug>
+                <use_webhooks>enabled</use_webhooks>
                 <force_base_currency>1</force_base_currency>
                 <register_autoloader>1</register_autoloader>
                 <autoloader_basepath>lib/Mollie</autoloader_basepath>
