@@ -118,6 +118,15 @@
                     </mollie_sales_order_shipment_save_before>
                 </observers>
             </sales_order_shipment_save_before>
+            <sales_order_shipment_save_commit_after>
+                <observers>
+                    <mollie_sales_order_shipment_save_commit_after>
+                        <type>singleton</type>
+                        <class>Mollie_Mpm_Model_Observer</class>
+                        <method>salesOrderShipmentSaveCommitAfter</method>
+                    </mollie_sales_order_shipment_save_commit_after>
+                </observers>
+            </sales_order_shipment_save_commit_after>
             <sales_order_shipment_track_save_after>
                 <observers>
                     <mollie_sales_order_shipment_track_save_after>
@@ -328,6 +337,7 @@
                 <loading_screen>0</loading_screen>
                 <invoice_notify>1</invoice_notify>
                 <debug>1</debug>
+                <use_webhooks>enabled</use_webhooks>
                 <force_base_currency>1</force_base_currency>
                 <register_autoloader>1</register_autoloader>
                 <autoloader_basepath>lib/Mollie</autoloader_basepath>
@@ -335,7 +345,7 @@
             </mollie>
             <mollie_bancontact>
                 <active>1</active>
-                <sort_order>10</sort_order>
+                <sort_order>30</sort_order>
                 <title>Bancontact</title>
                 <model>mpm/method_bancontact</model>
                 <group>mollie</group>
@@ -345,7 +355,7 @@
             </mollie_bancontact>
             <mollie_banktransfer>
                 <active>1</active>
-                <sort_order>10</sort_order>
+                <sort_order>40</sort_order>
                 <title>Banktransfer</title>
                 <model>mpm/method_banktransfer</model>
                 <group>mollie</group>
@@ -356,7 +366,7 @@
             </mollie_banktransfer>
             <mollie_belfius>
                 <active>1</active>
-                <sort_order>20</sort_order>
+                <sort_order>50</sort_order>
                 <title>Belfius</title>
                 <model>mpm/method_belfius</model>
                 <group>mollie</group>
@@ -365,8 +375,8 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_belfius>
             <mollie_bitcoin>
-                <active>1</active>
-                <sort_order>30</sort_order>
+                <active>0</active>
+                <sort_order>80</sort_order>
                 <title>Bitcoin</title>
                 <model>mpm/method_bitcoin</model>
                 <group>mollie</group>
@@ -376,7 +386,7 @@
             </mollie_bitcoin>
             <mollie_creditcard>
                 <active>1</active>
-                <sort_order>40</sort_order>
+                <sort_order>110</sort_order>
                 <title>Credit Card</title>
                 <model>mpm/method_creditcard</model>
                 <group>mollie</group>
@@ -386,7 +396,7 @@
             </mollie_creditcard>
             <mollie_ideal>
                 <active>1</active>
-                <sort_order>50</sort_order>
+                <sort_order>150</sort_order>
                 <title>iDEAL</title>
                 <model>mpm/method_ideal</model>
                 <group>mollie</group>
@@ -396,7 +406,7 @@
             </mollie_ideal>
             <mollie_kbc>
                 <active>1</active>
-                <sort_order>60</sort_order>
+                <sort_order>180</sort_order>
                 <title>KBC/CBC</title>
                 <model>mpm/method_kbc</model>
                 <group>mollie</group>
@@ -407,7 +417,7 @@
             </mollie_kbc>
             <mollie_paypal>
                 <active>1</active>
-                <sort_order>70</sort_order>
+                <sort_order>300</sort_order>
                 <title>Paypal</title>
                 <model>mpm/method_paypal</model>
                 <group>mollie</group>
@@ -417,7 +427,7 @@
             </mollie_paypal>
             <mollie_paysafecard>
                 <active>1</active>
-                <sort_order>80</sort_order>
+                <sort_order>310</sort_order>
                 <title>Paysafecard</title>
                 <model>mpm/method_paysafecard</model>
                 <group>mollie</group>
@@ -426,8 +436,8 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_paysafecard>
             <mollie_sofort>
-                <active>1</active>
-                <sort_order>90</sort_order>
+                <active>0</active>
+                <sort_order>350</sort_order>
                 <title>Sofort</title>
                 <model>mpm/method_sofort</model>
                 <group>mollie</group>
@@ -436,8 +446,8 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_sofort>
             <mollie_inghomepay>
-                <active>1</active>
-                <sort_order>100</sort_order>
+                <active>0</active>
+                <sort_order>170</sort_order>
                 <title>ING Homepay</title>
                 <model>mpm/method_inghomepay</model>
                 <group>mollie</group>
@@ -446,8 +456,8 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_inghomepay>
             <mollie_giropay>
-                <active>1</active>
-                <sort_order>110</sort_order>
+                <active>0</active>
+                <sort_order>140</sort_order>
                 <title>Giropay</title>
                 <model>mpm/method_giropay</model>
                 <group>mollie</group>
@@ -467,7 +477,7 @@
             </mollie_eps>
             <mollie_in3>
                 <active>1</active>
-                <sort_order>130</sort_order>
+                <sort_order>160</sort_order>
                 <title>in3</title>
                 <model>mpm/method_in3</model>
                 <group>mollie</group>
@@ -476,8 +486,8 @@
                 <invoice_moment>shipment</invoice_moment>
             </mollie_in3>
             <mollie_klarnapaylater>
-                <active>1</active>
-                <sort_order>140</sort_order>
+                <active>0</active>
+                <sort_order>200</sort_order>
                 <title>Klarna Pay Later</title>
                 <model>mpm/method_klarnapaylater</model>
                 <group>mollie</group>
@@ -486,8 +496,8 @@
                 <invoice_moment>shipment</invoice_moment>
             </mollie_klarnapaylater>
             <mollie_klarnapaynow>
-                <active>1</active>
-                <sort_order>150</sort_order>
+                <active>0</active>
+                <sort_order>210</sort_order>
                 <title>Klarna Pay Now</title>
                 <model>mpm/method_klarnapaynow</model>
                 <group>mollie</group>
@@ -496,8 +506,8 @@
                 <invoice_moment>shipment</invoice_moment>
             </mollie_klarnapaynow>
             <mollie_klarnasliceit>
-                <active>1</active>
-                <sort_order>160</sort_order>
+                <active>0</active>
+                <sort_order>220</sort_order>
                 <title>Klarna Slice</title>
                 <model>mpm/method_klarnasliceit</model>
                 <group>mollie</group>
@@ -507,7 +517,7 @@
             </mollie_klarnasliceit>
             <mollie_paymentlink>
                 <active>1</active>
-                <sort_order>170</sort_order>
+                <sort_order>290</sort_order>
                 <title>Payment Link / Admin Payment</title>
                 <model>mpm/method_paymentlink</model>
                 <group>mollie</group>
@@ -518,7 +528,7 @@
             </mollie_paymentlink>
             <mollie_przelewy24>
                 <active>1</active>
-                <sort_order>180</sort_order>
+                <sort_order>320</sort_order>
                 <title>Przelewy24</title>
                 <model>mpm/method_przelewy24</model>
                 <group>mollie</group>
@@ -528,7 +538,7 @@
             </mollie_przelewy24>
             <mollie_applepay>
                 <active>1</active>
-                <sort_order>190</sort_order>
+                <sort_order>10</sort_order>
                 <title>Apple Pay</title>
                 <model>mpm/method_applepay</model>
                 <group>mollie</group>
@@ -538,7 +548,7 @@
             </mollie_applepay>
             <mollie_mybank>
                 <active>1</active>
-                <sort_order>200</sort_order>
+                <sort_order>260</sort_order>
                 <title>MyBank</title>
                 <model>mpm/method_mybank</model>
                 <group>mollie</group>
@@ -546,9 +556,189 @@
                 <method/>
                 <payment_description>{ordernumber}</payment_description>
             </mollie_mybank>
+            <mollie_paybybank>
+                <active>1</active>
+                <sort_order>270</sort_order>
+                <title>Pay By Bank</title>
+                <model>mpm/method_paybybank</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_paybybank>
+            <mollie_wero>
+                <active>1</active>
+                <sort_order>400</sort_order>
+                <title>Wero</title>
+                <model>mpm/method_wero</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_wero>
+            <mollie_satispay>
+                <active>1</active>
+                <sort_order>340</sort_order>
+                <title>Satispay</title>
+                <model>mpm/method_satispay</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_satispay>
+            <mollie_bancomatpay>
+                <active>1</active>
+                <sort_order>20</sort_order>
+                <title>Bancomat Pay</title>
+                <model>mpm/method_bancomatpay</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_bancomatpay>
+            <mollie_bizum>
+                <active>1</active>
+                <sort_order>90</sort_order>
+                <title>Bizum</title>
+                <model>mpm/method_bizum</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_bizum>
+            <mollie_mbway>
+                <active>1</active>
+                <sort_order>230</sort_order>
+                <title>MB Way</title>
+                <model>mpm/method_mbway</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_mbway>
+            <mollie_vipps>
+                <active>1</active>
+                <sort_order>390</sort_order>
+                <title>Vipps</title>
+                <model>mpm/method_vipps</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_vipps>
+            <mollie_mobilepay>
+                <active>1</active>
+                <sort_order>240</sort_order>
+                <title>MobilePay</title>
+                <model>mpm/method_mobilepay</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_mobilepay>
+            <mollie_twint>
+                <active>1</active>
+                <sort_order>380</sort_order>
+                <title>TWINT</title>
+                <model>mpm/method_twint</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_twint>
+            <mollie_blik>
+                <active>1</active>
+                <sort_order>100</sort_order>
+                <title>Blik</title>
+                <model>mpm/method_blik</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_blik>
+            <mollie_swish>
+                <active>1</active>
+                <sort_order>360</sort_order>
+                <title>Swish</title>
+                <model>mpm/method_swish</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_swish>
+            <mollie_payconiq>
+                <active>1</active>
+                <sort_order>280</sort_order>
+                <title>Payconiq</title>
+                <model>mpm/method_payconiq</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_payconiq>
+            <mollie_klarna>
+                <active>1</active>
+                <sort_order>190</sort_order>
+                <title>Klarna</title>
+                <model>mpm/method_klarna</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_klarna>
+            <mollie_riverty>
+                <active>1</active>
+                <sort_order>330</sort_order>
+                <title>Riverty</title>
+                <model>mpm/method_riverty</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_riverty>
+            <mollie_billink>
+                <active>1</active>
+                <sort_order>70</sort_order>
+                <title>Billink</title>
+                <model>mpm/method_billink</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_billink>
+            <mollie_billie>
+                <active>1</active>
+                <sort_order>60</sort_order>
+                <title>Billie</title>
+                <model>mpm/method_billie</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_billie>
+            <mollie_multibanco>
+                <active>1</active>
+                <sort_order>250</sort_order>
+                <title>Multibanco</title>
+                <model>mpm/method_multibanco</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_multibanco>
+            <mollie_trustly>
+                <active>1</active>
+                <sort_order>370</sort_order>
+                <title>Trustly</title>
+                <model>mpm/method_trustly</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_trustly>
             <mollie_giftcard>
                 <active>0</active>
-                <sort_order>10</sort_order>
+                <sort_order>130</sort_order>
                 <title>Giftcard</title>
                 <model>mpm/method_giftcard</model>
                 <group>mollie</group>

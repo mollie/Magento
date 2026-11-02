@@ -124,6 +124,7 @@ class Mollie_Mpm_Helper_PaymentFee extends Mage_Core_Helper_Abstract
     public function methodSupportsPaymentFee($methodCode)
     {
         $supportedMethods = array(
+            'mollie_klarna',
             'mollie_klarnapaylater',
             'mollie_klarnapaynow',
             'mollie_klarnasliceit',

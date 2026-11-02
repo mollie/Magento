@@ -31,7 +31,7 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  * @deprecated  5.2.0 The Bitcoin method is no longer support by Mollie.
  */
-class Mollie_Mpm_Model_Method_Bitcoin extends Mollie_Mpm_Model_Method_Abstract
+class Mollie_Mpm_Model_Method_Bitcoin extends Mollie_Mpm_Model_Method_DiscontinuedAbstract
 {
 
     const METHOD_CODE = 'mollie_bitcoin';
@@ -55,10 +55,6 @@ class Mollie_Mpm_Model_Method_Bitcoin extends Mollie_Mpm_Model_Method_Abstract
     protected $_canRefund = false;
     protected $_canRefundInvoicePartial = false;
 
-    public function isAvailable($quote = null)
-    {
-        return false;
-    }
 
 
 }

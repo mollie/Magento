@@ -31,7 +31,7 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD-License 2
  */
 
-class Mollie_Mpm_Model_Method_Giropay extends Mollie_Mpm_Model_Method_Abstract
+class Mollie_Mpm_Model_Method_Giropay extends Mollie_Mpm_Model_Method_DiscontinuedAbstract
 {
 
     const METHOD_CODE = 'mollie_giropay';

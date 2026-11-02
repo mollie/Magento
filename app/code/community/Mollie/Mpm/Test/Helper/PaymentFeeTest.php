@@ -53,9 +53,10 @@ class Mollie_Mpm_Test_Helper_PaymentFeeTest extends Mollie_Mpm_Test_TestHelpers_
         $this->assertEquals(0.33842975206612, $result);
     }
 
-    public function methodSupportsPaymentFeeProvider()
+    public static function methodSupportsPaymentFeeProvider()
     {
         return [
+            ['mollie_klarna', true],
             ['mollie_klarnapaylater', true],
             ['mollie_klarnapaynow', true],
             ['mollie_klarnasliceit', true],
