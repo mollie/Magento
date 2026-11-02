@@ -7,6 +7,10 @@
 
 ***
 
+## Requirements ##
+
+PHP 7.2 or higher with the `curl`, `json` and `openssl` extensions.
+
 ## Installation & Update the Mollie Payments plugin ##
 
 [1. Installation through Magento Connect](https://github.com/mollie/Magento/wiki/Install-through-Magento-Connect)
