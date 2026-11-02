@@ -13,6 +13,7 @@ const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'Pay By Bank', code: 'mollie_paybybank' },
   { name: 'Wero', code: 'mollie_wero' },
   { name: 'Satispay', code: 'mollie_satispay' },
+  { name: 'Bancomat Pay', code: 'mollie_bancomatpay' },
 ];
 
 for (const method of REDIRECT_METHODS) {
