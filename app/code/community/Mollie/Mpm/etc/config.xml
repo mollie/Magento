@@ -597,6 +597,16 @@
                 <method>payment</method>
                 <payment_description>{ordernumber}</payment_description>
             </mollie_bizum>
+            <mollie_mbway>
+                <active>1</active>
+                <sort_order>350</sort_order>
+                <title>MB Way</title>
+                <model>mpm/method_mbway</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_mbway>
             <mollie_giftcard>
                 <active>0</active>
                 <sort_order>10</sort_order>

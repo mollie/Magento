@@ -1,4 +1,4 @@
-export type CountryCode = 'NL' | 'ES';
+export type CountryCode = 'NL' | 'ES' | 'PT';
 
 export type Address = {
   readonly firstname: string;
@@ -17,6 +17,7 @@ type Location = Pick<Address, 'street' | 'city' | 'postcode' | 'region' | 'telep
 const LOCATIONS: Readonly<Record<CountryCode, Location>> = {
   NL: { street: 'Keizersgracht 126', city: 'Amsterdam', postcode: '1015 CW', region: null, telephone: '0201234567' },
   ES: { street: 'Calle de Alcalá 1', city: 'Madrid', postcode: '28014', region: 'Madrid', telephone: '910000000' },
+  PT: { street: 'Avenida da Liberdade 1', city: 'Lisboa', postcode: '1250-096', region: null, telephone: '912345678' },
 };
 
 export const createCustomer = (countryId: CountryCode): Address => ({
