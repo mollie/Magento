@@ -34,8 +34,8 @@
 class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstract
 {
 
-    const METHODS_WITH_ORDER_LINES = array('klarna', 'riverty');
-    const METHODS_WITH_MANUAL_CAPTURE = array('riverty');
+    const METHODS_WITH_ORDER_LINES = array('klarna', 'riverty', 'billink');
+    const METHODS_WITH_MANUAL_CAPTURE = array('riverty', 'billink');
     const CAPTURE_MODE_AUTOMATIC = 'automatic';
     const CAPTURE_MODE_MANUAL = 'manual';
 

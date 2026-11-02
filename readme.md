@@ -55,6 +55,8 @@ Mollie requires no minimum costs, no fixed contracts, no hidden costs. At Mollie
 
 - Przelewy24
 
+- Billink
+
 - Riverty
 
 - Klarna
@@ -84,7 +86,7 @@ Mollie requires no minimum costs, no fixed contracts, no hidden costs. At Mollie
 - Pay By Bank
 
 ## Authorize and capture ##
-Riverty payments are authorized at checkout and captured when the order is shipped in Magento. The invoice is created as soon as Mollie confirms the capture. Canceling the order releases the authorization.
+Riverty and Billink payments are authorized at checkout and captured when the order is shipped in Magento. The invoice is created as soon as Mollie confirms the capture. Canceling the order releases the authorization.
 
 Track & trace information is not sent to Mollie for these payments, because Mollie's Captures API does not support it. Orders placed through the Orders API keep sending it.
 
