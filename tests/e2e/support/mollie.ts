@@ -11,24 +11,26 @@ const MAX_MOLLIE_REDIRECTS = 5;
 const isMollieReturn = (url: URL): boolean =>
   url.host === MOLLIE_HOST && /^\/checkout\/(?:[a-z0-9]+\/)?return\//.test(url.pathname);
 
+const isMollieTestMode = (url: URL): boolean => url.host === MOLLIE_HOST && url.pathname === '/checkout/test-mode';
+
+const leadsBackToTheShop = (url: URL): boolean => isMollieReturn(url) || isMollieTestMode(url);
+
 const redirectTarget = (response: APIResponse): URL | null => {
   const location = response.headers()['location'];
 
   return location === undefined ? null : new URL(location, response.url());
 };
 
-const followMollieRedirects = async (request: APIRequestContext, first: APIResponse): Promise<URL> => {
+const followMollieRedirects = async (request: APIRequestContext, first: APIResponse): Promise<URL | null> => {
   let target = redirectTarget(first);
   for (let hop = 0; target !== null && target.host === MOLLIE_HOST && hop < MAX_MOLLIE_REDIRECTS; hop++) {
     target = redirectTarget(await request.get(target.toString(), { maxRedirects: 0 }));
   }
 
-  if (target === null || target.host === MOLLIE_HOST) {
-    throw new Error(`Mollie did not redirect back to the shop, last hop: ${String(target)}`);
-  }
-
-  return target;
+  return target !== null && target.host !== MOLLIE_HOST ? target : null;
 };
+
+const HOLDING_PAGE = { status: 200, contentType: 'text/html', body: '<p>Holding the customer at Mollie</p>' };
 
 export const selectIdealIssuer = async (page: Page, issuer: string): Promise<void> => {
   await page.waitForURL('https://www.mollie.com/checkout/select-issuer/ideal/**');
@@ -46,21 +48,28 @@ export const completeTestPayment = async (page: Page, status: MollieTestStatus):
 };
 
 export const completeTestPaymentWithoutReturning = async (page: Page, status: MollieTestStatus): Promise<string> => {
-  const returnUrl = new Promise<string>((resolve, reject) => {
-    void page.route(isMollieReturn, async (route) => {
-      try {
-        const shopUrl = await followMollieRedirects(page.context().request, await route.fetch({ maxRedirects: 0 }));
-        resolve(shopUrl.toString());
-      } catch (error) {
-        reject(error);
+  const returnUrl = new Promise<string>((resolve) => {
+    void page.route(leadsBackToTheShop, async (route) => {
+      if (route.request().method() === 'GET' && isMollieTestMode(new URL(route.request().url()))) {
+        await route.continue();
+        return;
       }
-      await route.fulfill({ status: 200, contentType: 'text/html', body: '<p>Holding the customer at Mollie</p>' });
+
+      const response = await route.fetch({ maxRedirects: 0 });
+      const shopUrl = await followMollieRedirects(page.context().request, response);
+      if (shopUrl === null) {
+        await route.fulfill({ response });
+        return;
+      }
+
+      resolve(shopUrl.toString());
+      await route.fulfill(HOLDING_PAGE);
     });
   });
 
   await submitTestStatus(page, status);
   const url = await returnUrl;
-  await page.unroute(isMollieReturn);
+  await page.unroute(leadsBackToTheShop);
 
   return url;
 };
