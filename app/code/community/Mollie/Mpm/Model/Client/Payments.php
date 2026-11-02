@@ -34,6 +34,9 @@
 class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstract
 {
 
+    const METHODS_WITH_ORDER_LINES = array('klarna');
+    const CAPTURE_MODE_AUTOMATIC = 'automatic';
+
     const CHECKOUT_TYPE = 'payment';
 
     /**
@@ -106,6 +109,11 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
             $paymentData['shippingAddress'] = $this->getAddressLine($order->getShippingAddress());
         }
 
+        if (in_array($method, self::METHODS_WITH_ORDER_LINES, true)) {
+            $paymentData['lines'] = $this->getPaymentLines($order);
+            $paymentData['captureMode'] = self::CAPTURE_MODE_AUTOMATIC;
+        }
+
         $paymentData = $this->mollieHelper->validatePaymentData($paymentData);
         $this->mollieHelper->addTolog('request', $paymentData);
 
@@ -122,13 +130,47 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
      */
     public function getAddressLine(Mage_Sales_Model_Order_Address $address)
     {
-        return array(
-            'streetAndNumber' => rtrim(implode(' ', $address->getStreet()), ' '),
-            'postalCode'      => $address->getPostcode(),
-            'city'            => $address->getCity(),
-            'region'          => $address->getRegion(),
-            'country'         => $address->getCountryId(),
+        return array_merge(
+            array(
+                'givenName'       => $address->getFirstname(),
+                'familyName'      => $address->getLastname(),
+                'email'           => $address->getEmail() ?: $address->getOrder()->getCustomerEmail(),
+                'streetAndNumber' => rtrim(implode(' ', $address->getStreet()), ' '),
+                'postalCode'      => $address->getPostcode(),
+                'city'            => $address->getCity(),
+                'region'          => $address->getRegion(),
+                'country'         => $address->getCountryId(),
+            ),
+            array_filter(array('organizationName' => $address->getCompany()))
         );
+    }
+
+    /**
+     * The Payments API calls the name of an order line its description.
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @return array
+     */
+    private function getPaymentLines(Mage_Sales_Model_Order $order)
+    {
+        /** @var Mollie_Mpm_Model_OrderLines $orderLines */
+        $orderLines = Mage::getModel('mpm/orderLines');
+
+        return array_map(array($this, 'toPaymentLine'), $orderLines->getOrderLines($order));
+    }
+
+    /**
+     * @param array $orderLine
+     *
+     * @return array
+     */
+    private function toPaymentLine(array $orderLine)
+    {
+        $orderLine['description'] = $orderLine['name'];
+        unset($orderLine['name']);
+
+        return $orderLine;
     }
 
     /**
