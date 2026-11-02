@@ -65,7 +65,7 @@ $status = $this->getPaymentStatus();
             <?php endif; ?>
             <?php if ($status): ?>
                 <tr>
-                    <td class="label"><?= __('Payment Status'); ?></td>
+                    <td class="label"><?= $this->__('Payment Status'); ?></td>
                     <td class="value">
                         <?= ucfirst($status); ?>
                     </td>
