@@ -34,8 +34,10 @@
 class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstract
 {
 
-    const METHODS_WITH_ORDER_LINES = array('klarna');
+    const METHODS_WITH_ORDER_LINES = array('klarna', 'riverty');
+    const METHODS_WITH_MANUAL_CAPTURE = array('riverty');
     const CAPTURE_MODE_AUTOMATIC = 'automatic';
+    const CAPTURE_MODE_MANUAL = 'manual';
 
     const CHECKOUT_TYPE = 'payment';
 
@@ -111,13 +113,14 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
 
         if (in_array($method, self::METHODS_WITH_ORDER_LINES, true)) {
             $paymentData['lines'] = $this->getPaymentLines($order);
-            $paymentData['captureMode'] = self::CAPTURE_MODE_AUTOMATIC;
+            $paymentData['captureMode'] = $this->getCaptureMode($method);
         }
 
         $paymentData = $this->mollieHelper->validatePaymentData($paymentData);
         $this->mollieHelper->addTolog('request', $paymentData);
 
         $payment = $mollieApi->payments->create($paymentData);
+        $order->getPayment()->setAdditionalInformation('capture_mode', $payment->captureMode);
         $this->processResponse($order, $payment);
 
         return $payment->getCheckoutUrl();
@@ -143,6 +146,80 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
             ),
             array_filter(array('organizationName' => $address->getCompany()))
         );
+    }
+
+    /**
+     * Captures the full authorized amount. Mollie's webhook for the capture creates the invoice.
+     *
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @throws \Mollie\Api\Exceptions\ApiException
+     */
+    public function captureAuthorizedPayment(Mage_Sales_Model_Order $order)
+    {
+        $order->getPayment()->setAdditionalInformation('payment_status', 'capture_requested');
+        $order->addStatusHistoryComment($this->mollieHelper->__('Mollie: requested the capture of the authorized payment.'));
+        $order->save();
+
+        try {
+            $mollieApi = $this->mollieHelper->getMollieAPI($this->mollieHelper->getApiKey($order->getStoreId()));
+            $capture = $mollieApi->paymentCaptures->createForId($order->getMollieTransactionId());
+            $this->mollieHelper->addTolog('capture', $capture);
+        } catch (\Mollie\Api\Exceptions\ApiException $exception) {
+            $this->registerFailedCapture($order, $exception);
+        }
+    }
+
+    /**
+     * The shipment is already saved, so the merchant has to capture the payment in the Mollie Dashboard.
+     *
+     * @param Mage_Sales_Model_Order                  $order
+     * @param \Mollie\Api\Exceptions\ApiException $exception
+     */
+    private function registerFailedCapture(Mage_Sales_Model_Order $order, \Mollie\Api\Exceptions\ApiException $exception)
+    {
+        $message = $this->mollieHelper->__('Mollie: unable to capture the authorized payment: %s', $exception->getMessage());
+        $this->mollieHelper->addTolog('error', $exception->getMessage());
+        $order->getPayment()->setAdditionalInformation('payment_status', 'authorized');
+        $order->addStatusHistoryComment($message)->save();
+
+        if (Mage::app()->getStore()->isAdmin()) {
+            Mage::getSingleton('adminhtml/session')->addError($message);
+        }
+    }
+
+    /**
+     * The order is canceled even when Mollie refuses, so the merchant can release it in the Mollie Dashboard.
+     *
+     * @param Mage_Sales_Model_Order $order
+     */
+    public function releaseAuthorization(Mage_Sales_Model_Order $order)
+    {
+        try {
+            $mollieApi = $this->mollieHelper->getMollieAPI($this->mollieHelper->getApiKey($order->getStoreId()));
+            $mollieApi->payments->releaseAuthorization($order->getMollieTransactionId());
+        } catch (\Mollie\Api\Exceptions\ApiException $exception) {
+            $this->mollieHelper->addTolog('error', $exception->getMessage());
+            $order->addStatusHistoryComment(
+                $this->mollieHelper->__('Mollie: unable to release the authorized payment: %s', $exception->getMessage())
+            );
+            return;
+        }
+
+        $order->getPayment()->setAdditionalInformation('payment_status', 'release_requested');
+        $order->addStatusHistoryComment($this->mollieHelper->__('Mollie: released the authorized payment.'));
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return string
+     */
+    private function getCaptureMode($method)
+    {
+        return in_array($method, self::METHODS_WITH_MANUAL_CAPTURE, true)
+            ? self::CAPTURE_MODE_MANUAL
+            : self::CAPTURE_MODE_AUTOMATIC;
     }
 
     /**
@@ -238,7 +315,7 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
                 $payment->setAdditionalInformation('details', json_encode($paymentData->details));
             }
 
-            if (!$payment->getIsTransactionClosed() && $type == 'webhook') {
+            if (!$payment->getIsTransactionClosed() && $type == 'webhook' && !$order->hasInvoices()) {
                 if ($order->isCanceled()) {
                     $order = $this->mollieHelper->uncancelOrder($order);
                 }
@@ -263,14 +340,7 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
                     }
                 }
 
-                if (!$order->getEmailSent()) {
-                    try {
-                        $order->sendNewOrderEmail()->setEmailSent(true)->save();
-                    } catch (\Exception $exception) {
-                        $message = $this->mollieHelper->__('Unable to send the new order email: %s', $exception->getMessage());
-                        $order->addStatusHistoryComment($message)->save();
-                    }
-                }
+                $this->sendNewOrderEmail($order);
 
                 if ($order->hasInvoices()) {
                     if (!$order->getIsVirtual() && $order->getState() == Mage_Sales_Model_Order::STATE_PROCESSING) {
@@ -303,6 +373,28 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
             return $msg;
         }
 
+        if ($status == 'authorized') {
+            $awaitsPayment = in_array(
+                $order->getState(),
+                array(Mage_Sales_Model_Order::STATE_NEW, Mage_Sales_Model_Order::STATE_PENDING_PAYMENT),
+                true
+            );
+            if ($type == 'webhook' && $awaitsPayment) {
+                $order->setState(
+                    Mage_Sales_Model_Order::STATE_PROCESSING,
+                    true,
+                    $this->mollieHelper->__('Mollie: the payment is authorized and will be captured when the order ships.')
+                );
+                $this->sendNewOrderEmail($order);
+                $order->save();
+            }
+
+            $msg = array('success' => true, 'status' => 'authorized', 'order_id' => $orderId, 'type' => $type);
+            $this->mollieHelper->addTolog('success', $msg);
+            $this->checkCheckoutSession($order, $paymentToken, $paymentData, $type);
+            return $msg;
+        }
+
         if ($refunded) {
             $msg = array('success' => true, 'status' => 'refunded', 'order_id' => $orderId, 'type' => $type);
             $this->mollieHelper->addTolog('success', $msg);
@@ -311,12 +403,7 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
 
         if ($status == 'open') {
             if ($paymentData->method == 'banktransfer' && !$order->getEmailSent()) {
-                try {
-                    $order->sendNewOrderEmail()->setEmailSent(true)->save();
-                } catch (\Exception $exception) {
-                    $message = $this->mollieHelper->__('Unable to send the new order email: %s', $exception->getMessage());
-                    $order->addStatusHistoryComment($message)->save();
-                }
+                $this->sendNewOrderEmail($order);
 
                 $message = $this->mollieHelper->__('New order email sent');
                 if (!$statusPending = $this->mollieHelper->getStatusPendingBanktransfer($storeId)) {
@@ -351,6 +438,23 @@ class Mollie_Mpm_Model_Client_Payments extends Mage_Payment_Model_Method_Abstrac
         }
 
         return array();
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     */
+    private function sendNewOrderEmail(Mage_Sales_Model_Order $order)
+    {
+        if ($order->getEmailSent()) {
+            return;
+        }
+
+        try {
+            $order->sendNewOrderEmail()->setEmailSent(true)->save();
+        } catch (\Exception $exception) {
+            $message = $this->mollieHelper->__('Unable to send the new order email: %s', $exception->getMessage());
+            $order->addStatusHistoryComment($message)->save();
+        }
     }
 
     /**

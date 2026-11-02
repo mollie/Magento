@@ -625,6 +625,20 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @param Mage_Sales_Model_Order $order
      *
+     * @return bool
+     */
+    public function isAwaitingManualCapture(Mage_Sales_Model_Order $order)
+    {
+        $payment = $order->getPayment();
+
+        return $payment->getAdditionalInformation('checkout_type') == Mollie_Mpm_Model_Client_Payments::CHECKOUT_TYPE
+            && $payment->getAdditionalInformation('capture_mode') == Mollie_Mpm_Model_Client_Payments::CAPTURE_MODE_MANUAL
+            && $payment->getAdditionalInformation('payment_status') == 'authorized';
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     *
      * @return mixed
      */
     public function getCheckoutType(Mage_Sales_Model_Order $order)

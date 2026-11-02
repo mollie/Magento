@@ -1,6 +1,6 @@
 import { APIRequestContext, APIResponse, Page } from '@playwright/test';
 
-export type MollieTestStatus = 'open' | 'paid' | 'failed' | 'canceled' | 'expired';
+export type MollieTestStatus = 'open' | 'paid' | 'authorized' | 'failed' | 'canceled' | 'expired';
 
 export const ING_ISSUER = 'ideal_INGBNL2A';
 

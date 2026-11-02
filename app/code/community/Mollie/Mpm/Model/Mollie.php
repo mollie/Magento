@@ -224,6 +224,24 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
     }
 
     /**
+     * @param Mage_Sales_Model_Order $order
+     *
+     * @throws \Mollie\Api\Exceptions\ApiException
+     */
+    public function captureAuthorizedPayment(Mage_Sales_Model_Order $order)
+    {
+        $this->paymentsApi->captureAuthorizedPayment($order);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     */
+    public function releaseAuthorization(Mage_Sales_Model_Order $order)
+    {
+        $this->paymentsApi->releaseAuthorization($order);
+    }
+
+    /**
      * @param Mage_Sales_Model_Order_Shipment       $shipment
      * @param Mage_Sales_Model_Order_Shipment_Track $track
      * @param Mage_Sales_Model_Order                $order
