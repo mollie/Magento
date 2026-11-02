@@ -787,6 +787,39 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * @param Mage_Sales_Model_Quote|null $quote
+     *
+     * @return array
+     */
+    private function getAmountFilter($quote)
+    {
+        $amount = $quote !== null ? $this->getOrderAmountByQuote($quote) : null;
+        if ($amount === null || $amount['value'] <= 0) {
+            return array();
+        }
+
+        return array(
+            'amount[value]'    => $amount['value'],
+            'amount[currency]' => $amount['currency'],
+        );
+    }
+
+    /**
+     * @param Mage_Sales_Model_Quote|null $quote
+     *
+     * @return array
+     */
+    private function getBillingCountryFilter($quote)
+    {
+        $countryId = $quote !== null ? (string)$quote->getBillingAddress()->getCountryId() : '';
+        if ($countryId === '') {
+            return array();
+        }
+
+        return array('billingCountry' => $countryId);
+    }
+
+    /**
      * @param        $storeId
      * @param null   $quote
      * @param string $resource
@@ -806,26 +839,17 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
 
         try {
             $mollieApi = $this->getMollieAPI($apiKey);
-            $amount = $quote !== null ? $this->getOrderAmountByQuote($quote) : null;
-            if ($amount !== null && $amount['value'] > 0) {
-                $this->mollieMethods = $mollieApi->methods->all(
+            $this->mollieMethods = $mollieApi->methods->all(
+                array_merge(
                     array(
-                        'resource'         => $resource,
-                        'include'          => $include,
-                        'amount[value]'    => $amount['value'],
-                        'amount[currency]' => $amount['currency'],
-                        'includeWallets'   => 'applepay',
-                    )
-                );
-            } else {
-                $this->mollieMethods = $mollieApi->methods->all(
-                    array(
-                        'resource' => $resource,
-                        'include'  => $include,
+                        'resource'       => $resource,
+                        'include'        => $include,
                         'includeWallets' => 'applepay',
-                    )
-                );
-            }
+                    ),
+                    $this->getAmountFilter($quote),
+                    $this->getBillingCountryFilter($quote)
+                )
+            );
 
             // Remove issuers for iDEAL 2.0
             foreach ($this->mollieMethods as $method) {
