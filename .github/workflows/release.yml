@@ -40,16 +40,12 @@ jobs:
 
       - name: Check bundled libraries are present
         run: |
-          for file in \
-            lib/Mollie/Mollie/src/MollieApiClient.php \
-            lib/Mollie/GuzzleHttp/Guzzle/src/Client.php \
-            lib/Mollie/GuzzleHttp/Psr7/src/functions_include.php \
-            lib/Mollie/GuzzleHttp/Promises/src/functions_include.php \
-            lib/Mollie/Psr/HttpMessage/src/MessageInterface.php \
-            lib/Mollie/Composer/CaBundle/res/cacert.pem
-          do
-            test -f "$file" || { echo "::error::Missing $file, submodule not checked out"; exit 1; }
-          done
+          git submodule status --recursive
+          if git submodule status --recursive | grep -qE '^[-+U]'; then
+            echo "::error::Not every submodule is checked out at its pinned commit"
+            exit 1
+          fi
+          test -f lib/Mollie/Mollie/src/MollieApiClient.php || { echo "::error::Mollie API client is missing"; exit 1; }
 
       - name: Build zip
         run: |
