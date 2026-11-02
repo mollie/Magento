@@ -1,4 +1,5 @@
 import { expect, Page } from '@playwright/test';
+import { releaseCustomer } from './mollie';
 import { findLatestOrderByEmail, PlacedOrder } from './orders';
 
 export const expectOrderPaidByWebhook = async (email: string, expectedState = 'processing'): Promise<PlacedOrder> => {
@@ -21,6 +22,7 @@ export const expectOrderPaidByWebhook = async (email: string, expectedState = 'p
 export const expectSuccessPageForOrder = async (page: Page, returnUrl: string, incrementId: string): Promise<void> => {
   expect(new URL(returnUrl).pathname).toContain('/mpm/api/return');
 
+  await releaseCustomer(page);
   await page.goto(returnUrl);
 
   await expect(page).toHaveURL(/checkout\/onepage\/success/);

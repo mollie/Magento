@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 export type CountryCode = 'NL' | 'ES' | 'PT';
 
 export type Address = {
@@ -23,7 +25,7 @@ const LOCATIONS: Readonly<Record<CountryCode, Location>> = {
 export const createCustomer = (countryId: CountryCode): Address => ({
   firstname: 'Test',
   lastname: 'Mollie',
-  email: `e2e+${countryId.toLowerCase()}${Date.now()}@example.com`,
+  email: `e2e+${countryId.toLowerCase()}-${randomUUID()}@example.com`,
   countryId,
   ...LOCATIONS[countryId],
 });

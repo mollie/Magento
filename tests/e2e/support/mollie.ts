@@ -1,4 +1,4 @@
-import { APIRequestContext, APIResponse, Page } from '@playwright/test';
+import { APIRequestContext, APIResponse, Page, Route } from '@playwright/test';
 
 export type MollieTestStatus = 'open' | 'paid' | 'authorized' | 'failed' | 'canceled' | 'expired';
 
@@ -47,11 +47,34 @@ export const completeTestPayment = async (page: Page, status: MollieTestStatus):
   await submitTestStatus(page, status);
 };
 
+const isSupersededNavigation = (error: unknown): boolean =>
+  error instanceof Error && /Route is already handled|Target page, context or browser has been closed/.test(error.message);
+
+const holdCustomer = async (route: Route): Promise<void> => {
+  try {
+    await route.fulfill(HOLDING_PAGE);
+  } catch (error) {
+    if (!isSupersededNavigation(error)) {
+      throw error;
+    }
+  }
+};
+
+/**
+ * Keeps the browser at Mollie, also for later navigations back to the shop, until the test releases it
+ * with releaseCustomer(). Mollie's page can navigate back more than once.
+ */
 export const completeTestPaymentWithoutReturning = async (page: Page, status: MollieTestStatus): Promise<string> => {
+  let shopReturnUrl: string | null = null;
   const returnUrl = new Promise<string>((resolve) => {
     void page.route(leadsBackToTheShop, async (route) => {
       if (route.request().method() === 'GET' && isMollieTestMode(new URL(route.request().url()))) {
         await route.continue();
+        return;
+      }
+
+      if (shopReturnUrl !== null) {
+        await holdCustomer(route);
         return;
       }
 
@@ -62,14 +85,17 @@ export const completeTestPaymentWithoutReturning = async (page: Page, status: Mo
         return;
       }
 
-      resolve(shopUrl.toString());
-      await route.fulfill(HOLDING_PAGE);
+      shopReturnUrl = shopUrl.toString();
+      resolve(shopReturnUrl);
+      await holdCustomer(route);
     });
   });
 
   await submitTestStatus(page, status);
-  const url = await returnUrl;
-  await page.unroute(leadsBackToTheShop);
 
-  return url;
+  return returnUrl;
+};
+
+export const releaseCustomer = async (page: Page): Promise<void> => {
+  await page.unroute(leadsBackToTheShop);
 };
