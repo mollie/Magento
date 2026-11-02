@@ -12,6 +12,7 @@ export type Address = {
   readonly region: string | null;
   readonly countryId: CountryCode;
   readonly telephone: string;
+  readonly company: string | null;
 };
 
 type Location = Pick<Address, 'street' | 'city' | 'postcode' | 'region' | 'telephone'>;
@@ -27,5 +28,11 @@ export const createCustomer = (countryId: CountryCode): Address => ({
   lastname: 'Mollie',
   email: `e2e+${countryId.toLowerCase()}-${randomUUID()}@example.com`,
   countryId,
+  company: null,
   ...LOCATIONS[countryId],
+});
+
+export const createBusinessCustomer = (countryId: CountryCode): Address => ({
+  ...createCustomer(countryId),
+  company: 'Mollie Test B.V.',
 });

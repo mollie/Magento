@@ -23,6 +23,9 @@ const fillBillingAddress = async (page: Page, address: Address): Promise<void> =
   }
   await billingField(page, 'firstname').fill(address.firstname);
   await billingField(page, 'lastname').fill(address.lastname);
+  if (address.company !== null) {
+    await billingField(page, 'company').fill(address.company);
+  }
   await billingField(page, 'email').fill(address.email);
   await billingField(page, 'street1').fill(address.street);
   await billingField(page, 'city').fill(address.city);
