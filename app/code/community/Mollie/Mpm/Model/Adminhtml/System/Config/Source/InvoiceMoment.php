@@ -11,15 +11,15 @@ class Mollie_Mpm_Model_Adminhtml_System_Config_Source_InvoiceMoment
         return array(
             array(
                 'value' => static::ON_AUTHORIZE_PAID_BEFORE_SHIPMENT,
-                'label' => __('On Authorize and set status Paid before shipment'),
+                'label' => Mage::helper('mpm')->__('On Authorize and set status Paid before shipment'),
             ),
             array(
                 'value' => static::ON_AUTHORIZE_PAID_AFTER_SHIPMENT,
-                'label' => __('On Authorize and set status Paid after shipment'),
+                'label' => Mage::helper('mpm')->__('On Authorize and set status Paid after shipment'),
             ),
             array(
                 'value' => static::ON_SHIPMENT,
-                'label' => __('On Shipment'),
+                'label' => Mage::helper('mpm')->__('On Shipment'),
             )
         );
     }

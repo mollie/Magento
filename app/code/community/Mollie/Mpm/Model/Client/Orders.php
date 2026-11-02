@@ -304,7 +304,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                     try {
                         $order->sendNewOrderEmail()->setEmailSent(true)->save();
                     } catch (\Exception $exception) {
-                        $message = __('Unable to send the new order email: %1', $exception->getMessage());
+                        $message = $this->mollieHelper->__('Unable to send the new order email: %s', $exception->getMessage());
                         $order->addStatusHistoryComment($message)->save();
                     }
                 }
@@ -313,7 +313,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                     try {
                         $invoice->setEmailSent(true)->sendEmail()->save();
                     } catch (\Exception $exception) {
-                        $message = __('Unable to send the invoice: %1', $exception->getMessage());
+                        $message = $this->mollieHelper->__('Unable to send the invoice: %s', $exception->getMessage());
                         $order->addStatusHistoryComment($message)->save();
                     }
                 }
@@ -343,7 +343,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
                 try {
                     $order->sendNewOrderEmail()->setEmailSent(true)->save();
                 } catch (\Exception $exception) {
-                    $message = __('Unable to send the new order email: %1', $exception->getMessage());
+                    $message = $this->mollieHelper->__('Unable to send the new order email: %s', $exception->getMessage());
                     $order->addStatusHistoryComment($message)->save();
                 }
                 $message = $this->mollieHelper->__('New order email sent');
@@ -492,7 +492,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
             if ($mollieOrder->status == 'completed') {
                 Mage::getSingleton('adminhtml/session')->addWarning(
-                    __('All items in this order where already marked as shipped in the Mollie dashboard.')
+                    $this->mollieHelper->__('All items in this order where already marked as shipped in the Mollie dashboard.')
                 );
                 return $this;
             }
@@ -504,7 +504,7 @@ class Mollie_Mpm_Model_Client_Orders extends Mage_Payment_Model_Method_Abstract
 
                 if ($mollieOrder->status == 'shipping' && !$this->itemsAreShippable($mollieOrder, $orderLines)) {
                     Mage::getSingleton('adminhtml/session')->addWarning(
-                        __('All items in this order where already marked as shipped in the Mollie dashboard.')
+                        $this->mollieHelper->__('All items in this order where already marked as shipped in the Mollie dashboard.')
                     );
                     return $this;
                 }
