@@ -20,6 +20,7 @@ const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'Bancomat Pay', code: 'mollie_bancomatpay' },
   { name: 'Bizum', code: 'mollie_bizum', country: 'ES' },
   { name: 'MB Way', code: 'mollie_mbway', country: 'PT' },
+  { name: 'Vipps', code: 'mollie_vipps' },
 ];
 
 test.beforeAll(() => enableTestCurrencies());
