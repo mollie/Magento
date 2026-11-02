@@ -647,6 +647,16 @@
                 <method>payment</method>
                 <payment_description>{ordernumber}</payment_description>
             </mollie_blik>
+            <mollie_swish>
+                <active>1</active>
+                <sort_order>400</sort_order>
+                <title>Swish</title>
+                <model>mpm/method_swish</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_swish>
             <mollie_giftcard>
                 <active>0</active>
                 <sort_order>10</sort_order>

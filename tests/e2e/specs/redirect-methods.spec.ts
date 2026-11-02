@@ -24,6 +24,7 @@ const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'MobilePay', code: 'mollie_mobilepay' },
   { name: 'TWINT', code: 'mollie_twint', currency: 'CHF' },
   { name: 'Blik', code: 'mollie_blik', currency: 'PLN' },
+  { name: 'Swish', code: 'mollie_swish', currency: 'SEK' },
 ];
 
 test.beforeAll(() => enableTestCurrencies());
