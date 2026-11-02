@@ -148,16 +148,7 @@ class Mollie_Mpm_Block_Payment_Info_Base extends Mage_Payment_Block_Info
 
     public function getcardLabel()
     {
-        try {
-            $details = json_decode($this->getInfo()->getAdditionalInformation('details'));
-            if (isset($details->cardLabel)) {
-                return $details->cardLabel;
-            }
-        } catch (\Exception $e) {
-            $this->mollieHelper->addTolog('error', $e->getMessage());
-        }
-
-        return '';
+        return (string)$this->getPaymentDetail('cardLabel');
     }
 
     public function getIssuer()
@@ -171,31 +162,37 @@ class Mollie_Mpm_Block_Payment_Info_Base extends Mage_Payment_Block_Info
 
     public function getConsumerName()
     {
-        try {
-            $details = json_decode($this->getInfo()->getAdditionalInformation('details'), true);
-            return $details['consumerName'];
-        } catch (\Exception $exception) {
-            return null;
-        }
+        return $this->getPaymentDetail('consumerName');
     }
 
     public function getIban()
     {
-        try {
-            $details = json_decode($this->getInfo()->getAdditionalInformation('details'), true);
-            return $details['consumerAccount'];
-        } catch (\Exception $exception) {
-            return null;
-        }
+        return $this->getPaymentDetail('consumerAccount');
     }
 
     public function getBic()
     {
-        try {
-            $details = json_decode($this->getInfo()->getAdditionalInformation('details'), true);
-            return $details['consumerBic'];
-        } catch (\Exception $exception) {
-            return null;
-        }
+        return $this->getPaymentDetail('consumerBic');
+    }
+
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
+    private function getPaymentDetail($key)
+    {
+        $details = $this->getPaymentDetails();
+
+        return array_key_exists($key, $details) ? $details[$key] : null;
+    }
+
+    /**
+     * @return array
+     */
+    private function getPaymentDetails()
+    {
+        $details = json_decode((string)$this->getInfo()->getAdditionalInformation('details'), true);
+
+        return is_array($details) ? $details : array();
     }
 }
