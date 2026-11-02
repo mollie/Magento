@@ -35,7 +35,7 @@ const chooseFlatRateShipping = async (page: Page): Promise<void> => {
 };
 
 const choosePaymentMethod = async (page: Page, methodCode: string): Promise<void> => {
-  await page.locator(`#p_method_${methodCode}`).check();
+  await page.locator(`#p_method_${methodCode}`).check({ timeout: 15_000 });
   await page.locator('#payment-buttons-container button').click();
 };
 
