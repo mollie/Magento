@@ -44,6 +44,8 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
     const XPATH_LIVE_APIKEY = 'payment/mollie/apikey_live';
     const XPATH_TEST_APIKEY = 'payment/mollie/apikey_test';
     const XPATH_DEBUG = 'payment/mollie/debug';
+    const XPATH_USE_WEBHOOKS = 'payment/mollie/use_webhooks';
+    const XPATH_CUSTOM_WEBHOOK_URL = 'payment/mollie/custom_webhook_url';
     const XPATH_LOADING_SCREEN = 'payment/mollie/loading_screen';
     const XPATH_STATUS_PENDING = 'payment/mollie/order_status_pending';
     const XPATH_CANCEL_FAILED_ORDERS = 'payment/mollie/cancel_failed_orders';
@@ -293,6 +295,60 @@ class Mollie_Mpm_Helper_Data extends Mage_Core_Helper_Abstract
      * @return string
      */
     public function getWebhookUrl($storeId = null)
+    {
+        if ($this->isWebhookDisabled($storeId)) {
+            return '';
+        }
+
+        $customWebhookUrl = $this->getCustomWebhookUrl($storeId);
+        if ($customWebhookUrl !== '') {
+            return $customWebhookUrl;
+        }
+
+        return $this->getDefaultWebhookUrl($storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return bool
+     */
+    private function isWebhookDisabled($storeId)
+    {
+        return $this->getModus($storeId) === 'test'
+            && $this->getWebhookOption($storeId) === Mollie_Mpm_Model_Adminhtml_System_Config_Source_WebhookUrlOptions::DISABLED;
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    private function getCustomWebhookUrl($storeId)
+    {
+        if ($this->getWebhookOption($storeId) !== Mollie_Mpm_Model_Adminhtml_System_Config_Source_WebhookUrlOptions::CUSTOM_URL) {
+            return '';
+        }
+
+        return $this->getStoreConfig(self::XPATH_CUSTOM_WEBHOOK_URL, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    private function getWebhookOption($storeId)
+    {
+        return $this->getStoreConfig(self::XPATH_USE_WEBHOOKS, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return string
+     */
+    private function getDefaultWebhookUrl($storeId)
     {
         if ($storeId !== null) {
             return Mage::getUrl('mpm/api/webhook', array('_store' => $storeId));
