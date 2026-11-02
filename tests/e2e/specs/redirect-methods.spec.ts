@@ -11,6 +11,7 @@ type RedirectMethod = {
 
 const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'Pay By Bank', code: 'mollie_paybybank' },
+  { name: 'Wero', code: 'mollie_wero' },
 ];
 
 for (const method of REDIRECT_METHODS) {
