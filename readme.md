@@ -39,21 +39,13 @@ Mollie requires no minimum costs, no fixed contracts, no hidden costs. At Mollie
 
 - Belfius Pay Button
 
-- ING HomePay
-
 - KBC/CBC-Betaalknop
 
-- SOFORT Banking
-
 - EPS
-
-- Giropay
 
 - PayPal
 
 - Paysafecard
-
-- Klarna
 
 - SEPA bank transfer
 

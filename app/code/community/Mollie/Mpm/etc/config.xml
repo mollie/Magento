@@ -366,7 +366,7 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_belfius>
             <mollie_bitcoin>
-                <active>1</active>
+                <active>0</active>
                 <sort_order>30</sort_order>
                 <title>Bitcoin</title>
                 <model>mpm/method_bitcoin</model>
@@ -427,7 +427,7 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_paysafecard>
             <mollie_sofort>
-                <active>1</active>
+                <active>0</active>
                 <sort_order>90</sort_order>
                 <title>Sofort</title>
                 <model>mpm/method_sofort</model>
@@ -437,7 +437,7 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_sofort>
             <mollie_inghomepay>
-                <active>1</active>
+                <active>0</active>
                 <sort_order>100</sort_order>
                 <title>ING Homepay</title>
                 <model>mpm/method_inghomepay</model>
@@ -447,7 +447,7 @@
                 <payment_description>{ordernumber}</payment_description>
             </mollie_inghomepay>
             <mollie_giropay>
-                <active>1</active>
+                <active>0</active>
                 <sort_order>110</sort_order>
                 <title>Giropay</title>
                 <model>mpm/method_giropay</model>
@@ -477,7 +477,7 @@
                 <invoice_moment>shipment</invoice_moment>
             </mollie_in3>
             <mollie_klarnapaylater>
-                <active>1</active>
+                <active>0</active>
                 <sort_order>140</sort_order>
                 <title>Klarna Pay Later</title>
                 <model>mpm/method_klarnapaylater</model>
@@ -487,7 +487,7 @@
                 <invoice_moment>shipment</invoice_moment>
             </mollie_klarnapaylater>
             <mollie_klarnapaynow>
-                <active>1</active>
+                <active>0</active>
                 <sort_order>150</sort_order>
                 <title>Klarna Pay Now</title>
                 <model>mpm/method_klarnapaynow</model>
@@ -497,7 +497,7 @@
                 <invoice_moment>shipment</invoice_moment>
             </mollie_klarnapaynow>
             <mollie_klarnasliceit>
-                <active>1</active>
+                <active>0</active>
                 <sort_order>160</sort_order>
                 <title>Klarna Slice</title>
                 <model>mpm/method_klarnasliceit</model>
