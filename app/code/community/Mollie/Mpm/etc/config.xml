@@ -587,6 +587,16 @@
                 <method>payment</method>
                 <payment_description>{ordernumber}</payment_description>
             </mollie_bancomatpay>
+            <mollie_bizum>
+                <active>1</active>
+                <sort_order>340</sort_order>
+                <title>Bizum</title>
+                <model>mpm/method_bizum</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_bizum>
             <mollie_giftcard>
                 <active>0</active>
                 <sort_order>10</sort_order>

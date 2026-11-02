@@ -18,6 +18,9 @@ const continueAsGuest = async (page: Page): Promise<void> => {
 
 const fillBillingAddress = async (page: Page, address: Address): Promise<void> => {
   await billingField(page, 'country_id').selectOption(address.countryId);
+  if (address.region !== null) {
+    await billingField(page, 'region_id').selectOption({ label: address.region });
+  }
   await billingField(page, 'firstname').fill(address.firstname);
   await billingField(page, 'lastname').fill(address.lastname);
   await billingField(page, 'email').fill(address.email);
@@ -38,10 +41,23 @@ const choosePaymentMethod = async (page: Page, methodCode: string): Promise<void
   await page.locator('#payment-buttons-container button').click();
 };
 
-export const placeGuestOrder = async (page: Page, address: Address, methodCode: string): Promise<void> => {
+const goToPaymentStep = async (page: Page, address: Address): Promise<void> => {
   await continueAsGuest(page);
   await fillBillingAddress(page, address);
   await chooseFlatRateShipping(page);
+  await page.locator('#checkout-step-payment').waitFor({ state: 'visible' });
+};
+
+export const getOfferedPaymentMethods = async (page: Page, address: Address): Promise<readonly string[]> => {
+  await goToPaymentStep(page, address);
+
+  return page.locator('#checkout-step-payment input[name="payment[method]"]').evaluateAll((inputs) =>
+    inputs.map((input) => (input as HTMLInputElement).value),
+  );
+};
+
+export const placeGuestOrder = async (page: Page, address: Address, methodCode: string): Promise<void> => {
+  await goToPaymentStep(page, address);
   await choosePaymentMethod(page, methodCode);
   await page.locator('#review-buttons-container button').click();
 };
