@@ -1,12 +1,11 @@
 import { Page } from '@playwright/test';
+import { Product } from './catalog';
 import { Address } from './customer';
-
-export const SIMPLE_PRODUCT_URL = '/retro-chic-eyeglasses.html';
 
 const billingField = (page: Page, name: string) => page.locator(`#billing\\:${name}`);
 
-export const addProductToCart = async (page: Page, productUrl: string): Promise<void> => {
-  await page.goto(productUrl);
+export const addProductToCart = async (page: Page, product: Product): Promise<void> => {
+  await page.goto(product.url);
   await page.locator('.add-to-cart-buttons button.btn-cart').first().click();
   await page.waitForURL('**/checkout/cart/');
 };

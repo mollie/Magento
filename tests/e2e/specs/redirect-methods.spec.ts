@@ -1,6 +1,7 @@
 import { test } from '@playwright/test';
 import { expectOrderPaidByWebhook, expectSuccessPageAfterReturning } from '../support/assertions';
-import { addProductToCart, placeGuestOrder, SIMPLE_PRODUCT_URL } from '../support/checkout';
+import { restockProduct, SIMPLE_PRODUCT } from '../support/catalog';
+import { addProductToCart, placeGuestOrder } from '../support/checkout';
 import { createDutchCustomer } from '../support/customer';
 import { completeTestPaymentWithoutReturning } from '../support/mollie';
 
@@ -16,11 +17,13 @@ const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'Bancomat Pay', code: 'mollie_bancomatpay' },
 ];
 
+test.beforeEach(() => restockProduct(SIMPLE_PRODUCT));
+
 for (const method of REDIRECT_METHODS) {
   test(`a paid ${method.name} payment is processed by the webhook and shows the success page`, async ({ page }) => {
     const customer = createDutchCustomer();
 
-    await addProductToCart(page, SIMPLE_PRODUCT_URL);
+    await addProductToCart(page, SIMPLE_PRODUCT);
     await placeGuestOrder(page, customer, method.code);
     const returnUrl = await completeTestPaymentWithoutReturning(page, 'paid');
 
