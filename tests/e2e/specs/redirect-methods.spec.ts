@@ -23,6 +23,7 @@ const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'Vipps', code: 'mollie_vipps' },
   { name: 'MobilePay', code: 'mollie_mobilepay' },
   { name: 'TWINT', code: 'mollie_twint', currency: 'CHF' },
+  { name: 'Blik', code: 'mollie_blik', currency: 'PLN' },
 ];
 
 test.beforeAll(() => enableTestCurrencies());
