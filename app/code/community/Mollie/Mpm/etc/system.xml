@@ -370,7 +370,7 @@
                 <mollie_bancontact translate="label" module="mpm">
                     <label>Mollie - Bancontact</label>
                     <expanded>0</expanded>
-                    <sort_order>70</sort_order>
+                    <sort_order>90</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -492,7 +492,7 @@
                 <mollie_banktransfer translate="label" module="mpm">
                     <label>Mollie - Banktransfer</label>
                     <expanded>0</expanded>
-                    <sort_order>80</sort_order>
+                    <sort_order>100</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -639,7 +639,7 @@
                 <mollie_belfius translate="label" module="mpm">
                     <label>Mollie - Belfius</label>
                     <expanded>0</expanded>
-                    <sort_order>90</sort_order>
+                    <sort_order>110</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -761,7 +761,7 @@
                 <mollie_creditcard translate="label" module="mpm">
                     <label>Mollie - Credit Card</label>
                     <expanded>0</expanded>
-                    <sort_order>110</sort_order>
+                    <sort_order>160</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -896,7 +896,7 @@
 				<mollie_ideal translate="label" module="mpm">
                     <label>Mollie - iDEAL</label>
                     <expanded>0</expanded>
-                    <sort_order>120</sort_order>
+                    <sort_order>190</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -1020,7 +1020,7 @@
                 <mollie_kbc translate="label" module="mpm">
                     <label>Mollie - KBC/CBC</label>
                     <expanded>0</expanded>
-                    <sort_order>130</sort_order>
+                    <sort_order>210</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -1154,7 +1154,7 @@
 				<mollie_paypal translate="label" module="mpm">
                     <label>Mollie - Paypal</label>
                     <expanded>0</expanded>
-                    <sort_order>140</sort_order>
+                    <sort_order>300</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -1276,7 +1276,7 @@
                 <mollie_paysafecard translate="label" module="mpm">
                     <label>Mollie - Paysafecard</label>
                     <expanded>0</expanded>
-                    <sort_order>150</sort_order>
+                    <sort_order>310</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -1398,7 +1398,7 @@
                 <mollie_eps translate="label" module="mpm">
                     <label>Mollie - EPS</label>
                     <expanded>0</expanded>
-                    <sort_order>190</sort_order>
+                    <sort_order>170</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -1653,7 +1653,7 @@
 				<mollie_paymentlink translate="label" module="mpm">
                     <label>Mollie - Payment Link / Admin Payment</label>
                     <expanded>0</expanded>
-                    <sort_order>240</sort_order>
+                    <sort_order>290</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -1768,7 +1768,7 @@
                 <mollie_przelewy24 translate="label" module="mpm">
                     <label>Mollie - Przelewy24</label>
                     <expanded>0</expanded>
-                    <sort_order>250</sort_order>
+                    <sort_order>320</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -1890,7 +1890,7 @@
                 <mollie_applepay translate="label" module="mpm">
                     <label>Mollie - Apple Pay</label>
                     <expanded>0</expanded>
-                    <sort_order>260</sort_order>
+                    <sort_order>70</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2013,7 +2013,7 @@
                 <mollie_paybybank translate="label" module="mpm">
                     <label>Mollie - Pay By Bank</label>
                     <expanded>0</expanded>
-                    <sort_order>300</sort_order>
+                    <sort_order>270</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2120,7 +2120,7 @@
                 <mollie_wero translate="label" module="mpm">
                     <label>Mollie - Wero</label>
                     <expanded>0</expanded>
-                    <sort_order>310</sort_order>
+                    <sort_order>390</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2227,7 +2227,7 @@
                 <mollie_satispay translate="label" module="mpm">
                     <label>Mollie - Satispay</label>
                     <expanded>0</expanded>
-                    <sort_order>320</sort_order>
+                    <sort_order>340</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2334,7 +2334,7 @@
                 <mollie_bancomatpay translate="label" module="mpm">
                     <label>Mollie - Bancomat Pay</label>
                     <expanded>0</expanded>
-                    <sort_order>330</sort_order>
+                    <sort_order>80</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2441,7 +2441,7 @@
                 <mollie_bizum translate="label" module="mpm">
                     <label>Mollie - Bizum</label>
                     <expanded>0</expanded>
-                    <sort_order>340</sort_order>
+                    <sort_order>140</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2548,7 +2548,7 @@
                 <mollie_mbway translate="label" module="mpm">
                     <label>Mollie - MB Way</label>
                     <expanded>0</expanded>
-                    <sort_order>350</sort_order>
+                    <sort_order>230</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2655,7 +2655,7 @@
                 <mollie_vipps translate="label" module="mpm">
                     <label>Mollie - Vipps</label>
                     <expanded>0</expanded>
-                    <sort_order>360</sort_order>
+                    <sort_order>380</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2762,7 +2762,7 @@
                 <mollie_mobilepay translate="label" module="mpm">
                     <label>Mollie - MobilePay</label>
                     <expanded>0</expanded>
-                    <sort_order>370</sort_order>
+                    <sort_order>240</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2869,7 +2869,7 @@
                 <mollie_twint translate="label" module="mpm">
                     <label>Mollie - TWINT</label>
                     <expanded>0</expanded>
-                    <sort_order>380</sort_order>
+                    <sort_order>370</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -2976,7 +2976,7 @@
                 <mollie_blik translate="label" module="mpm">
                     <label>Mollie - Blik</label>
                     <expanded>0</expanded>
-                    <sort_order>390</sort_order>
+                    <sort_order>150</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3083,7 +3083,7 @@
                 <mollie_swish translate="label" module="mpm">
                     <label>Mollie - Swish</label>
                     <expanded>0</expanded>
-                    <sort_order>400</sort_order>
+                    <sort_order>350</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3190,7 +3190,7 @@
                 <mollie_payconiq translate="label" module="mpm">
                     <label>Mollie - Payconiq</label>
                     <expanded>0</expanded>
-                    <sort_order>410</sort_order>
+                    <sort_order>280</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3297,7 +3297,7 @@
                 <mollie_klarna translate="label" module="mpm">
                     <label>Mollie - Klarna</label>
                     <expanded>0</expanded>
-                    <sort_order>420</sort_order>
+                    <sort_order>220</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3428,7 +3428,7 @@
                 <mollie_riverty translate="label" module="mpm">
                     <label>Mollie - Riverty</label>
                     <expanded>0</expanded>
-                    <sort_order>430</sort_order>
+                    <sort_order>330</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3535,7 +3535,7 @@
                 <mollie_billink translate="label" module="mpm">
                     <label>Mollie - Billink</label>
                     <expanded>0</expanded>
-                    <sort_order>440</sort_order>
+                    <sort_order>130</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3642,7 +3642,7 @@
                 <mollie_billie translate="label" module="mpm">
                     <label>Mollie - Billie</label>
                     <expanded>0</expanded>
-                    <sort_order>450</sort_order>
+                    <sort_order>120</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3749,7 +3749,7 @@
                 <mollie_multibanco translate="label" module="mpm">
                     <label>Mollie - Multibanco</label>
                     <expanded>0</expanded>
-                    <sort_order>460</sort_order>
+                    <sort_order>250</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3856,7 +3856,7 @@
                 <mollie_trustly translate="label" module="mpm">
                     <label>Mollie - Trustly</label>
                     <expanded>0</expanded>
-                    <sort_order>470</sort_order>
+                    <sort_order>360</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -3963,7 +3963,7 @@
                 <mollie_mybank translate="label" module="mpm">
                     <label>Mollie - MyBank</label>
                     <expanded>0</expanded>
-                    <sort_order>270</sort_order>
+                    <sort_order>260</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -4085,7 +4085,7 @@
 				<mollie_giftcard translate="label" module="mpm">
                     <label>Mollie - Giftcard</label>
                     <expanded>0</expanded>
-                    <sort_order>280</sort_order>
+                    <sort_order>180</sort_order>
                     <frontend_type>text</frontend_type>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
