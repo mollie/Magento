@@ -1,20 +1,13 @@
-import { execFileSync } from 'node:child_process';
 import { Page } from '@playwright/test';
+import { cleanConfigCache } from './config';
 import { queryDatabase } from './database';
 
 export type TestCurrency = 'CHF' | 'PLN' | 'SEK';
 
 const BASE_CURRENCY = 'EUR';
 const RATES: Readonly<Record<TestCurrency, number>> = { CHF: 0.94, PLN: 4.25, SEK: 11.2 };
-const MAGENTO_ROOT = process.env.MAGENTO_ROOT ?? '/var/www/html/pub';
 
 const allowedCurrencies = (): string => [BASE_CURRENCY, ...Object.keys(RATES)].join(',');
-
-const cleanConfigCache = (): void => {
-  execFileSync('php', ['-r', 'require "app/Mage.php"; Mage::app()->getCacheInstance()->cleanType("config");'], {
-    cwd: MAGENTO_ROOT,
-  });
-};
 
 export const enableTestCurrencies = (): void => {
   const rates = Object.entries(RATES)

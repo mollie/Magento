@@ -156,13 +156,12 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
             return $msg;
         }
 
-        $method = $this->mollieHelper->getApiMethod($order);
         $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
 
         try {
             $connection->beginTransaction();
 
-            if ($method == 'order' && substr($transactionId, 0, 4) == 'ord_') {
+            if ($this->isOrdersApiTransaction($transactionId)) {
                 return $this->ordersApi->processTransaction($order, $type, $paymentToken);
             } else {
                 return $this->paymentsApi->processTransaction($order, $type, $paymentToken);
@@ -178,6 +177,16 @@ class Mollie_Mpm_Model_Mollie extends Mage_Payment_Model_Method_Abstract
             $this->commitOrder($order);
             $connection->commit();
         }
+    }
+
+    /**
+     * @param string $transactionId
+     *
+     * @return bool
+     */
+    private function isOrdersApiTransaction($transactionId)
+    {
+        return strpos($transactionId, 'ord_') === 0;
     }
 
     /**
