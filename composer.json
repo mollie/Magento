@@ -44,8 +44,8 @@
     "magento 2"
   ],
   "require": {
-    "php": ">=5.6",
-    "mollie/mollie-api-php": "^2.1"
+    "php": ">=7.2",
+    "mollie/mollie-api-php": "^2.80"
   },
   "authors": [
     {
