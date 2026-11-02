@@ -55,6 +55,8 @@ Mollie requires no minimum costs, no fixed contracts, no hidden costs. At Mollie
 
 - Przelewy24
 
+- Multibanco
+
 - Billie
 
 - Billink

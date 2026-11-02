@@ -27,6 +27,7 @@ const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'Blik', code: 'mollie_blik', currency: 'PLN' },
   { name: 'Swish', code: 'mollie_swish', currency: 'SEK' },
   { name: 'Billie', code: 'mollie_billie', isBusiness: true },
+  { name: 'Multibanco', code: 'mollie_multibanco', country: 'PT' },
 ];
 
 test.beforeAll(() => enableTestCurrencies());
