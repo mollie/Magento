@@ -657,6 +657,16 @@
                 <method>payment</method>
                 <payment_description>{ordernumber}</payment_description>
             </mollie_swish>
+            <mollie_payconiq>
+                <active>1</active>
+                <sort_order>410</sort_order>
+                <title>Payconiq</title>
+                <model>mpm/method_payconiq</model>
+                <group>mollie</group>
+                <allowspecific>0</allowspecific>
+                <method>payment</method>
+                <payment_description>{ordernumber}</payment_description>
+            </mollie_payconiq>
             <mollie_giftcard>
                 <active>0</active>
                 <sort_order>10</sort_order>
