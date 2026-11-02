@@ -86,15 +86,10 @@ class Mollie_Mpm_Helper_Autoloader
         if (!$registered) {
             $autoloader = new self;
             $autoloader
-                ->addNamespace('Psr\Http\Message', $libBaseDir . '/Psr/HttpMessage/src')
                 ->addNamespace('Mollie\Api', $libBaseDir . '/Mollie/src')
-                ->addNamespace('GuzzleHttp', $libBaseDir . '/GuzzleHttp/Guzzle/src')
-                ->addNamespace('GuzzleHttp\Psr7', $libBaseDir . '/GuzzleHttp/Psr7/src')
-                ->addNamespace('GuzzleHttp\Promise', $libBaseDir . '/GuzzleHttp/Promises/src')
                 ->addNamespace('Composer\CaBundle', $libBaseDir . '/Composer/CaBundle/src')
                 ->register();
             $registered = true;
-            self::loadGuzzleFunctions($libBaseDir);
         }
 
     }
@@ -137,24 +132,6 @@ class Mollie_Mpm_Helper_Autoloader
         }
 
         return $this;
-    }
-
-    /**
-     * @param $libBaseDir
-     */
-    public static function loadGuzzleFunctions($libBaseDir)
-    {
-        if (file_exists($libBaseDir . '/GuzzleHttp/Guzzle/src/functions_include.php')) {
-            require_once $libBaseDir . '/GuzzleHttp/Guzzle/src/functions_include.php';
-        }
-
-        if (file_exists($libBaseDir . '/GuzzleHttp/Psr7/src/functions_include.php')) {
-            require_once $libBaseDir . '/GuzzleHttp/Psr7/src/functions_include.php';
-        }
-
-        if (file_exists($libBaseDir . '/GuzzleHttp/Promises/src/functions_include.php')) {
-            require_once $libBaseDir . '/GuzzleHttp/Promises/src/functions_include.php';
-        }
     }
 
     /**
