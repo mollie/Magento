@@ -21,6 +21,7 @@ const REDIRECT_METHODS: readonly RedirectMethod[] = [
   { name: 'Bizum', code: 'mollie_bizum', country: 'ES' },
   { name: 'MB Way', code: 'mollie_mbway', country: 'PT' },
   { name: 'Vipps', code: 'mollie_vipps' },
+  { name: 'MobilePay', code: 'mollie_mobilepay' },
 ];
 
 test.beforeAll(() => enableTestCurrencies());
