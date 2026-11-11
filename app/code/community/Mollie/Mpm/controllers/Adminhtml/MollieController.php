@@ -114,6 +114,6 @@ class Mollie_Mpm_Adminhtml_MollieController extends Mage_Adminhtml_Controller_Ac
      */
     protected function _isAllowed(): bool
     {
-        return Mage::getSingleton('admin/session')->isAllowed('admin/mollie/mollie');
+        return Mage::getSingleton('admin/session')->isAllowed('admin/system/config/mollie');
     }
 }
