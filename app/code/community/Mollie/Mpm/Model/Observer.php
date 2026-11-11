@@ -55,6 +55,10 @@ class Mollie_Mpm_Model_Observer
         if ($mollieHelper->isPaidUsingMollieOrdersApi($order)) {
             $mollieModel->cancelOrder($order);
         }
+
+        if ($mollieHelper->isAwaitingManualCapture($order)) {
+            $mollieModel->releaseAuthorization($order);
+        }
     }
 
     /**
@@ -102,6 +106,20 @@ class Mollie_Mpm_Model_Observer
 
         if ($mollieHelper->isPaidUsingMollieOrdersApi($order)) {
             $mollieModel->createShipment($shipment, $order);
+        }
+    }
+
+    /**
+     * Runs after the shipment is committed: Mollie's webhook for the capture must not race the shipment save.
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function salesOrderShipmentSaveCommitAfter(Varien_Event_Observer $observer)
+    {
+        $order = $observer->getEvent()->getShipment()->getOrder();
+
+        if (Mage::helper('mpm')->isAwaitingManualCapture($order)) {
+            Mage::getModel('mpm/mollie')->captureAuthorizedPayment($order);
         }
     }
 

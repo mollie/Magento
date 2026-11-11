@@ -1,0 +1,13 @@
+{
+  "name": "mollie-magento1-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3"
+  }
+}

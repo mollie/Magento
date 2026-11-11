@@ -1,0 +1,62 @@
+name: Build release package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing release tag to build, for example v5.10.0'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and attach zip
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout tag with submodules
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+          submodules: recursive
+
+      - name: Determine version
+        run: echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
+
+      - name: Check module version matches tag
+        run: |
+          MODULE_VERSION=$(grep -oP '(?<=<version>)[^<]+' app/code/community/Mollie/Mpm/etc/config.xml | head -1)
+          if [ "$MODULE_VERSION" != "$VERSION" ]; then
+            echo "::error::config.xml has version $MODULE_VERSION but the tag is $TAG"
+            exit 1
+          fi
+
+      - name: Check bundled libraries are present
+        run: |
+          git submodule status --recursive
+          if git submodule status --recursive | grep -qE '^[-+U]'; then
+            echo "::error::Not every submodule is checked out at its pinned commit"
+            exit 1
+          fi
+          test -f lib/Mollie/Mollie/src/MollieApiClient.php || { echo "::error::Mollie API client is missing"; exit 1; }
+
+      - name: Build zip
+        run: |
+          zip -rq "mollie-magento-${VERSION}.zip" app lib skin -x '*/.git' '*/.git/*'
+          unzip -l "mollie-magento-${VERSION}.zip" | tail -1
+
+      - name: Attach zip to release
+        run: gh release upload "$TAG" "mollie-magento-${VERSION}.zip" --clobber
+
+      - name: Keep zip as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mollie-magento-${{ env.VERSION }}
+          path: mollie-magento-${{ env.VERSION }}.zip
